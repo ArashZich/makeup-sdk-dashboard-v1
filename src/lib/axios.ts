@@ -1,5 +1,5 @@
 // src/lib/axios.ts
-import axios from "axios";
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { useCookies } from "./cookies";
 
 // آدرس پایه API
@@ -36,8 +36,10 @@ axiosInstance.interceptors.response.use(
   (response) => {
     return response;
   },
-  async (error) => {
-    const originalRequest = error.config;
+  async (error: AxiosError) => {
+    const originalRequest = error.config as AxiosRequestConfig & {
+      _retry?: boolean;
+    };
     const { getCookie, setCookie, removeCookie } = useCookies();
 
     // اگر خطای 401 (Unauthorized) دریافت شد و قبلاً تلاش برای بازیابی توکن نکرده‌ایم
@@ -65,13 +67,21 @@ axiosInstance.interceptors.response.use(
           });
 
           // تنظیم هدر Authorization برای درخواست اصلی و ارسال مجدد
-          originalRequest.headers.Authorization = `Bearer ${tokens.access.token}`;
+          if (originalRequest.headers) {
+            originalRequest.headers.Authorization = `Bearer ${tokens.access.token}`;
+          } else {
+            originalRequest.headers = {
+              Authorization: `Bearer ${tokens.access.token}`,
+            };
+          }
+
           return axiosInstance(originalRequest);
         }
       } catch (refreshError) {
         // در صورت خطا در نوسازی توکن، کاربر را خارج می‌کنیم
         removeCookie("access_token");
         removeCookie("refresh_token");
+        removeCookie("user_role");
 
         // در صورتی که در مرورگر هستیم، به صفحه لاگین هدایت می‌کنیم
         if (typeof window !== "undefined") {
