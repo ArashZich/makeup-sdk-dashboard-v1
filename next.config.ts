@@ -1,15 +1,12 @@
+// next.config.ts
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
+  // حذف swcMinify
   images: {
     domains: ["localhost", "example.com", "cdn.example.com"],
   },
-  i18n: {
-    locales: ["fa", "en"],
-    defaultLocale: "fa",
-    localeDetection: true,
-  },
+  // حذف کانفیگ i18n چون در App Router پشتیبانی نمی‌شود
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
   },

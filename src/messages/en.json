@@ -15,16 +15,12 @@
     "confirm": "Confirm",
     "select": "Select",
     "back": "Back",
-    "next": "Next",
-    "previous": "Previous",
-    "details": "Details",
     "actions": "Actions",
     "status": "Status",
     "date": "Date",
     "name": "Name",
     "email": "Email",
     "phone": "Phone",
-    "description": "Description",
     "active": "Active",
     "inactive": "Inactive",
     "submit": "Submit",
@@ -33,22 +29,13 @@
     "less": "Less",
     "settings": "Settings",
     "profile": "Profile",
+    "openSidebar": "Open Menu",
+    "closeSidebar": "Close Menu",
     "error": {
-      "general": "An error occurred. Please try again.",
-      "notFound": "Not found",
-      "accessDenied": "Access denied",
-      "invalidInput": "Invalid input",
-      "serverError": "Server error"
+      "general": "An error occurred. Please try again."
     },
     "success": {
-      "create": "Created successfully",
-      "update": "Updated successfully",
-      "delete": "Deleted successfully",
-      "save": "Saved successfully"
-    },
-    "empty": {
-      "noData": "No data available",
-      "noResults": "No results found"
+      "update": "Updated successfully"
     },
     "theme": {
       "light": "Light",
@@ -63,41 +50,30 @@
   },
   "auth": {
     "login": "Login",
-    "loginWithOtp": "Login with OTP",
-    "loginWithPassword": "Login with password",
     "enterPhone": "Enter your phone number",
     "enterOtp": "Enter verification code",
-    "enterPassword": "Enter your password",
-    "forgotPassword": "Forgot password",
-    "resetPassword": "Reset password",
-    "register": "Register",
-    "logout": "Logout",
+    "sendOtp": "Send verification code",
     "verifyOtp": "Verify code",
     "resendOtp": "Resend code",
     "otpSent": "Verification code sent",
     "otpResent": "Verification code resent",
-    "completeProfile": "Complete profile",
-    "changePassword": "Change password",
-    "newPassword": "New password",
-    "confirmPassword": "Confirm password",
-    "passwordsDontMatch": "Passwords don't match",
-    "passwordReset": "Password reset successfully",
     "remainingTimeToResend": "Time remaining to resend: {{seconds}} seconds",
+    "logout": "Logout",
     "error": {
-      "invalidCredentials": "Invalid credentials",
-      "invalidOtp": "Invalid verification code",
-      "expiredOtp": "Verification code expired",
       "invalidPhone": "Invalid phone number",
-      "userNotFound": "User not found"
+      "invalidOtp": "Invalid verification code",
+      "expiredOtp": "Verification code expired"
     }
   },
   "dashboard": {
-    "title": "Dashboard",
+    "title": "Makeup SDK Dashboard",
     "welcome": "Welcome to the Makeup SDK Dashboard",
     "overview": "Overview",
-    "recentActivity": "Recent Activity",
-    "quickStats": "Quick Stats",
-    "statistics": "Statistics",
+    "welcomeMessage": "Welcome! Manage your SDK status here",
+    "noPlanTitle": "No Active Plan",
+    "noPlanDescription": "To use the Makeup SDK, please purchase a plan first.",
+    "remainingRequests": "Remaining Requests",
+    "totalRequests": "Total Requests",
     "menu": {
       "dashboard": "Dashboard",
       "analytics": "Analytics",
@@ -108,249 +84,55 @@
       "notifications": "Notifications",
       "profile": "Profile",
       "settings": "Settings",
-      "admin": "Admin",
-      "users": "Users",
-      "coupons": "Coupons"
+      "admin": "Admin"
     }
   },
   "plans": {
     "title": "Plans",
     "availablePlans": "Available Plans",
-    "comparePlans": "Compare Plans",
     "buyPlan": "Buy Plan",
-    "confirmPurchase": "Confirm Purchase",
-    "planDetails": "Plan Details",
     "duration": "Duration: {{duration}} days",
-    "price": "Price: {{price}} USD",
-    "features": "Features",
     "requestLimit": "Request Limit",
     "monthly": "Monthly: {{count}} requests",
-    "total": "Total: {{count}} requests",
-    "specialOffer": "Special Offer",
-    "manageYourPlan": "Manage Your Plan",
-    "error": {
-      "planNotFound": "Plan not found",
-      "planNotActive": "Plan is not active"
-    },
-    "admin": {
-      "createPlan": "Create New Plan",
-      "editPlan": "Edit Plan",
-      "deletePlan": "Delete Plan",
-      "confirmDelete": "Are you sure you want to delete this plan?"
-    }
+    "viewAllPlans": "View All Plans"
   },
   "packages": {
     "title": "Packages",
-    "activePackages": "Active Packages",
-    "expiredPackages": "Expired Packages",
-    "packageDetails": "Package Details",
-    "startDate": "Start Date",
-    "endDate": "End Date",
-    "remainingDays": "{{count}} Days Remaining",
-    "expired": "Expired",
+    "activePackage": "Active Package",
+    "package": "Package",
+    "expiresOn": "Expires on",
+    "remainingDays": "{{count}} days remaining",
+    "status": "Status",
     "active": "Active",
-    "suspended": "Suspended",
-    "sdkFeatures": "SDK Features",
-    "requestsRemaining": "Requests Remaining: {{count}}",
-    "renewPackage": "Renew Package",
-    "upgradePackage": "Upgrade Package",
-    "error": {
-      "packageNotFound": "Package not found"
-    },
-    "admin": {
-      "extendPackage": "Extend Package",
-      "suspendPackage": "Suspend Package",
-      "reactivatePackage": "Reactivate Package",
-      "updateFeatures": "Update Features"
-    }
+    "expired": "Expired",
+    "suspended": "Suspended"
   },
-  "products": {
-    "title": "Products",
-    "myProducts": "My Products",
-    "createProduct": "Create New Product",
-    "editProduct": "Edit Product",
-    "deleteProduct": "Delete Product",
-    "productDetails": "Product Details",
-    "productName": "Product Name",
-    "productType": "Product Type",
-    "productCode": "Product Code",
-    "patterns": "Patterns",
-    "colors": "Colors",
-    "addPattern": "Add Pattern",
-    "addColor": "Add Color",
-    "thumbnail": "Thumbnail",
-    "uploadImage": "Upload Image",
-    "types": {
-      "lips": "Lipstick",
-      "eyeshadow": "Eyeshadow",
-      "eyepencil": "Eye Pencil",
-      "eyelashes": "Eyelashes",
-      "blush": "Blush",
-      "eyeliner": "Eyeliner"
-    },
-    "error": {
-      "productNotFound": "Product not found",
-      "duplicateCode": "Product code already exists"
-    }
+  "sdk": {
+    "title": "SDK",
+    "status": "SDK Status",
+    "manageSDK": "Manage SDK",
+    "token": "Token"
   },
-  "payments": {
-    "title": "Payments",
-    "history": "Payment History",
-    "paymentDetails": "Payment Details",
-    "amount": "Amount",
-    "originalAmount": "Original Amount",
-    "finalAmount": "Final Amount",
-    "discount": "Discount",
-    "paymentDate": "Payment Date",
-    "paymentStatus": "Payment Status",
-    "paymentMethod": "Payment Method",
-    "paymentReference": "Payment Reference",
-    "couponApplied": "Coupon Applied",
-    "status": {
-      "pending": "Pending",
-      "success": "Success",
-      "failed": "Failed",
-      "canceled": "Canceled"
-    },
-    "cancelPayment": "Cancel Payment",
-    "retry": "Retry",
-    "error": {
-      "paymentNotFound": "Payment not found",
-      "paymentFailed": "Payment failed"
-    }
+  "profile": {
+    "title": "Profile"
+  },
+  "settings": {
+    "title": "Settings"
   },
   "notifications": {
     "title": "Notifications",
     "markAsRead": "Mark as Read",
     "markAllAsRead": "Mark All as Read",
     "empty": "No notifications",
-    "viewAll": "View All",
-    "unreadNotifications": "Unread Notifications",
-    "readNotifications": "Read Notifications",
-    "expiryNotice": "Expiry Notice",
-    "paymentNotice": "Payment Notice",
-    "systemNotice": "System Notice",
-    "type": {
-      "expiry": "Expiry",
-      "payment": "Payment",
-      "system": "System",
-      "other": "Other"
-    },
-    "admin": {
-      "sendNotification": "Send Notification",
-      "selectUsers": "Select Users",
-      "selectPlan": "Select Plan",
-      "notificationTitle": "Notification Title",
-      "notificationMessage": "Notification Message",
-      "sendSms": "Send SMS"
-    }
+    "viewAll": "View All"
   },
   "analytics": {
-    "title": "Analytics",
-    "overview": "Overview",
-    "usageSummary": "Usage Summary",
-    "requestsOverTime": "Requests Over Time",
-    "usageByProduct": "Usage by Product",
-    "timeRange": "Time Range",
-    "timeRanges": {
-      "week": "Week",
-      "month": "Month",
-      "halfyear": "Half Year",
-      "year": "Year",
-      "all": "All"
-    },
-    "deviceStats": "Device Statistics",
-    "browserStats": "Browser Statistics",
-    "osStats": "OS Statistics",
-    "successRate": "Success Rate",
-    "totalRequests": "Total Requests",
-    "admin": {
-      "userAnalytics": "User Analytics",
-      "searchUser": "Search User",
-      "overallStats": "Overall Statistics",
-      "financialAnalytics": "Financial Analytics",
-      "requestsAnalytics": "Requests Analytics"
-    }
+    "title": "Analytics"
   },
-  "profile": {
-    "title": "Profile",
-    "myProfile": "My Profile",
-    "editProfile": "Edit Profile",
-    "personalInfo": "Personal Information",
-    "changePassword": "Change Password",
-    "name": "Name",
-    "email": "Email",
-    "phone": "Phone Number",
-    "company": "Company",
-    "userType": "User Type",
-    "nationalId": "National ID",
-    "allowedDomains": "Allowed Domains",
-    "addDomain": "Add Domain",
-    "userTypes": {
-      "real": "Real Person",
-      "legal": "Legal Entity"
-    },
-    "currentPassword": "Current Password",
-    "newPassword": "New Password",
-    "confirmPassword": "Confirm New Password"
+  "products": {
+    "title": "Products"
   },
-  "settings": {
-    "title": "Settings",
-    "appearance": "Appearance",
-    "theme": "Theme",
-    "language": "Language",
-    "notifications": "Notifications",
-    "emailNotifications": "Email Notifications",
-    "smsNotifications": "SMS Notifications",
-    "security": "Security",
-    "twoFactorAuth": "Two-Factor Authentication"
-  },
-  "admin": {
-    "title": "Admin",
-    "users": {
-      "title": "Users",
-      "allUsers": "All Users",
-      "createUser": "Create New User",
-      "editUser": "Edit User",
-      "deleteUser": "Delete User",
-      "role": "Role",
-      "verified": "Verified",
-      "roles": {
-        "admin": "Admin",
-        "user": "User"
-      }
-    },
-    "coupons": {
-      "title": "Coupons",
-      "allCoupons": "All Coupons",
-      "createCoupon": "Create New Coupon",
-      "editCoupon": "Edit Coupon",
-      "deactivateCoupon": "Deactivate Coupon",
-      "code": "Coupon Code",
-      "percent": "Discount Percentage",
-      "maxAmount": "Maximum Discount Amount",
-      "maxUsage": "Maximum Usage Count",
-      "usedCount": "Used Count",
-      "startDate": "Start Date",
-      "endDate": "End Date",
-      "forPlans": "For Plans",
-      "forUsers": "For Users",
-      "selectPlans": "Select Plans",
-      "selectUsers": "Select Users"
-    }
-  },
-  "sdk": {
-    "title": "SDK",
-    "validateToken": "Validate Token",
-    "token": "Token",
-    "features": "Features",
-    "patterns": "Patterns",
-    "mediaFeatures": "Media Features",
-    "allowedSources": "Allowed Sources",
-    "allowedViews": "Allowed Views",
-    "comparisonModes": "Comparison Modes",
-    "isPremium": "Premium",
-    "projectType": "Project Type",
-    "requestLimit": "Request Limit"
+  "payments": {
+    "title": "Payments"
   }
 }

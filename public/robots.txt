@@ -1,0 +1,10 @@
+# public/robots.txt
+User-agent: LinkedInBot
+Allow: /
+User-agent: *
+Allow: /
+Allow: /
+Disallow: /dashboard/
+Disallow: /admin/
+
+Sitemap: https://armogroup.tech/sitemap.xml

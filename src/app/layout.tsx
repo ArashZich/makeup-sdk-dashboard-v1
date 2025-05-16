@@ -10,11 +10,10 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { ErrorBoundaryProvider } from "@/providers/ErrorBoundaryProvider";
 
 export const metadata: Metadata = {
-  title: "داشبورد SDK آرایش مجازی",
-  description: "داشبورد مدیریت SDK آرایش مجازی",
+  title: "Makeup SDK Dashboard",
+  description: "Makeup SDK Dashboard Management",
   applicationName: "Makeup SDK Dashboard",
   authors: [{ name: "Makeup SDK Team" }],
-  themeColor: "#3b82f6",
 };
 
 export default function RootLayout({

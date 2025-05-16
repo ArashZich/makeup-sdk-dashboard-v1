@@ -3,6 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { authService } from "@/api/services/auth-service";
 import { useCookies } from "@/lib/cookies";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuthStore } from "@/store/auth.store";
 import { showToast } from "@/lib/toast";
 import {
@@ -18,6 +19,7 @@ export const useAuth = () => {
   const router = useRouter();
   const { setCookie, removeCookie } = useCookies();
   const { setAuth, clearAuth } = useAuthStore();
+  const { t } = useLanguage();
 
   // استفاده از query برای دریافت اطلاعات کاربر جاری
   const {
@@ -37,12 +39,12 @@ export const useAuth = () => {
   const sendOtpMutation = useMutation({
     mutationFn: (data: SendOtpRequest) => authService.sendOtp(data),
     onSuccess: (data) => {
-      showToast.success("auth.otpSent");
+      showToast.success(t("auth.otpSent"));
       return data;
     },
     onError: (error: any) => {
       showToast.error(
-        error.response?.data?.message || "auth.error.invalidPhone"
+        error.response?.data?.message || t("auth.error.invalidPhone")
       );
       throw error;
     },
@@ -70,7 +72,9 @@ export const useAuth = () => {
       return data;
     },
     onError: (error: any) => {
-      showToast.error(error.response?.data?.message || "auth.error.invalidOtp");
+      showToast.error(
+        error.response?.data?.message || t("auth.error.invalidOtp")
+      );
       throw error;
     },
   });
@@ -93,12 +97,12 @@ export const useAuth = () => {
       // ذخیره اطلاعات کاربر در store
       setAuth(data.user, data.tokens.access.token, data.tokens.refresh.token);
 
-      showToast.success("auth.loginSuccess");
+      showToast.success(t("auth.loginSuccess"));
       return data;
     },
     onError: (error: any) => {
       showToast.error(
-        error.response?.data?.message || "auth.error.invalidCredentials"
+        error.response?.data?.message || t("auth.error.invalidCredentials")
       );
       throw error;
     },
