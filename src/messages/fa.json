@@ -1,0 +1,356 @@
+{
+  "common": {
+    "dashboard": "داشبورد",
+    "login": "ورود",
+    "logout": "خروج",
+    "loading": "در حال بارگذاری...",
+    "save": "ذخیره",
+    "cancel": "انصراف",
+    "edit": "ویرایش",
+    "delete": "حذف",
+    "search": "جستجو",
+    "filter": "فیلتر",
+    "create": "ایجاد",
+    "update": "به‌روزرسانی",
+    "confirm": "تایید",
+    "select": "انتخاب",
+    "back": "بازگشت",
+    "next": "بعدی",
+    "previous": "قبلی",
+    "details": "جزئیات",
+    "actions": "عملیات",
+    "status": "وضعیت",
+    "date": "تاریخ",
+    "name": "نام",
+    "email": "ایمیل",
+    "phone": "تلفن",
+    "description": "توضیحات",
+    "active": "فعال",
+    "inactive": "غیرفعال",
+    "submit": "ثبت",
+    "welcome": "خوش آمدید",
+    "more": "بیشتر",
+    "less": "کمتر",
+    "settings": "تنظیمات",
+    "profile": "پروفایل",
+    "error": {
+      "general": "خطایی رخ داد. لطفا دوباره تلاش کنید.",
+      "notFound": "یافت نشد",
+      "accessDenied": "دسترسی غیرمجاز",
+      "invalidInput": "ورودی نامعتبر",
+      "serverError": "خطای سرور"
+    },
+    "success": {
+      "create": "با موفقیت ایجاد شد",
+      "update": "با موفقیت به‌روزرسانی شد",
+      "delete": "با موفقیت حذف شد",
+      "save": "با موفقیت ذخیره شد"
+    },
+    "empty": {
+      "noData": "اطلاعاتی وجود ندارد",
+      "noResults": "نتیجه‌ای یافت نشد"
+    },
+    "theme": {
+      "light": "روشن",
+      "dark": "تاریک",
+      "system": "سیستم"
+    },
+    "language": {
+      "fa": "فارسی",
+      "en": "انگلیسی",
+      "change": "تغییر زبان"
+    }
+  },
+  "auth": {
+    "login": "ورود",
+    "loginWithOtp": "ورود با رمز یکبار مصرف",
+    "loginWithPassword": "ورود با رمز عبور",
+    "enterPhone": "شماره تلفن خود را وارد کنید",
+    "enterOtp": "کد تایید را وارد کنید",
+    "enterPassword": "رمز عبور خود را وارد کنید",
+    "forgotPassword": "فراموشی رمز عبور",
+    "resetPassword": "بازنشانی رمز عبور",
+    "register": "ثبت نام",
+    "logout": "خروج",
+    "verifyOtp": "تایید کد",
+    "resendOtp": "ارسال مجدد کد",
+    "otpSent": "کد تایید ارسال شد",
+    "otpResent": "کد تایید مجدداً ارسال شد",
+    "completeProfile": "تکمیل پروفایل",
+    "changePassword": "تغییر رمز عبور",
+    "newPassword": "رمز عبور جدید",
+    "confirmPassword": "تکرار رمز عبور",
+    "passwordsDontMatch": "رمز عبور و تکرار آن مطابقت ندارند",
+    "passwordReset": "رمز عبور با موفقیت تغییر یافت",
+    "remainingTimeToResend": "زمان باقی‌مانده برای ارسال مجدد: {{seconds}} ثانیه",
+    "error": {
+      "invalidCredentials": "اطلاعات وارد شده صحیح نیست",
+      "invalidOtp": "کد تایید نامعتبر است",
+      "expiredOtp": "کد تایید منقضی شده است",
+      "invalidPhone": "شماره تلفن نامعتبر است",
+      "userNotFound": "کاربر یافت نشد"
+    }
+  },
+  "dashboard": {
+    "title": "داشبورد",
+    "welcome": "به داشبورد SDK آرایش مجازی خوش آمدید",
+    "overview": "نمای کلی",
+    "recentActivity": "فعالیت‌های اخیر",
+    "quickStats": "آمار سریع",
+    "statistics": "آمار و ارقام",
+    "menu": {
+      "dashboard": "داشبورد",
+      "analytics": "آنالیتیکس",
+      "packages": "بسته‌ها",
+      "products": "محصولات",
+      "plans": "پلن‌ها",
+      "payments": "پرداخت‌ها",
+      "notifications": "اطلاعیه‌ها",
+      "profile": "پروفایل",
+      "settings": "تنظیمات",
+      "admin": "مدیریت",
+      "users": "کاربران",
+      "coupons": "کوپن‌ها"
+    }
+  },
+  "plans": {
+    "title": "پلن‌ها",
+    "availablePlans": "پلن‌های موجود",
+    "comparePlans": "مقایسه پلن‌ها",
+    "buyPlan": "خرید پلن",
+    "confirmPurchase": "تایید خرید",
+    "planDetails": "جزئیات پلن",
+    "duration": "مدت زمان: {{duration}} روز",
+    "price": "قیمت: {{price}} تومان",
+    "features": "ویژگی‌ها",
+    "requestLimit": "محدودیت درخواست",
+    "monthly": "ماهانه: {{count}} درخواست",
+    "total": "کل: {{count}} درخواست",
+    "specialOffer": "پیشنهاد ویژه",
+    "manageYourPlan": "مدیریت پلن شما",
+    "error": {
+      "planNotFound": "پلن یافت نشد",
+      "planNotActive": "پلن غیرفعال است"
+    },
+    "admin": {
+      "createPlan": "ایجاد پلن جدید",
+      "editPlan": "ویرایش پلن",
+      "deletePlan": "حذف پلن",
+      "confirmDelete": "آیا از حذف این پلن اطمینان دارید؟"
+    }
+  },
+  "packages": {
+    "title": "بسته‌ها",
+    "activePackages": "بسته‌های فعال",
+    "expiredPackages": "بسته‌های منقضی شده",
+    "packageDetails": "جزئیات بسته",
+    "startDate": "تاریخ شروع",
+    "endDate": "تاریخ پایان",
+    "remainingDays": "{{count}} روز باقی مانده",
+    "expired": "منقضی شده",
+    "active": "فعال",
+    "suspended": "معلق",
+    "sdkFeatures": "ویژگی‌های SDK",
+    "requestsRemaining": "درخواست‌های باقی‌مانده: {{count}}",
+    "renewPackage": "تمدید بسته",
+    "upgradePackage": "ارتقای بسته",
+    "error": {
+      "packageNotFound": "بسته یافت نشد"
+    },
+    "admin": {
+      "extendPackage": "تمدید بسته",
+      "suspendPackage": "تعلیق بسته",
+      "reactivatePackage": "فعال‌سازی مجدد بسته",
+      "updateFeatures": "به‌روزرسانی ویژگی‌ها"
+    }
+  },
+  "products": {
+    "title": "محصولات",
+    "myProducts": "محصولات من",
+    "createProduct": "ایجاد محصول جدید",
+    "editProduct": "ویرایش محصول",
+    "deleteProduct": "حذف محصول",
+    "productDetails": "جزئیات محصول",
+    "productName": "نام محصول",
+    "productType": "نوع محصول",
+    "productCode": "کد محصول",
+    "patterns": "الگوها",
+    "colors": "رنگ‌ها",
+    "addPattern": "افزودن الگو",
+    "addColor": "افزودن رنگ",
+    "thumbnail": "تصویر بند‌انگشتی",
+    "uploadImage": "آپلود تصویر",
+    "types": {
+      "lips": "رژ لب",
+      "eyeshadow": "سایه چشم",
+      "eyepencil": "مداد چشم",
+      "eyelashes": "مژه",
+      "blush": "رژگونه",
+      "eyeliner": "خط چشم"
+    },
+    "error": {
+      "productNotFound": "محصول یافت نشد",
+      "duplicateCode": "کد محصول تکراری است"
+    }
+  },
+  "payments": {
+    "title": "پرداخت‌ها",
+    "history": "تاریخچه پرداخت‌ها",
+    "paymentDetails": "جزئیات پرداخت",
+    "amount": "مبلغ",
+    "originalAmount": "مبلغ اصلی",
+    "finalAmount": "مبلغ نهایی",
+    "discount": "تخفیف",
+    "paymentDate": "تاریخ پرداخت",
+    "paymentStatus": "وضعیت پرداخت",
+    "paymentMethod": "روش پرداخت",
+    "paymentReference": "شناسه پرداخت",
+    "couponApplied": "کوپن اعمال شده",
+    "status": {
+      "pending": "در انتظار",
+      "success": "موفق",
+      "failed": "ناموفق",
+      "canceled": "لغو شده"
+    },
+    "cancelPayment": "لغو پرداخت",
+    "retry": "تلاش مجدد",
+    "error": {
+      "paymentNotFound": "پرداخت یافت نشد",
+      "paymentFailed": "پرداخت ناموفق بود"
+    }
+  },
+  "notifications": {
+    "title": "اطلاعیه‌ها",
+    "markAsRead": "علامت‌گذاری به عنوان خوانده شده",
+    "markAllAsRead": "علامت‌گذاری همه به عنوان خوانده شده",
+    "empty": "اطلاعیه‌ای وجود ندارد",
+    "viewAll": "مشاهده همه",
+    "unreadNotifications": "اطلاعیه‌های خوانده نشده",
+    "readNotifications": "اطلاعیه‌های خوانده شده",
+    "expiryNotice": "اطلاعیه انقضا",
+    "paymentNotice": "اطلاعیه پرداخت",
+    "systemNotice": "اطلاعیه سیستمی",
+    "type": {
+      "expiry": "انقضا",
+      "payment": "پرداخت",
+      "system": "سیستمی",
+      "other": "سایر"
+    },
+    "admin": {
+      "sendNotification": "ارسال اطلاعیه",
+      "selectUsers": "انتخاب کاربران",
+      "selectPlan": "انتخاب پلن",
+      "notificationTitle": "عنوان اطلاعیه",
+      "notificationMessage": "متن اطلاعیه",
+      "sendSms": "ارسال پیامک"
+    }
+  },
+  "analytics": {
+    "title": "آنالیتیکس",
+    "overview": "نمای کلی",
+    "usageSummary": "خلاصه استفاده",
+    "requestsOverTime": "درخواست‌ها در طول زمان",
+    "usageByProduct": "استفاده بر اساس محصول",
+    "timeRange": "بازه زمانی",
+    "timeRanges": {
+      "week": "هفته",
+      "month": "ماه",
+      "halfyear": "نیم سال",
+      "year": "سال",
+      "all": "همه"
+    },
+    "deviceStats": "آمار دستگاه‌ها",
+    "browserStats": "آمار مرورگرها",
+    "osStats": "آمار سیستم‌عامل‌ها",
+    "successRate": "نرخ موفقیت",
+    "totalRequests": "کل درخواست‌ها",
+    "admin": {
+      "userAnalytics": "آنالیتیکس کاربران",
+      "searchUser": "جستجوی کاربر",
+      "overallStats": "آمار کلی",
+      "financialAnalytics": "آنالیتیکس مالی",
+      "requestsAnalytics": "آنالیتیکس درخواست‌ها"
+    }
+  },
+  "profile": {
+    "title": "پروفایل",
+    "myProfile": "پروفایل من",
+    "editProfile": "ویرایش پروفایل",
+    "personalInfo": "اطلاعات شخصی",
+    "changePassword": "تغییر رمز عبور",
+    "name": "نام",
+    "email": "ایمیل",
+    "phone": "شماره تلفن",
+    "company": "شرکت",
+    "userType": "نوع کاربر",
+    "nationalId": "کد ملی",
+    "allowedDomains": "دامنه‌های مجاز",
+    "addDomain": "افزودن دامنه",
+    "userTypes": {
+      "real": "حقیقی",
+      "legal": "حقوقی"
+    },
+    "currentPassword": "رمز عبور فعلی",
+    "newPassword": "رمز عبور جدید",
+    "confirmPassword": "تکرار رمز عبور جدید"
+  },
+  "settings": {
+    "title": "تنظیمات",
+    "appearance": "ظاهر",
+    "theme": "تم",
+    "language": "زبان",
+    "notifications": "اطلاع‌رسانی‌ها",
+    "emailNotifications": "اطلاع‌رسانی ایمیل",
+    "smsNotifications": "اطلاع‌رسانی پیامکی",
+    "security": "امنیت",
+    "twoFactorAuth": "احراز هویت دو مرحله‌ای"
+  },
+  "admin": {
+    "title": "مدیریت",
+    "users": {
+      "title": "کاربران",
+      "allUsers": "همه کاربران",
+      "createUser": "ایجاد کاربر جدید",
+      "editUser": "ویرایش کاربر",
+      "deleteUser": "حذف کاربر",
+      "role": "نقش",
+      "verified": "تایید شده",
+      "roles": {
+        "admin": "ادمین",
+        "user": "کاربر"
+      }
+    },
+    "coupons": {
+      "title": "کوپن‌ها",
+      "allCoupons": "همه کوپن‌ها",
+      "createCoupon": "ایجاد کوپن جدید",
+      "editCoupon": "ویرایش کوپن",
+      "deactivateCoupon": "غیرفعال‌سازی کوپن",
+      "code": "کد کوپن",
+      "percent": "درصد تخفیف",
+      "maxAmount": "حداکثر مبلغ تخفیف",
+      "maxUsage": "حداکثر تعداد استفاده",
+      "usedCount": "تعداد استفاده شده",
+      "startDate": "تاریخ شروع",
+      "endDate": "تاریخ پایان",
+      "forPlans": "برای پلن‌ها",
+      "forUsers": "برای کاربران",
+      "selectPlans": "انتخاب پلن‌ها",
+      "selectUsers": "انتخاب کاربران"
+    }
+  },
+  "sdk": {
+    "title": "SDK",
+    "validateToken": "اعتبارسنجی توکن",
+    "token": "توکن",
+    "features": "ویژگی‌ها",
+    "patterns": "الگوها",
+    "mediaFeatures": "ویژگی‌های رسانه",
+    "allowedSources": "منابع مجاز",
+    "allowedViews": "نماهای مجاز",
+    "comparisonModes": "حالت‌های مقایسه",
+    "isPremium": "پریمیوم",
+    "projectType": "نوع پروژه",
+    "requestLimit": "محدودیت درخواست"
+  }
+}
