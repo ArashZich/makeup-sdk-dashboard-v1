@@ -226,7 +226,56 @@
     "nextStep3": "SDK را در برنامه خود یکپارچه‌سازی کنید و شروع به ساخت کنید!"
   },
   "profile": {
-    "title": "پروفایل"
+    "title": "پروفایل",
+    "description": "اطلاعات حساب کاربری خود را مدیریت کنید",
+    "personalInfo": "اطلاعات شخصی",
+    "personalInfoDescription": "اطلاعات شخصی خود را مشاهده و ویرایش کنید",
+    "name": "نام",
+    "phone": "شماره تلفن",
+    "email": "ایمیل",
+    "company": "شرکت",
+    "userType": "نوع کاربر",
+    "nationalId": "کد ملی",
+    "role": "نقش کاربری",
+    "createdAt": "تاریخ ثبت نام",
+    "notProvided": "وارد نشده",
+    "verified": "تأیید شده",
+    "phoneCannotBeChanged": "شماره تلفن قابل تغییر نیست",
+    "userTypes": {
+      "real": "حقیقی",
+      "legal": "حقوقی"
+    },
+    "roles": {
+      "user": "کاربر عادی",
+      "admin": "مدیر سیستم"
+    },
+    "notificationSettings": "تنظیمات اطلاع‌رسانی",
+    "emailNotifications": "اطلاع‌رسانی ایمیلی",
+    "emailNotificationsDescription": "دریافت اطلاعیه‌ها از طریق ایمیل",
+    "smsNotifications": "اطلاع‌رسانی پیامکی",
+    "smsNotificationsDescription": "دریافت اطلاعیه‌ها از طریق پیامک",
+    "accountInfo": "اطلاعات حساب کاربری",
+    "updateSuccess": "اطلاعات پروفایل با موفقیت به‌روزرسانی شد",
+    "updateError": "خطا در به‌روزرسانی اطلاعات پروفایل",
+    "selectUserType": "نوع کاربر را انتخاب کنید",
+    "tabs": {
+      "profile": "پروفایل",
+      "domains": "دامنه‌های مجاز"
+    },
+    "allowedDomains": "دامنه‌های مجاز",
+    "allowedDomainsDescription": "دامنه‌هایی که مجاز به استفاده از SDK هستند را مدیریت کنید",
+    "domainRestriction": "محدودیت دامنه",
+    "domainRestrictionDescription": "SDK فقط در دامنه‌های مجاز قابل استفاده است. دامنه‌های مجاز خود را اضافه کنید.",
+    "addDomain": "افزودن دامنه",
+    "domainFormat": "مثال: example.com",
+    "yourDomains": "دامنه‌های شما",
+    "noDomainsAdded": "دامنه‌ای اضافه نشده است",
+    "noDomainsAddedDescription": "برای استفاده از SDK، حداقل یک دامنه مجاز اضافه کنید",
+    "saveDomains": "ذخیره دامنه‌ها",
+    "invalidDomain": "فرمت دامنه نامعتبر است",
+    "domainExists": "این دامنه قبلاً اضافه شده است",
+    "domainsUpdateSuccess": "دامنه‌های مجاز با موفقیت به‌روزرسانی شدند",
+    "domainsUpdateError": "خطا در به‌روزرسانی دامنه‌های مجاز"
   },
   "settings": {
     "title": "تنظیمات"
@@ -323,6 +372,60 @@
     }
   },
   "payments": {
-    "title": "پرداخت‌ها"
+    "title": "پرداخت‌ها",
+    "description": "مدیریت و مشاهده سوابق پرداخت‌های شما",
+    "allPayments": "همه پرداخت‌ها",
+    "paymentHistory": "تاریخچه پرداخت‌ها",
+    "paymentDetails": "جزئیات پرداخت",
+    "paymentId": "شناسه پرداخت",
+    "amount": "مبلغ",
+    "originalAmount": "مبلغ اولیه",
+    "finalAmount": "مبلغ نهایی",
+    "discount": "تخفیف",
+    "planName": "نام پلن",
+    "paymentDate": "تاریخ پرداخت",
+    "paymentStatus": "وضعیت پرداخت",
+    "cardNumber": "شماره کارت",
+    "paymentRefId": "شناسه مرجع پرداخت",
+    "clientRefId": "شناسه مرجع مشتری",
+    "paymentCode": "کد پرداخت",
+    "couponCode": "کد تخفیف",
+    "paymentSuccessful": "پرداخت موفق",
+    "paymentFailed": "پرداخت ناموفق",
+    "paymentPending": "در انتظار پرداخت",
+    "paymentCanceled": "پرداخت لغو شده",
+    "cancelPayment": "لغو پرداخت",
+    "confirmCancelPayment": "آیا از لغو این پرداخت اطمینان دارید؟",
+    "cancelPendingPayment": "لغو پرداخت در انتظار",
+    "paymentSuccessfulMessage": "پرداخت شما با موفقیت انجام شد",
+    "paymentFailedMessage": "پرداخت ناموفق بود. لطفا دوباره تلاش کنید",
+    "viewPaymentDetails": "مشاهده جزئیات پرداخت",
+    "createNewPayment": "پرداخت جدید",
+    "proceedToPayment": "ادامه به پرداخت",
+    "noPaymentsFound": "پرداختی یافت نشد",
+    "noPaymentsFoundDescription": "شما هنوز هیچ پرداختی انجام نداده‌اید",
+    "filterByStatus": "فیلتر بر اساس وضعیت",
+    "sortByDate": "مرتب‌سازی بر اساس تاریخ",
+    "status": {
+      "pending": "در انتظار پرداخت",
+      "success": "موفق",
+      "failed": "ناموفق",
+      "canceled": "لغو شده"
+    },
+    "tabs": {
+      "all": "همه",
+      "pending": "در انتظار",
+      "success": "موفق",
+      "failed": "ناموفق",
+      "canceled": "لغو شده"
+    },
+    "error": {
+      "fetchFailed": "خطا در دریافت اطلاعات پرداخت‌ها",
+      "cancelFailed": "خطا در لغو پرداخت",
+      "paymentNotFound": "پرداخت مورد نظر یافت نشد"
+    },
+    "success": {
+      "paymentCanceled": "پرداخت با موفقیت لغو شد"
+    }
   }
 }

@@ -226,7 +226,56 @@
     "nextStep3": "Integrate the SDK into your application and start building!"
   },
   "profile": {
-    "title": "Profile"
+    "title": "Profile",
+    "description": "Manage your account information",
+    "personalInfo": "Personal Information",
+    "personalInfoDescription": "View and edit your personal information",
+    "name": "Name",
+    "phone": "Phone Number",
+    "email": "Email",
+    "company": "Company",
+    "userType": "User Type",
+    "nationalId": "National ID",
+    "role": "Role",
+    "createdAt": "Registration Date",
+    "notProvided": "Not provided",
+    "verified": "Verified",
+    "phoneCannotBeChanged": "Phone number cannot be changed",
+    "userTypes": {
+      "real": "Individual",
+      "legal": "Organization"
+    },
+    "roles": {
+      "user": "Regular User",
+      "admin": "Administrator"
+    },
+    "notificationSettings": "Notification Settings",
+    "emailNotifications": "Email Notifications",
+    "emailNotificationsDescription": "Receive notifications via email",
+    "smsNotifications": "SMS Notifications",
+    "smsNotificationsDescription": "Receive notifications via SMS",
+    "accountInfo": "Account Information",
+    "updateSuccess": "Profile updated successfully",
+    "updateError": "Error updating profile",
+    "selectUserType": "Select user type",
+    "tabs": {
+      "profile": "Profile",
+      "domains": "Allowed Domains"
+    },
+    "allowedDomains": "Allowed Domains",
+    "allowedDomainsDescription": "Manage domains allowed to use the SDK",
+    "domainRestriction": "Domain Restriction",
+    "domainRestrictionDescription": "The SDK can only be used on allowed domains. Add your allowed domains.",
+    "addDomain": "Add Domain",
+    "domainFormat": "Example: example.com",
+    "yourDomains": "Your Domains",
+    "noDomainsAdded": "No domains added",
+    "noDomainsAddedDescription": "Add at least one allowed domain to use the SDK",
+    "saveDomains": "Save Domains",
+    "invalidDomain": "Invalid domain format",
+    "domainExists": "This domain has already been added",
+    "domainsUpdateSuccess": "Allowed domains updated successfully",
+    "domainsUpdateError": "Error updating allowed domains"
   },
   "settings": {
     "title": "Settings"
@@ -323,6 +372,60 @@
     }
   },
   "payments": {
-    "title": "Payments"
+    "title": "Payments",
+    "description": "Manage and view your payment history",
+    "allPayments": "All Payments",
+    "paymentHistory": "Payment History",
+    "paymentDetails": "Payment Details",
+    "paymentId": "Payment ID",
+    "amount": "Amount",
+    "originalAmount": "Original Amount",
+    "finalAmount": "Final Amount",
+    "discount": "Discount",
+    "planName": "Plan Name",
+    "paymentDate": "Payment Date",
+    "paymentStatus": "Payment Status",
+    "cardNumber": "Card Number",
+    "paymentRefId": "Payment Reference ID",
+    "clientRefId": "Client Reference ID",
+    "paymentCode": "Payment Code",
+    "couponCode": "Coupon Code",
+    "paymentSuccessful": "Payment Successful",
+    "paymentFailed": "Payment Failed",
+    "paymentPending": "Payment Pending",
+    "paymentCanceled": "Payment Canceled",
+    "cancelPayment": "Cancel Payment",
+    "confirmCancelPayment": "Are you sure you want to cancel this payment?",
+    "cancelPendingPayment": "Cancel Pending Payment",
+    "paymentSuccessfulMessage": "Your payment has been completed successfully",
+    "paymentFailedMessage": "Payment failed. Please try again",
+    "viewPaymentDetails": "View Payment Details",
+    "createNewPayment": "New Payment",
+    "proceedToPayment": "Proceed to Payment",
+    "noPaymentsFound": "No Payments Found",
+    "noPaymentsFoundDescription": "You haven't made any payments yet",
+    "filterByStatus": "Filter by Status",
+    "sortByDate": "Sort by Date",
+    "status": {
+      "pending": "Pending",
+      "success": "Successful",
+      "failed": "Failed",
+      "canceled": "Canceled"
+    },
+    "tabs": {
+      "all": "All",
+      "pending": "Pending",
+      "success": "Successful",
+      "failed": "Failed",
+      "canceled": "Canceled"
+    },
+    "error": {
+      "fetchFailed": "Failed to fetch payment information",
+      "cancelFailed": "Failed to cancel payment",
+      "paymentNotFound": "Payment not found"
+    },
+    "success": {
+      "paymentCanceled": "Payment successfully canceled"
+    }
   }
 }
