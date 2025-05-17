@@ -46,7 +46,9 @@
       "fa": "فارسی",
       "en": "انگلیسی",
       "change": "تغییر زبان"
-    }
+    },
+    "copy": "کپی",
+    "copied": "کپی شد"
   },
   "auth": {
     "login": "ورود",
@@ -85,16 +87,44 @@
       "profile": "پروفایل",
       "settings": "تنظیمات",
       "admin": "مدیریت"
-    }
+    },
+    "backToDashboard": "بازگشت به داشبورد"
   },
   "plans": {
     "title": "پلن‌ها",
+    "description": "پلن مورد نظر خود را انتخاب کنید و SDK آرایش مجازی را فعال کنید",
     "availablePlans": "پلن‌های موجود",
     "buyPlan": "خرید پلن",
     "duration": "مدت زمان: {{duration}} روز",
     "requestLimit": "محدودیت درخواست",
     "monthly": "ماهانه: {{count}} درخواست",
-    "viewAllPlans": "مشاهده همه پلن‌ها"
+    "features": "ویژگی‌ها",
+    "viewAllPlans": "مشاهده همه پلن‌ها",
+    "allPlans": "همه پلن‌ها",
+    "specialOffers": "پیشنهادات ویژه",
+    "popular": "محبوب",
+    "specialOffer": "پیشنهاد ویژه",
+    "noPlansAvailable": "در حال حاضر پلنی موجود نیست",
+    "noSpecialOffersAvailable": "در حال حاضر پیشنهاد ویژه‌ای موجود نیست",
+    "purchaseSummary": "خلاصه خرید",
+    "planPrice": "قیمت پلن",
+    "discount": "تخفیف",
+    "totalPrice": "قیمت نهایی",
+    "couponCode": "کد تخفیف",
+    "enterCouponCode": "کد تخفیف خود را وارد کنید",
+    "applyCoupon": "اعمال کد",
+    "couponApplied": "کد تخفیف اعمال شد",
+    "discountAmount": "میزان تخفیف",
+    "proceedToPayment": "ادامه و پرداخت",
+    "couponAppliedSuccessfully": "کد تخفیف با موفقیت اعمال شد",
+    "invalidCoupon": "کد تخفیف نامعتبر است",
+    "couponValidationFailed": "خطا در بررسی کد تخفیف",
+    "error": {
+      "title": "خطا در دریافت پلن‌ها",
+      "fetchFailed": "خطا در دریافت پلن‌ها. لطفا دوباره تلاش کنید.",
+      "noPlansAvailable": "در حال حاضر پلنی موجود نیست",
+      "planNotFound": "پلن مورد نظر یافت نشد"
+    }
   },
   "packages": {
     "title": "بسته‌ها",
@@ -109,9 +139,57 @@
   },
   "sdk": {
     "title": "SDK",
+    "description": "مدیریت و یکپارچه‌سازی SDK آرایش مجازی",
     "status": "وضعیت SDK",
     "manageSDK": "مدیریت SDK",
-    "token": "توکن"
+    "token": "توکن",
+    "sdkToken": "توکن SDK",
+    "tokenDescription": "این توکن را برای استفاده از SDK در برنامه خود استفاده کنید",
+    "tokenCopied": "توکن کپی شد",
+    "tokenSecurityWarning": "این توکن محرمانه است. آن را با افراد غیرمجاز به اشتراک نگذارید.",
+    "packageId": "شناسه بسته",
+    "features": "ویژگی‌ها",
+    "premiumStatus": "وضعیت اشتراک",
+    "premium": "پرمیوم",
+    "standard": "استاندارد",
+    "projectType": "نوع پروژه",
+    "enabledFeatures": "ویژگی‌های فعال شده",
+    "mediaFeatures": "ویژگی‌های رسانه",
+    "allowedSources": "منابع مجاز",
+    "allowedViews": "نماهای مجاز",
+    "comparisonModes": "حالت‌های مقایسه",
+    "patterns": "الگوها",
+    "usageStatistics": "آمار استفاده",
+    "requestLimit": "محدودیت درخواست",
+    "remainingRequests": "{{count}} درخواست باقی‌مانده",
+    "expiryDate": "تاریخ انقضا",
+    "daysRemaining": "{{count}} روز باقی‌مانده",
+    "usageBreakdown": "جزئیات استفاده",
+    "totalUsage": "کل استفاده",
+    "validateCalls": "درخواست‌های اعتبارسنجی",
+    "applyCalls": "درخواست‌های اعمال",
+    "checkCalls": "درخواست‌های بررسی",
+    "otherCalls": "سایر درخواست‌ها",
+    "integrationGuide": "راهنمای یکپارچه‌سازی",
+    "integrationGuideDescription": "برای اطلاعات بیشتر در مورد یکپارچه‌سازی، به مستندات SDK مراجعه کنید.",
+    "codeCopied": "کد کپی شد",
+    "viewDocumentation": "مشاهده مستندات",
+    "noActivePackage": "بسته فعالی ندارید",
+    "noActivePackageDescription": "برای استفاده از SDK آرایش مجازی، ابتدا یک پلن خریداری کنید.",
+    "error": {
+      "title": "خطا در دریافت اطلاعات SDK",
+      "fetchFailed": "خطا در دریافت اطلاعات SDK. لطفا دوباره تلاش کنید."
+    },
+    "activationSuccess": "سرویس SDK با موفقیت فعال شد",
+    "activationDescription": "توکن SDK شما آماده استفاده است",
+    "yourSdkToken": "توکن SDK شما",
+    "tokenImportance": "این توکن برای استفاده از SDK آرایش مجازی ضروری است",
+    "important": "مهم",
+    "saveTokenWarning": "این توکن را در مکانی امن ذخیره کنید. بعداً هم می‌توانید به آن دسترسی داشته باشید.",
+    "nextSteps": "مراحل بعدی",
+    "nextStep1": "توکن SDK را ذخیره کنید.",
+    "nextStep2": "مستندات SDK را مطالعه کنید تا با نحوه استفاده آشنا شوید.",
+    "nextStep3": "SDK را در برنامه خود یکپارچه‌سازی کنید و شروع به ساخت کنید!"
   },
   "profile": {
     "title": "پروفایل"

@@ -46,7 +46,9 @@
       "fa": "Persian",
       "en": "English",
       "change": "Change language"
-    }
+    },
+    "copy": "Copy",
+    "copied": "Copied"
   },
   "auth": {
     "login": "Login",
@@ -85,16 +87,44 @@
       "profile": "Profile",
       "settings": "Settings",
       "admin": "Admin"
-    }
+    },
+    "backToDashboard": "Back to Dashboard"
   },
   "plans": {
     "title": "Plans",
+    "description": "Choose your preferred plan and activate the Makeup SDK",
     "availablePlans": "Available Plans",
     "buyPlan": "Buy Plan",
     "duration": "Duration: {{duration}} days",
     "requestLimit": "Request Limit",
     "monthly": "Monthly: {{count}} requests",
-    "viewAllPlans": "View All Plans"
+    "features": "Features",
+    "viewAllPlans": "View All Plans",
+    "allPlans": "All Plans",
+    "specialOffers": "Special Offers",
+    "popular": "Popular",
+    "specialOffer": "Special Offer",
+    "noPlansAvailable": "No plans available at the moment",
+    "noSpecialOffersAvailable": "No special offers available at the moment",
+    "purchaseSummary": "Purchase Summary",
+    "planPrice": "Plan Price",
+    "discount": "Discount",
+    "totalPrice": "Total Price",
+    "couponCode": "Coupon Code",
+    "enterCouponCode": "Enter your coupon code",
+    "applyCoupon": "Apply",
+    "couponApplied": "Coupon Applied",
+    "discountAmount": "Discount Amount",
+    "proceedToPayment": "Proceed to Payment",
+    "couponAppliedSuccessfully": "Coupon applied successfully",
+    "invalidCoupon": "Invalid coupon code",
+    "couponValidationFailed": "Error validating coupon",
+    "error": {
+      "title": "Error Fetching Plans",
+      "fetchFailed": "Failed to fetch plans. Please try again.",
+      "noPlansAvailable": "No plans available at the moment",
+      "planNotFound": "Plan not found"
+    }
   },
   "packages": {
     "title": "Packages",
@@ -109,9 +139,57 @@
   },
   "sdk": {
     "title": "SDK",
+    "description": "Manage and integrate Makeup Virtual SDK",
     "status": "SDK Status",
     "manageSDK": "Manage SDK",
-    "token": "Token"
+    "token": "Token",
+    "sdkToken": "SDK Token",
+    "tokenDescription": "Use this token to integrate the SDK in your application",
+    "tokenCopied": "Token copied to clipboard",
+    "tokenSecurityWarning": "This token is confidential. Do not share it with unauthorized individuals.",
+    "packageId": "Package ID",
+    "features": "Features",
+    "premiumStatus": "Subscription Status",
+    "premium": "Premium",
+    "standard": "Standard",
+    "projectType": "Project Type",
+    "enabledFeatures": "Enabled Features",
+    "mediaFeatures": "Media Features",
+    "allowedSources": "Allowed Sources",
+    "allowedViews": "Allowed Views",
+    "comparisonModes": "Comparison Modes",
+    "patterns": "Patterns",
+    "usageStatistics": "Usage Statistics",
+    "requestLimit": "Request Limit",
+    "remainingRequests": "{{count}} requests remaining",
+    "expiryDate": "Expiry Date",
+    "daysRemaining": "{{count}} days remaining",
+    "usageBreakdown": "Usage Breakdown",
+    "totalUsage": "Total Usage",
+    "validateCalls": "Validate Calls",
+    "applyCalls": "Apply Calls",
+    "checkCalls": "Check Calls",
+    "otherCalls": "Other Calls",
+    "integrationGuide": "Integration Guide",
+    "integrationGuideDescription": "For more information about integration, refer to the SDK documentation.",
+    "codeCopied": "Code copied to clipboard",
+    "viewDocumentation": "View Documentation",
+    "noActivePackage": "No Active Package",
+    "noActivePackageDescription": "To use the Makeup SDK, please purchase a plan first.",
+    "error": {
+      "title": "Error Fetching SDK Info",
+      "fetchFailed": "Failed to fetch SDK information. Please try again."
+    },
+    "activationSuccess": "SDK Service Successfully Activated",
+    "activationDescription": "Your SDK token is ready to use",
+    "yourSdkToken": "Your SDK Token",
+    "tokenImportance": "This token is essential for using the Makeup Virtual SDK",
+    "important": "Important",
+    "saveTokenWarning": "Keep this token in a secure place. You can access it later as well.",
+    "nextSteps": "Next Steps",
+    "nextStep1": "Save your SDK token.",
+    "nextStep2": "Review the SDK documentation to understand how to use it.",
+    "nextStep3": "Integrate the SDK into your application and start building!"
   },
   "profile": {
     "title": "Profile"
