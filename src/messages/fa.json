@@ -128,14 +128,48 @@
   },
   "packages": {
     "title": "بسته‌ها",
+    "description": "بسته‌های SDK خود را مدیریت کنید",
     "activePackage": "بسته فعال",
     "package": "بسته",
     "expiresOn": "تاریخ انقضا",
     "remainingDays": "{{count}} روز باقی‌مانده",
-    "status": "وضعیت",
-    "active": "فعال",
-    "expired": "منقضی شده",
-    "suspended": "معلق"
+    "packageId": "شناسه بسته",
+    "packageDetails": "جزئیات بسته",
+    "startDate": "تاریخ شروع",
+    "endDate": "تاریخ پایان",
+    "timeRemaining": "زمان باقی‌مانده",
+    "viewDetails": "مشاهده جزئیات",
+    "unknownPlan": "پلن نامشخص",
+    "requestLimits": "محدودیت درخواست‌ها",
+    "usageProgress": "میزان استفاده",
+    "packageExpired": "بسته منقضی شده است",
+    "packageExpiredDescription": "این بسته دیگر فعال نیست و نمی‌توانید از آن استفاده کنید.",
+    "renewPackage": "تمدید بسته",
+    "renewPackageDescription": "برای ادامه استفاده از SDK، یک پلن جدید خریداری کنید.",
+    "status": {
+      "active": "فعال",
+      "expired": "منقضی شده",
+      "suspended": "معلق",
+      "unknown": "نامشخص"
+    },
+    "tabs": {
+      "active": "فعال",
+      "expired": "منقضی شده",
+      "suspended": "معلق"
+    },
+    "noActivePackages": "بسته فعالی ندارید",
+    "noActivePackagesDescription": "برای استفاده از SDK آرایش مجازی، یک پلن خریداری کنید.",
+    "noExpiredPackages": "بسته منقضی‌شده‌ای ندارید",
+    "noSuspendedPackages": "بسته معلقی ندارید",
+    "requestLimit": {
+      "monthly": "محدودیت ماهانه",
+      "remaining": "باقی‌مانده"
+    },
+    "error": {
+      "title": "خطا در دریافت بسته‌ها",
+      "fetchFailed": "خطا در دریافت بسته‌ها. لطفا دوباره تلاش کنید.",
+      "packageNotFound": "بسته مورد نظر یافت نشد"
+    }
   },
   "sdk": {
     "title": "SDK",

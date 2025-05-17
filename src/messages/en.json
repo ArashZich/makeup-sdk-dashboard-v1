@@ -128,14 +128,48 @@
   },
   "packages": {
     "title": "Packages",
+    "description": "Manage your SDK packages",
     "activePackage": "Active Package",
     "package": "Package",
-    "expiresOn": "Expires on",
+    "expiresOn": "Expires On",
     "remainingDays": "{{count}} days remaining",
-    "status": "Status",
-    "active": "Active",
-    "expired": "Expired",
-    "suspended": "Suspended"
+    "packageId": "Package ID",
+    "packageDetails": "Package Details",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "timeRemaining": "Time Remaining",
+    "viewDetails": "View Details",
+    "unknownPlan": "Unknown Plan",
+    "requestLimits": "Request Limits",
+    "usageProgress": "Usage Progress",
+    "packageExpired": "Package Expired",
+    "packageExpiredDescription": "This package is no longer active and you cannot use it.",
+    "renewPackage": "Renew Package",
+    "renewPackageDescription": "To continue using the SDK, purchase a new plan.",
+    "status": {
+      "active": "Active",
+      "expired": "Expired",
+      "suspended": "Suspended",
+      "unknown": "Unknown"
+    },
+    "tabs": {
+      "active": "Active",
+      "expired": "Expired",
+      "suspended": "Suspended"
+    },
+    "noActivePackages": "No Active Packages",
+    "noActivePackagesDescription": "To use the Makeup SDK, purchase a plan.",
+    "noExpiredPackages": "No Expired Packages",
+    "noSuspendedPackages": "No Suspended Packages",
+    "requestLimit": {
+      "monthly": "Monthly Limit",
+      "remaining": "Remaining"
+    },
+    "error": {
+      "title": "Error Fetching Packages",
+      "fetchFailed": "Failed to fetch packages. Please try again.",
+      "packageNotFound": "Package not found"
+    }
   },
   "sdk": {
     "title": "SDK",
