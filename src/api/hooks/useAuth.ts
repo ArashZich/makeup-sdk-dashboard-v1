@@ -68,7 +68,7 @@ export const useAuth = () => {
       // ذخیره اطلاعات کاربر در store
       setAuth(data.user, data.tokens.access.token, data.tokens.refresh.token);
 
-      showToast.success("auth.loginSuccess");
+      showToast.success(t("auth.loginSuccess"));
       return data;
     },
     onError: (error: any) => {

@@ -48,7 +48,8 @@
       "change": "Change language"
     },
     "copy": "Copy",
-    "copied": "Copied"
+    "copied": "Copied",
+    "view": "View"
   },
   "auth": {
     "login": "Login",
@@ -61,6 +62,7 @@
     "otpResent": "Verification code resent",
     "remainingTimeToResend": "Time remaining to resend: {{seconds}} seconds",
     "logout": "Logout",
+    "loginSuccess": "Login success",
     "error": {
       "invalidPhone": "Invalid phone number",
       "invalidOtp": "Invalid verification code",
@@ -169,7 +171,10 @@
       "title": "Error Fetching Packages",
       "fetchFailed": "Failed to fetch packages. Please try again.",
       "packageNotFound": "Package not found"
-    }
+    },
+    "active": "Active",
+    "expired": "Expired",
+    "suspended": "Suspended"
   },
   "sdk": {
     "title": "SDK",
@@ -420,6 +425,7 @@
       "canceled": "Canceled"
     },
     "error": {
+      "title": "Title",
       "fetchFailed": "Failed to fetch payment information",
       "cancelFailed": "Failed to cancel payment",
       "paymentNotFound": "Payment not found"

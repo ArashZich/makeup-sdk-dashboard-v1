@@ -48,7 +48,8 @@
       "change": "تغییر زبان"
     },
     "copy": "کپی",
-    "copied": "کپی شد"
+    "copied": "کپی شد",
+    "view": "بازدید"
   },
   "auth": {
     "login": "ورود",
@@ -61,6 +62,7 @@
     "otpResent": "کد تأیید مجدداً ارسال شد",
     "remainingTimeToResend": "زمان باقی‌مانده برای ارسال مجدد: {{seconds}} ثانیه",
     "logout": "خروج",
+    "loginSuccess": "ورود با موفقیت",
     "error": {
       "invalidPhone": "شماره تلفن نامعتبر است",
       "invalidOtp": "کد تأیید نامعتبر است",
@@ -169,7 +171,10 @@
       "title": "خطا در دریافت بسته‌ها",
       "fetchFailed": "خطا در دریافت بسته‌ها. لطفا دوباره تلاش کنید.",
       "packageNotFound": "بسته مورد نظر یافت نشد"
-    }
+    },
+    "active": "فعال",
+    "expired": "منقضی شده",
+    "suspended": "معلق"
   },
   "sdk": {
     "title": "SDK",
@@ -420,6 +425,7 @@
       "canceled": "لغو شده"
     },
     "error": {
+      "title": "عنوان",
       "fetchFailed": "خطا در دریافت اطلاعات پرداخت‌ها",
       "cancelFailed": "خطا در لغو پرداخت",
       "paymentNotFound": "پرداخت مورد نظر یافت نشد"

@@ -1,0 +1,16 @@
+error: TypeError: paymentService.queryPayments is not a function
+    at /app/src/controllers/payment.controller.js:206:41
+    at /app/src/utils/catchAsync.js:2:19
+    at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+    at next (/app/node_modules/express/lib/router/route.js:149:13)
+    at auth (/app/src/middlewares/auth.js:28:5)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+info: GET /api/v1/payments/me 500 6.135 ms - 533
+error: TypeError: paymentService.queryPayments is not a function
+    at /app/src/controllers/payment.controller.js:206:41
+    at /app/src/utils/catchAsync.js:2:19
+    at Layer.handle [as handle_request] (/app/node_modules/express/lib/router/layer.js:95:5)
+    at next (/app/node_modules/express/lib/router/route.js:149:13)
+    at auth (/app/src/middlewares/auth.js:28:5)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+info: GET /api/v1/payments/me 500 3.768 ms - 533

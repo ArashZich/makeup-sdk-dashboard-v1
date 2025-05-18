@@ -60,7 +60,7 @@ export function PaymentDetailsView({ paymentId }: PaymentDetailsViewProps) {
     return (
       <Alert variant="destructive">
         <InfoIcon className="h-4 w-4" />
-        <AlertTitle>{t("payments.error.title")}</AlertTitle>
+        <AlertTitle>{error?.message}</AlertTitle>
         <AlertDescription>
           {t("payments.error.paymentNotFound")}
         </AlertDescription>

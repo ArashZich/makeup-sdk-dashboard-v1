@@ -15,9 +15,10 @@ export function ReactQueryProvider({
       new QueryClient({
         defaultOptions: {
           queries: {
-            staleTime: 60 * 1000, // 1 minute
+            staleTime: 5 * 60 * 1000, // 5 دقیقه
             retry: 1,
             refetchOnWindowFocus: false,
+            refetchInterval: false,
           },
         },
       })

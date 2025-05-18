@@ -103,7 +103,7 @@ export function DashboardOverview() {
                   : t("packages.package")}
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                {t("packages.status")}: {t(`packages.${activePackage.status}`)}
+                {t("common.status")}: {t(`packages.${activePackage.status}`)}
               </p>
             </CardContent>
             <CardFooter className="flex flex-col items-start p-4 pt-0">

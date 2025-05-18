@@ -1,17 +1,29 @@
-// next.config.ts
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // حذف swcMinify
   images: {
-    domains: ["localhost", "example.com", "cdn.example.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "localhost",
+      },
+      {
+        protocol: "https",
+        hostname: "example.com",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.example.com",
+      },
+      {
+        protocol: "https",
+        hostname: "images.rojashop.com",
+      },
+    ],
   },
-  // حذف کانفیگ i18n چون در App Router پشتیبانی نمی‌شود
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
   },
-
-  // ریدایرکت‌ها
   async redirects() {
     return [
       {
@@ -21,7 +33,6 @@ const nextConfig = {
       },
     ];
   },
-  // تنظیمات سربرگ‌ها
   async headers() {
     return [
       {

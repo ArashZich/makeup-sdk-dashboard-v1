@@ -6,6 +6,7 @@ import React, {
   useContext,
   useEffect,
   useState,
+  useRef,
   ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
@@ -42,10 +43,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const { getCookie, setCookie, removeCookie } = useCookies();
+  const authCheckRef = useRef(false);
 
   useEffect(() => {
     // بررسی وضعیت احراز هویت هنگام بارگذاری اولیه
     const checkAuth = async () => {
+      // اگر قبلاً بررسی شده، اجرا نکن
+      if (authCheckRef.current) return;
+
       const token = getCookie("access_token");
 
       if (token) {
@@ -62,6 +67,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       }
 
       setIsLoading(false);
+      authCheckRef.current = true;
     };
 
     checkAuth();

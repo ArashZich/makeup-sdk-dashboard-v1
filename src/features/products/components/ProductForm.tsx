@@ -36,6 +36,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { PlusIcon, TrashIcon, SwatchBookIcon } from "lucide-react";
+import { ColorPicker } from "./ColorPicker";
 
 // Schema for product form
 const productFormSchema = z.object({
@@ -465,25 +466,16 @@ export function ProductForm({
                       <label className="text-xs">
                         {t("products.form.colorHexCode")}
                       </label>
-                      <div className="flex">
-                        <Input
-                          value={newColor.hexCode}
-                          onChange={(e) =>
-                            setNewColor({
-                              ...newColor,
-                              hexCode: e.target.value,
-                            })
-                          }
-                          placeholder="#FF5733"
-                          className="h-8 rounded-r-none flex-1"
-                        />
-                        <div
-                          className="h-8 w-8 rounded-r-md"
-                          style={{
-                            backgroundColor: newColor.hexCode || "#FFFFFF",
-                          }}
-                        ></div>
-                      </div>
+                      <ColorPicker
+                        value={newColor.hexCode}
+                        onChange={(color) =>
+                          setNewColor({
+                            ...newColor,
+                            hexCode: color,
+                          })
+                        }
+                        placeholder="#000000"
+                      />
                     </div>
                   </div>
                   <div>
