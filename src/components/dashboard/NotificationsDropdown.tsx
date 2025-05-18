@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bell } from "lucide-react";
+import { Bell, CheckCircle } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -12,6 +12,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Loader } from "@/components/common/Loader";
+import { useRouter } from "next/navigation";
+import { useNotifications } from "@/api/hooks/useNotifications";
+import { formatRelativeTime } from "@/lib/date";
 
 interface NotificationsDropdownProps {
   hasUnread?: boolean;
@@ -22,31 +25,50 @@ export function NotificationsDropdown({
   hasUnread = false,
   count = 0,
 }: NotificationsDropdownProps) {
-  const { t } = useLanguage();
+  const { t, isRtl } = useLanguage();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  // این بخش بعداً با داده‌های واقعی از API جایگزین می‌شود
-  const mockNotifications = [
-    {
-      id: "1",
-      title: "بسته شما به زودی منقضی می‌شود",
-      read: false,
-      time: "30 دقیقه پیش",
-    },
-    {
-      id: "2",
-      title: "پرداخت شما با موفقیت انجام شد",
-      read: true,
-      time: "2 ساعت پیش",
-    },
-    {
-      id: "3",
-      title: "محصول جدید به سیستم اضافه شد",
-      read: true,
-      time: "دیروز",
-    },
-  ];
+  const {
+    getUserNotifications,
+    markAsRead,
+    markAllAsRead,
+    isMarkingAsRead,
+    isMarkingAllAsRead,
+  } = useNotifications();
+
+  // دریافت 5 اطلاعیه اخیر خوانده نشده
+  const { data, isLoading, error, refetch } = getUserNotifications({
+    read: false,
+    limit: 5,
+    page: 1,
+  });
+
+  // علامت‌گذاری یک اطلاعیه به عنوان خوانده شده
+  const handleMarkAsRead = async (id: string) => {
+    try {
+      await markAsRead(id);
+      refetch();
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+    }
+  };
+
+  // علامت‌گذاری همه اطلاعیه‌ها به عنوان خوانده شده
+  const handleMarkAllAsRead = async () => {
+    try {
+      await markAllAsRead();
+      refetch();
+    } catch (error) {
+      console.error("Error marking all notifications as read:", error);
+    }
+  };
+
+  // هدایت به صفحه همه اطلاعیه‌ها
+  const navigateToAllNotifications = () => {
+    setOpen(false);
+    router.push("/dashboard/notifications");
+  };
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -89,24 +111,45 @@ export function NotificationsDropdown({
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-80 p-0" align="end">
+      <PopoverContent className="w-80 p-0" align={isRtl ? "start" : "end"}>
         <div className="flex items-center justify-between p-4 border-b">
           <h3 className="font-medium">{t("notifications.title")}</h3>
-          <Button variant="ghost" size="sm" className="text-xs">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-xs"
+            onClick={handleMarkAllAsRead}
+            disabled={isMarkingAllAsRead || !hasUnread}
+          >
+            {isMarkingAllAsRead ? (
+              <span className="h-3 w-3 mr-1 rounded-full animate-spin border-2 border-primary border-t-transparent" />
+            ) : (
+              <CheckCircle className="h-3 w-3 mr-1" />
+            )}
             {t("notifications.markAllAsRead")}
           </Button>
         </div>
 
         <div className="max-h-80 overflow-y-auto">
-          {loading ? (
-            <div className="p-4">
-              <Loader type="pulse" size="sm" />
+          {isLoading ? (
+            <div className="p-4 flex justify-center">
+              <Loader size="sm" />
             </div>
-          ) : mockNotifications.length > 0 ? (
+          ) : error ? (
+            <div className="p-4 text-center text-red-500 text-sm">
+              {t("common.error.general")}
+            </div>
+          ) : !data?.results || data.results.length === 0 ? (
+            <div className="p-8 text-center">
+              <p className="text-gray-500 dark:text-gray-400">
+                {t("notifications.empty")}
+              </p>
+            </div>
+          ) : (
             <AnimatePresence>
-              {mockNotifications.map((notification, index) => (
+              {data.results.map((notification, index) => (
                 <motion.div
-                  key={notification.id}
+                  key={notification._id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, height: 0 }}
@@ -114,6 +157,11 @@ export function NotificationsDropdown({
                   className={`p-3 border-b last:border-b-0 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 ${
                     !notification.read ? "bg-blue-50 dark:bg-blue-900/20" : ""
                   }`}
+                  onClick={() => {
+                    if (!notification.read) {
+                      handleMarkAsRead(notification._id);
+                    }
+                  }}
                 >
                   <div className="flex items-start gap-2">
                     {!notification.read && (
@@ -122,24 +170,26 @@ export function NotificationsDropdown({
                     <div className="flex-1 text-sm">
                       <p className="font-medium">{notification.title}</p>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {notification.time}
+                        {formatRelativeTime(
+                          notification.createdAt,
+                          isRtl ? "fa" : "en"
+                        )}
                       </p>
                     </div>
                   </div>
                 </motion.div>
               ))}
             </AnimatePresence>
-          ) : (
-            <div className="p-8 text-center">
-              <p className="text-gray-500 dark:text-gray-400">
-                {t("notifications.empty")}
-              </p>
-            </div>
           )}
         </div>
 
         <div className="p-2 border-t">
-          <Button variant="outline" size="sm" className="w-full text-sm">
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full text-sm"
+            onClick={navigateToAllNotifications}
+          >
             {t("notifications.viewAll")}
           </Button>
         </div>

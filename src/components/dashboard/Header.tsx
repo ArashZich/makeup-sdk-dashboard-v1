@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeSwitcher } from "@/components/common/ThemeSwitcher";
 import { LanguageSwitcher } from "@/components/common/LanguageSwitcher";
 import { NotificationsDropdown } from "@/components/dashboard/NotificationsDropdown";
-import { User, LogOut, Settings, Menu, X, Bell } from "lucide-react";
+import { User, LogOut, Settings, Menu, X } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,8 +26,10 @@ export function Header() {
   const { user, logout } = useAuth();
   const { toggleSidebar, isSidebarOpen } = useUIStore();
   const router = useRouter();
-  const { useUnreadNotificationsCount } = useNotifications();
-  const { hasUnread, count } = useUnreadNotificationsCount();
+
+  // استفاده از هوک جدید برای دریافت تعداد اطلاعیه‌های خوانده نشده
+  const { getUnreadCount } = useNotifications();
+  const { hasUnread, count } = getUnreadCount();
 
   const handleLogout = async () => {
     try {

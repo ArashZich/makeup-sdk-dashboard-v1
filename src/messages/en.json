@@ -49,7 +49,13 @@
     },
     "copy": "Copy",
     "copied": "Copied",
-    "view": "View"
+    "view": "View",
+    "newest": "Newest",
+    "oldest": "Oldest",
+    "highest": "Highest",
+    "lowest": "Lowest",
+    "all": "All",
+    "refresh": "Refresh"
   },
   "auth": {
     "login": "Login",
@@ -285,18 +291,29 @@
     "domainsUpdateSuccess": "Allowed domains updated successfully",
     "domainsUpdateError": "Error updating allowed domains"
   },
-  "settings": {
-    "title": "Settings"
-  },
   "notifications": {
     "title": "Notifications",
+    "description": "View and manage your notifications",
     "markAsRead": "Mark as Read",
     "markAllAsRead": "Mark All as Read",
     "empty": "No notifications",
-    "viewAll": "View All"
-  },
-  "analytics": {
-    "title": "Analytics"
+    "emptyDescription": "You don't have any notifications at the moment",
+    "unread": "Unread",
+    "read": "Read",
+    "viewAll": "View All",
+    "filterByType": "Filter by Type",
+    "filterByReadStatus": "Filter by Status",
+    "loadMore": "Load More",
+    "types": {
+      "expiry": "Package Expiry",
+      "payment": "Payment",
+      "system": "System",
+      "other": "Other"
+    },
+    "error": {
+      "title": "Error Fetching Notifications",
+      "fetchFailed": "Failed to fetch notifications. Please try again."
+    }
   },
   "products": {
     "title": "Products",
@@ -435,6 +452,80 @@
     },
     "success": {
       "paymentCanceled": "Payment successfully canceled"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Customize your application settings",
+    "appearance": {
+      "tabTitle": "Appearance",
+      "title": "Appearance Settings",
+      "description": "Customize the look and feel of the application",
+      "theme": "Theme",
+      "language": "Language",
+      "selectLanguage": "Select language"
+    },
+    "notifications": {
+      "tabTitle": "Notifications",
+      "title": "Notification Settings",
+      "description": "Manage how you receive notifications",
+      "email": {
+        "title": "Email Notifications",
+        "description": "Receive notifications via email"
+      },
+      "sms": {
+        "title": "SMS Notifications",
+        "description": "Receive notifications via SMS"
+      },
+      "emailMissing": {
+        "title": "Email Address Missing",
+        "description": "You need to add an email address in your profile to receive email notifications."
+      },
+      "phoneMissing": {
+        "title": "Phone Number Missing",
+        "description": "You need to add a phone number in your profile to receive SMS notifications."
+      },
+      "saveSuccess": "Notification settings saved successfully",
+      "saveError": "Failed to save notification settings"
+    },
+    "layout": {
+      "tabTitle": "Layout",
+      "title": "Dashboard Layout",
+      "description": "Customize how the dashboard appears",
+      "default": "Default",
+      "compact": "Compact",
+      "comfortable": "Comfortable"
+    }
+  },
+  "analytics": {
+    "title": "Analytics",
+    "description": "Monitor usage and performance of your SDK",
+    "download": "Download Data",
+    "usageOverTime": "Usage Over Time",
+    "totalRequests": "Total Requests",
+    "requestsSuccessRate": "Success Rate",
+    "usageProgress": "Usage Progress",
+    "browserDistribution": "Browser Distribution",
+    "deviceDistribution": "Device Distribution",
+    "osDistribution": "OS Distribution",
+    "topStats": "Top Stats",
+    "topDevice": "Top Device",
+    "topBrowser": "Top Browser",
+    "topOS": "Top OS",
+    "success": "Success",
+    "failed": "Failed",
+    "successRate": "Success Rate",
+    "requests": "Requests",
+    "timeRange": {
+      "week": "Week",
+      "month": "Month",
+      "halfyear": "6 Months",
+      "year": "Year",
+      "all": "All Time"
+    },
+    "error": {
+      "title": "Error Fetching Analytics",
+      "fetchFailed": "Failed to fetch analytics data. Please try again."
     }
   }
 }

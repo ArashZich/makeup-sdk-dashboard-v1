@@ -49,7 +49,13 @@
     },
     "copy": "کپی",
     "copied": "کپی شد",
-    "view": "بازدید"
+    "view": "بازدید",
+    "newest": "جدیدترین",
+    "oldest": "قدیمی‌ترین",
+    "highest": "بالاترین",
+    "lowest": "پایین‌ترین",
+    "all": "همه",
+    "refresh": "به‌روزرسانی"
   },
   "auth": {
     "login": "ورود",
@@ -285,18 +291,29 @@
     "domainsUpdateSuccess": "دامنه‌های مجاز با موفقیت به‌روزرسانی شدند",
     "domainsUpdateError": "خطا در به‌روزرسانی دامنه‌های مجاز"
   },
-  "settings": {
-    "title": "تنظیمات"
-  },
   "notifications": {
     "title": "اطلاعیه‌ها",
+    "description": "مشاهده و مدیریت اطلاعیه‌های شما",
     "markAsRead": "علامت‌گذاری به عنوان خوانده شده",
     "markAllAsRead": "علامت‌گذاری همه به عنوان خوانده شده",
     "empty": "اطلاعیه‌ای وجود ندارد",
-    "viewAll": "مشاهده همه"
-  },
-  "analytics": {
-    "title": "آنالیتیکس"
+    "emptyDescription": "در حال حاضر هیچ اطلاعیه‌ای ندارید",
+    "unread": "خوانده نشده",
+    "read": "خوانده شده",
+    "viewAll": "مشاهده همه",
+    "filterByType": "فیلتر بر اساس نوع",
+    "filterByReadStatus": "فیلتر بر اساس وضعیت",
+    "loadMore": "بارگذاری بیشتر",
+    "types": {
+      "expiry": "انقضای بسته",
+      "payment": "پرداخت",
+      "system": "سیستم",
+      "other": "سایر"
+    },
+    "error": {
+      "title": "خطا در دریافت اطلاعیه‌ها",
+      "fetchFailed": "خطا در دریافت اطلاعیه‌ها. لطفا دوباره تلاش کنید."
+    }
   },
   "products": {
     "title": "محصولات",
@@ -435,6 +452,80 @@
     },
     "success": {
       "paymentCanceled": "پرداخت با موفقیت لغو شد"
+    }
+  },
+  "settings": {
+    "title": "تنظیمات",
+    "description": "سفارشی‌سازی تنظیمات برنامه",
+    "appearance": {
+      "tabTitle": "ظاهر",
+      "title": "تنظیمات ظاهری",
+      "description": "سفارشی‌سازی ظاهر و احساس برنامه",
+      "theme": "قالب",
+      "language": "زبان",
+      "selectLanguage": "انتخاب زبان"
+    },
+    "notifications": {
+      "tabTitle": "اطلاع‌رسانی",
+      "title": "تنظیمات اطلاع‌رسانی",
+      "description": "مدیریت نحوه دریافت اطلاعیه‌ها",
+      "email": {
+        "title": "اطلاع‌رسانی ایمیلی",
+        "description": "دریافت اطلاعیه‌ها از طریق ایمیل"
+      },
+      "sms": {
+        "title": "اطلاع‌رسانی پیامکی",
+        "description": "دریافت اطلاعیه‌ها از طریق پیامک"
+      },
+      "emailMissing": {
+        "title": "آدرس ایمیل موجود نیست",
+        "description": "برای دریافت اطلاعیه‌های ایمیلی، باید آدرس ایمیل را در پروفایل خود اضافه کنید."
+      },
+      "phoneMissing": {
+        "title": "شماره تلفن موجود نیست",
+        "description": "برای دریافت اطلاعیه‌های پیامکی، باید شماره تلفن را در پروفایل خود اضافه کنید."
+      },
+      "saveSuccess": "تنظیمات اطلاع‌رسانی با موفقیت ذخیره شد",
+      "saveError": "خطا در ذخیره تنظیمات اطلاع‌رسانی"
+    },
+    "layout": {
+      "tabTitle": "چیدمان",
+      "title": "چیدمان داشبورد",
+      "description": "سفارشی‌سازی نحوه نمایش داشبورد",
+      "default": "پیش‌فرض",
+      "compact": "فشرده",
+      "comfortable": "راحت"
+    }
+  },
+  "analytics": {
+    "title": "آنالیتیکس",
+    "description": "نظارت بر استفاده و عملکرد SDK",
+    "download": "دانلود داده‌ها",
+    "usageOverTime": "استفاده در طول زمان",
+    "totalRequests": "کل درخواست‌ها",
+    "requestsSuccessRate": "نرخ موفقیت",
+    "usageProgress": "پیشرفت استفاده",
+    "browserDistribution": "توزیع مرورگرها",
+    "deviceDistribution": "توزیع دستگاه‌ها",
+    "osDistribution": "توزیع سیستم‌عامل‌ها",
+    "topStats": "آمار برتر",
+    "topDevice": "دستگاه برتر",
+    "topBrowser": "مرورگر برتر",
+    "topOS": "سیستم‌عامل برتر",
+    "success": "موفق",
+    "failed": "ناموفق",
+    "successRate": "نرخ موفقیت",
+    "requests": "درخواست‌ها",
+    "timeRange": {
+      "week": "هفته",
+      "month": "ماه",
+      "halfyear": "۶ ماه",
+      "year": "سال",
+      "all": "کل زمان"
+    },
+    "error": {
+      "title": "خطا در دریافت آنالیتیکس",
+      "fetchFailed": "خطا در دریافت داده‌های آنالیتیکس. لطفا دوباره تلاش کنید."
     }
   }
 }

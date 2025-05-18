@@ -1,4 +1,4 @@
-// src/api/hooks/useNotifications.ts - اصلاح شده
+// src/api/hooks/useNotifications.ts
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { notificationsService } from "@/api/services/notifications-service";
 import { showToast } from "@/lib/toast";
@@ -33,7 +33,8 @@ export const useNotifications = () => {
       if (result.data && filters?.read === false) {
         setUnreadNotifications(result.data.totalResults);
       }
-    }, [result.data, filters]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [result.data]);
 
     return result;
   };
@@ -83,38 +84,42 @@ export const useNotifications = () => {
     },
   });
 
-  /**
-   * هوک برای دریافت تعداد اطلاعیه‌های خوانده نشده
-   */
-  const useUnreadNotificationsCount = () => {
-    const { data } = useQuery({
-      queryKey: ["userNotifications", { read: false }],
+  // هوک برای دریافت تعداد اطلاعیه‌های خوانده نشده
+  const getUnreadCount = () => {
+    const { data, isLoading, error, refetch } = useQuery({
+      queryKey: ["unreadNotificationsCount"],
       queryFn: () =>
-        notificationsService.getCurrentUserNotifications({ read: false }),
-      staleTime: 2 * 60 * 1000, // 2 دقیقه
-      refetchInterval: 5 * 60 * 1000, // هر 5 دقیقه به‌روزرسانی
+        notificationsService.getCurrentUserNotifications({
+          read: false,
+          limit: 1,
+        }),
+      staleTime: 2 * 60 * 1000,
+      refetchInterval: 5 * 60 * 1000,
     });
 
-    // بررسی تعداد اطلاعیه‌های خوانده نشده با useEffect
     useEffect(() => {
       if (data) {
         setUnreadNotifications(data.totalResults);
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data]);
 
     return {
       count: data?.totalResults || 0,
       hasUnread: (data?.totalResults || 0) > 0,
+      isLoading,
+      error,
+      refetch,
     };
   };
 
   return {
     getUserNotifications,
+    getUnreadCount,
     markAsRead: markAsReadMutation.mutateAsync,
     markAllAsRead: markAllAsReadMutation.mutateAsync,
     isMarkingAsRead: markAsReadMutation.isPending,
     isMarkingAllAsRead: markAllAsReadMutation.isPending,
-    useUnreadNotificationsCount,
   };
 };
 
