@@ -174,7 +174,10 @@
     },
     "active": "فعال",
     "expired": "منقضی شده",
-    "suspended": "معلق"
+    "suspended": "معلق",
+    "currentPackage": "بسته فعلی",
+    "willRenewSamePlan": "همان پلن فعلی شما تمدید خواهد شد",
+    "expirationWarning": "اعتبار بسته شما به زودی به پایان می‌رسد. لطفاً آن را تمدید کنید."
   },
   "sdk": {
     "title": "SDK",

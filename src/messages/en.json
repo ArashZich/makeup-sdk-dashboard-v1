@@ -174,7 +174,10 @@
     },
     "active": "Active",
     "expired": "Expired",
-    "suspended": "Suspended"
+    "suspended": "Suspended",
+    "currentPackage": "Current Package",
+    "willRenewSamePlan": "Your current plan will be renewed",
+    "expirationWarning": "Your package is expiring soon. Please renew it."
   },
   "sdk": {
     "title": "SDK",

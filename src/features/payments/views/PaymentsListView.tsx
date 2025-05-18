@@ -1,3 +1,4 @@
+// src/features/payments/views/PaymentsListView.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -48,6 +49,7 @@ export function PaymentsListView() {
   const handleStatusChange = (status: PaymentStatus | null) => {
     setStatusFilter(status === null ? undefined : status);
   };
+
   // Handle search term change
   const handleSearch = (term: string) => {
     setSearchTerm(term);
@@ -68,7 +70,7 @@ export function PaymentsListView() {
     return (
       <Alert variant="destructive">
         <InfoIcon className="h-4 w-4" />
-        <AlertTitle>{error?.message}</AlertTitle>
+        <AlertTitle>{t("payments.error.title")}</AlertTitle>
         <AlertDescription>{t("payments.error.fetchFailed")}</AlertDescription>
       </Alert>
     );

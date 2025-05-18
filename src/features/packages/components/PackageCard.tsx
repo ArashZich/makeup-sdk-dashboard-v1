@@ -1,6 +1,7 @@
 // src/features/packages/components/PackageCard.tsx
 "use client";
 
+import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Package, PackageStatus } from "@/api/types/packages.types";
 import {
@@ -20,7 +21,9 @@ import {
   CheckCircle,
   AlertTriangle,
   XCircle,
+  RefreshCw,
 } from "lucide-react";
+import { RenewPackageDialog } from "./RenewPackageDialog";
 
 interface PackageCardProps {
   package: Package;
@@ -29,6 +32,7 @@ interface PackageCardProps {
 
 export function PackageCard({ package: pkg, onView }: PackageCardProps) {
   const { t, isRtl } = useLanguage();
+  const [showRenewDialog, setShowRenewDialog] = useState(false);
 
   // status icon base on package status
   const getStatusIcon = (status: PackageStatus) => {
@@ -78,9 +82,16 @@ export function PackageCard({ package: pkg, onView }: PackageCardProps) {
 
   const remainingDays = getDaysRemaining(pkg.endDate);
   const isActive = pkg.status === "active";
+  const needsRenewal = isActive && remainingDays <= 7; // پیشنهاد تمدید برای کمتر از 7 روز مانده به انقضا
+  const isExpired = pkg.status === "expired"; // بسته منقضی شده
+
+  // وقتی بسته منقضی شده یا نزدیک به انقضاست، امکان تمدید نمایش داده می‌شود
+  const showRenewOption = isExpired || needsRenewal;
 
   return (
-    <Card className="overflow-hidden">
+    <Card
+      className={`overflow-hidden ${needsRenewal ? "border-amber-400" : ""}`}
+    >
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
           <CardTitle className="text-lg">{planName}</CardTitle>
@@ -111,9 +122,21 @@ export function PackageCard({ package: pkg, onView }: PackageCardProps) {
         {isActive && (
           <div className="flex items-center gap-2">
             <Clock className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">
+            <span
+              className={`text-sm ${
+                needsRenewal ? "text-amber-500 font-medium" : ""
+              }`}
+            >
               {t("packages.remainingDays", { count: remainingDays })}
             </span>
+          </div>
+        )}
+
+        {/* نمایش هشدار برای بسته‌های نزدیک به انقضا */}
+        {needsRenewal && (
+          <div className="bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 p-2 rounded-md text-sm">
+            <AlertTriangle className="h-4 w-4 inline mr-1" />
+            {t("packages.expirationWarning")}
           </div>
         )}
 
@@ -137,15 +160,33 @@ export function PackageCard({ package: pkg, onView }: PackageCardProps) {
           </div>
         </div>
       </CardContent>
-      <CardFooter className="pt-4">
+      <CardFooter className="pt-4 flex gap-2 flex-wrap">
         <Button
-          className="w-full"
+          className={showRenewOption ? "flex-1" : "w-full"}
           variant={isActive ? "default" : "outline"}
           onClick={() => onView(pkg._id)}
         >
           {t("packages.viewDetails")}
         </Button>
+
+        {showRenewOption && (
+          <Button
+            className="flex-1"
+            variant="outline"
+            onClick={() => setShowRenewDialog(true)}
+          >
+            <RefreshCw className="h-4 w-4 mr-1" />
+            {t("packages.renewPackage")}
+          </Button>
+        )}
       </CardFooter>
+
+      {/* دیالوگ تمدید بسته */}
+      <RenewPackageDialog
+        isOpen={showRenewDialog}
+        onClose={() => setShowRenewDialog(false)}
+        packageData={pkg}
+      />
     </Card>
   );
 }
