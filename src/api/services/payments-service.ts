@@ -24,7 +24,9 @@ export const paymentsService = {
    * دریافت پرداخت‌های کاربر جاری
    * @param status فیلتر وضعیت (اختیاری)
    */
-  getCurrentUserPayments: async (status?: string): Promise<Payment[]> => {
+  getCurrentUserPayments: async (
+    status?: string
+  ): Promise<PaginatedPayments> => {
     const response = await axios.get("/payments/me", { params: { status } });
     return response.data;
   },

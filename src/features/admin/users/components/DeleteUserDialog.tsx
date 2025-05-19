@@ -1,4 +1,4 @@
-// src/features/admin/components/users/DeleteUserDialog.tsx
+// src/features/admin/users/components/DeleteUserDialog.tsx
 "use client";
 
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -13,55 +13,54 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/common/Loader";
 
 interface DeleteUserDialogProps {
+  user: User | null;
   isOpen: boolean;
   isDeleting: boolean;
-  user: User | null;
-  onClose: () => void;
   onConfirm: () => void;
+  onCancel: () => void;
 }
 
 export function DeleteUserDialog({
+  user,
   isOpen,
   isDeleting,
-  user,
-  onClose,
   onConfirm,
+  onCancel,
 }: DeleteUserDialogProps) {
   const { t } = useLanguage();
 
   if (!user) return null;
 
   return (
-    <AlertDialog open={isOpen} onOpenChange={onClose}>
+    <AlertDialog open={isOpen} onOpenChange={() => !isDeleting && onCancel()}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{t("admin.users.deleteUser")}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t("admin.users.deleteUserConfirmation", { name: user.name })}
+            {t("admin.users.confirmDelete")}
+            <div className="mt-2 text-sm">
+              <span className="font-semibold">{user.name}</span> ({user.phone})
+            </div>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isDeleting}>
             {t("common.cancel")}
           </AlertDialogCancel>
-          <Button
-            variant="destructive"
-            onClick={onConfirm}
+          <AlertDialogAction
+            onClick={(e) => {
+              e.preventDefault();
+              onConfirm();
+            }}
             disabled={isDeleting}
+            className="bg-destructive text-destructive-foreground"
           >
-            {isDeleting ? (
-              <>
-                <Loader size="sm" className="mr-2" />
-                {t("common.deleting")}
-              </>
-            ) : (
-              t("common.delete")
-            )}
-          </Button>
+            {isDeleting ? <Loader size="sm" className="mr-2" /> : null}
+            {t("common.delete")}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

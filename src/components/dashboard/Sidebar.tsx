@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUIStore } from "@/store/ui.store";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/api/hooks/useAuth";
+import { useAuthStore } from "@/store/auth.store";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
 import { dashboardNavItems } from "@/config/dashboard-nav";
@@ -19,7 +19,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export function Sidebar() {
   const { t, isRtl } = useLanguage();
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const pathname = usePathname();
   const { isSidebarOpen, toggleSidebar, setSidebarOpen } = useUIStore();
   const isMobile = useMediaQuery("(max-width: 1024px)");

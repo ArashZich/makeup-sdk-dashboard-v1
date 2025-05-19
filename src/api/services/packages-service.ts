@@ -14,7 +14,9 @@ export const packagesService = {
    * دریافت بسته‌های کاربر جاری
    * @param status فیلتر وضعیت (اختیاری)
    */
-  getCurrentUserPackages: async (status?: string): Promise<Package[]> => {
+  getCurrentUserPackages: async (
+    status?: string
+  ): Promise<PaginatedPackages> => {
     const response = await axios.get("/packages/me", { params: { status } });
     return response.data;
   },

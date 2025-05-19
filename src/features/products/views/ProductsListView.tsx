@@ -2,7 +2,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useProducts } from "@/api/hooks/useProducts";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Product } from "@/api/types/products.types";
@@ -18,7 +17,6 @@ import {
   InfoIcon,
   PlusIcon,
   Search,
-  FilterIcon,
   LayoutGridIcon,
   TableIcon,
   PackageIcon,
@@ -26,7 +24,6 @@ import {
 
 export function ProductsListView() {
   const { t } = useLanguage();
-  const router = useRouter();
 
   // State for UI
   const [searchTerm, setSearchTerm] = useState("");
@@ -52,7 +49,7 @@ export function ProductsListView() {
 
   // Filter products by search term
   const filteredProducts = products
-    ? products.filter(
+    ? products.results.filter(
         (product) =>
           product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           product.description

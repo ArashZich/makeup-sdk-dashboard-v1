@@ -15,7 +15,7 @@ export const productsService = {
    */
   getCurrentUserProducts: async (
     filters?: ProductFilters
-  ): Promise<Product[]> => {
+  ): Promise<PaginatedProducts> => {
     const response = await axios.get("/products/me", { params: filters });
     return response.data;
   },
@@ -77,7 +77,7 @@ export const productsService = {
   getUserProducts: async (
     userId: string,
     filters?: ProductFilters
-  ): Promise<Product[]> => {
+  ): Promise<PaginatedProducts> => {
     const response = await axios.get(`/products/user/${userId}`, {
       params: filters,
     });

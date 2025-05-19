@@ -23,7 +23,7 @@ export function PaymentsListView() {
 
   // Get payments data
   const {
-    data: payments = [],
+    data: payments,
     isLoading,
     error,
     refetch,
@@ -31,7 +31,7 @@ export function PaymentsListView() {
 
   // Filter payments based on search term
   const filteredPayments = searchTerm.trim()
-    ? payments.filter(
+    ? payments?.results.filter(
         (payment) =>
           payment._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
           (typeof payment.planId === "object" &&
@@ -43,7 +43,7 @@ export function PaymentsListView() {
               .toLowerCase()
               .includes(searchTerm.toLowerCase()))
       )
-    : payments;
+    : payments?.results;
 
   // Handle status filter change
   const handleStatusChange = (status: PaymentStatus | null) => {
@@ -91,7 +91,7 @@ export function PaymentsListView() {
       />
 
       <PaymentList
-        payments={filteredPayments}
+        payments={filteredPayments || []}
         isLoading={isLoading}
         onCancelPayment={handleCancelPayment}
         isCancelling={isCancelingPayment}

@@ -43,6 +43,8 @@ export const usersService = {
    */
   getAllUsers: async (filters?: UserFilters): Promise<PaginatedUsers> => {
     const response = await axios.get("/users", { params: filters });
+    console.log(response, "OOOO");
+
     return response.data;
   },
 

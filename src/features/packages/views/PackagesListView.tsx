@@ -99,9 +99,9 @@ export function PackagesListView() {
         </TabsList>
 
         <TabsContent value="active" className="mt-6">
-          {packages && packages.length > 0 ? (
+          {packages && packages?.results.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {packages.map((pkg) => (
+              {packages.results.map((pkg) => (
                 <PackageCard
                   key={pkg._id}
                   package={pkg}
@@ -126,9 +126,9 @@ export function PackagesListView() {
         </TabsContent>
 
         <TabsContent value="expired" className="mt-6">
-          {packages && packages.length > 0 ? (
+          {packages && packages.results.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {packages.map((pkg) => (
+              {packages.results.map((pkg) => (
                 <PackageCard
                   key={pkg._id}
                   package={pkg}
@@ -149,9 +149,9 @@ export function PackagesListView() {
         </TabsContent>
 
         <TabsContent value="suspended" className="mt-6">
-          {packages && packages.length > 0 ? (
+          {packages && packages.results.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {packages.map((pkg) => (
+              {packages.results.map((pkg) => (
                 <PackageCard
                   key={pkg._id}
                   package={pkg}

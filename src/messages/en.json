@@ -527,5 +527,66 @@
       "title": "Error Fetching Analytics",
       "fetchFailed": "Failed to fetch analytics data. Please try again."
     }
+  },
+  "admin": {
+    "title": "Admin",
+    "users": {
+      "title": "User Management",
+      "description": "Manage and view users",
+      "addUser": "Add User",
+      "editUser": "Edit User",
+      "deleteUser": "Delete User",
+      "confirmDelete": "Are you sure you want to delete this user?",
+      "search": "Search users...",
+      "role": "Role",
+      "status": "Status",
+      "active": "Active",
+      "inactive": "Inactive",
+      "verified": "Verified",
+      "notVerified": "Not Verified",
+      "createSuccess": "User created successfully",
+      "updateSuccess": "User updated successfully",
+      "deleteSuccess": "User deleted successfully",
+      "noUsers": "No users found",
+      "userDetails": "User Details",
+      "form": {
+        "name": "Name",
+        "namePlaceholder": "Enter user name",
+        "email": "Email",
+        "emailPlaceholder": "Enter user email",
+        "phone": "Phone Number",
+        "phonePlaceholder": "Enter user phone number",
+        "role": "Role",
+        "rolePlaceholder": "Select user role",
+        "company": "Company",
+        "companyPlaceholder": "Enter company name (optional)",
+        "userType": "User Type",
+        "userTypePlaceholder": "Select user type",
+        "nationalId": "National ID",
+        "nationalIdPlaceholder": "Enter national ID (optional)",
+        "allowedDomains": "Allowed Domains",
+        "allowedDomainsPlaceholder": "Enter allowed domains"
+      },
+      "filters": {
+        "all": "All",
+        "admin": "Admin",
+        "user": "User",
+        "verified": "Verified",
+        "notVerified": "Not Verified"
+      },
+      "tabs": {
+        "all": "All",
+        "admins": "Admins",
+        "users": "Users"
+      }
+    },
+    "coupons": {
+      "title": "Coupons",
+      "description": "Manage discount coupons"
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "System analytics and statistics"
+    }
   }
 }

@@ -126,7 +126,7 @@ export function OtpVerificationForm({
               <FormLabel className="text-base">{t("auth.verifyOtp")}</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="۱۲۳۴"
+                  placeholder="12345"
                   {...field}
                   autoComplete="one-time-code"
                   disabled={isLoading}

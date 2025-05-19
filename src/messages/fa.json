@@ -527,5 +527,66 @@
       "title": "خطا در دریافت آنالیتیکس",
       "fetchFailed": "خطا در دریافت داده‌های آنالیتیکس. لطفا دوباره تلاش کنید."
     }
+  },
+  "admin": {
+    "title": "مدیریت",
+    "users": {
+      "title": "مدیریت کاربران",
+      "description": "مدیریت و مشاهده کاربران",
+      "addUser": "افزودن کاربر",
+      "editUser": "ویرایش کاربر",
+      "deleteUser": "حذف کاربر",
+      "confirmDelete": "آیا از حذف این کاربر اطمینان دارید؟",
+      "search": "جستجو در کاربران...",
+      "role": "نقش کاربری",
+      "status": "وضعیت",
+      "active": "فعال",
+      "inactive": "غیرفعال",
+      "verified": "تایید شده",
+      "notVerified": "تایید نشده",
+      "createSuccess": "کاربر با موفقیت ایجاد شد",
+      "updateSuccess": "کاربر با موفقیت به‌روزرسانی شد",
+      "deleteSuccess": "کاربر با موفقیت حذف شد",
+      "noUsers": "کاربری یافت نشد",
+      "userDetails": "جزئیات کاربر",
+      "form": {
+        "name": "نام",
+        "namePlaceholder": "نام کاربر را وارد کنید",
+        "email": "ایمیل",
+        "emailPlaceholder": "ایمیل کاربر را وارد کنید",
+        "phone": "شماره تلفن",
+        "phonePlaceholder": "شماره تلفن کاربر را وارد کنید",
+        "role": "نقش کاربری",
+        "rolePlaceholder": "نقش کاربری را انتخاب کنید",
+        "company": "شرکت",
+        "companyPlaceholder": "نام شرکت را وارد کنید (اختیاری)",
+        "userType": "نوع کاربر",
+        "userTypePlaceholder": "نوع کاربر را انتخاب کنید",
+        "nationalId": "کد ملی",
+        "nationalIdPlaceholder": "کد ملی را وارد کنید (اختیاری)",
+        "allowedDomains": "دامنه‌های مجاز",
+        "allowedDomainsPlaceholder": "دامنه‌های مجاز را وارد کنید"
+      },
+      "filters": {
+        "all": "همه",
+        "admin": "ادمین",
+        "user": "کاربر",
+        "verified": "تایید شده",
+        "notVerified": "تایید نشده"
+      },
+      "tabs": {
+        "all": "همه",
+        "admins": "ادمین‌ها",
+        "users": "کاربران"
+      }
+    },
+    "coupons": {
+      "title": "کدهای تخفیف",
+      "description": "مدیریت کدهای تخفیف"
+    },
+    "analytics": {
+      "title": "آنالیتیکس",
+      "description": "آنالیتیکس و آمار سیستم"
+    }
   }
 }
