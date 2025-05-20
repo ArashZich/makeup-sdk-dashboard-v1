@@ -21,13 +21,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -41,9 +34,9 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { Loader } from "@/components/common/Loader";
 import { Badge } from "@/components/ui/badge";
+import { DateTime } from "luxon";
 import { CalendarIcon, Plus, X } from "lucide-react";
-import { format } from "date-fns";
-import { fa } from "date-fns/locale";
+import { toJalali } from "@/lib/date";
 
 // اسکیما برای اعتبارسنجی فرم
 const couponSchema = z
@@ -170,7 +163,12 @@ export function CouponForm({
   };
 
   const handleSubmit = (values: CouponFormValues) => {
-    onSubmit(values);
+    const formattedValues: CreateCouponRequest | UpdateCouponRequest = {
+      ...values,
+      startDate: DateTime.fromJSDate(values.startDate).toISO()!,
+      endDate: DateTime.fromJSDate(values.endDate).toISO()!,
+    };
+    onSubmit(formattedValues);
   };
 
   return (
@@ -319,9 +317,7 @@ export function CouponForm({
                               }`}
                             >
                               {field.value ? (
-                                format(field.value, "PPP", {
-                                  locale: isRtl ? fa : undefined,
-                                })
+                                toJalali(field.value)
                               ) : (
                                 <span>{t("admin.coupons.selectDate")}</span>
                               )}
@@ -335,7 +331,6 @@ export function CouponForm({
                             selected={field.value}
                             onSelect={field.onChange}
                             disabled={(date) => date < new Date()} // گذشته غیرفعال است
-                            locale={isRtl ? fa : undefined}
                           />
                         </PopoverContent>
                       </Popover>
@@ -360,9 +355,7 @@ export function CouponForm({
                               }`}
                             >
                               {field.value ? (
-                                format(field.value, "PPP", {
-                                  locale: isRtl ? fa : undefined,
-                                })
+                                toJalali(field.value)
                               ) : (
                                 <span>{t("admin.coupons.selectDate")}</span>
                               )}
@@ -376,7 +369,6 @@ export function CouponForm({
                             selected={field.value}
                             onSelect={field.onChange}
                             disabled={(date) => date < new Date()} // گذشته غیرفعال است
-                            locale={isRtl ? fa : undefined}
                           />
                         </PopoverContent>
                       </Popover>
@@ -434,9 +426,12 @@ export function CouponForm({
                                   </div>
                                 </div>
                                 <div className="text-sm text-muted-foreground mt-1">
-                                  {formatCurrency(
-                                    plan.price,
-                                    isRtl ? "fa-IR" : "en-US"
+                                  {plan.price.toLocaleString(
+                                    isRtl ? "fa-IR" : "en-US",
+                                    {
+                                      style: "currency",
+                                      currency: "IRR", // پیش‌فرض ریال ایران - می‌توانید بر اساس نیاز تغییر دهید
+                                    }
                                   )}{" "}
                                   | {plan.duration} {t("admin.coupons.days")}
                                 </div>
