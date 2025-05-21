@@ -33,6 +33,12 @@ export function Sidebar() {
     return false;
   };
 
+  // بررسی آیا آیتم نیاز به اتصال دیوار دارد و کاربر متصل است یا خیر
+  const hasDivarAccess = (requiresDivarAuth?: boolean) => {
+    if (!requiresDivarAuth) return true;
+    return !!user?.divarTokens?.accessToken;
+  };
+
   // باز کردن گروه منو برای آیتمی که در مسیر فعلی است
   useEffect(() => {
     if (pathname) {
@@ -102,7 +108,11 @@ export function Sidebar() {
           {dashboardNavItems.map((group) => (
             <div key={group.id} className="flex flex-col gap-3">
               {group.items
-                .filter((item) => hasPermission(item.permission ?? "all"))
+                .filter(
+                  (item) =>
+                    hasPermission(item.permission ?? "all") &&
+                    hasDivarAccess(item.requiresDivarAuth)
+                )
                 .map((item) => (
                   <Button
                     key={item.id}
@@ -194,8 +204,10 @@ export function Sidebar() {
 
                     <div className="space-y-1">
                       {group.items
-                        .filter((item) =>
-                          hasPermission(item.permission ?? "all")
+                        .filter(
+                          (item) =>
+                            hasPermission(item.permission ?? "all") &&
+                            hasDivarAccess(item.requiresDivarAuth)
                         )
                         .map((item) => (
                           <div key={item.id}>
@@ -245,10 +257,14 @@ export function Sidebar() {
                                     >
                                       <div className={`ps-8 py-1 space-y-1`}>
                                         {item.children
-                                          .filter((child) =>
-                                            hasPermission(
-                                              child.permission ?? "all"
-                                            )
+                                          .filter(
+                                            (child) =>
+                                              hasPermission(
+                                                child.permission ?? "all"
+                                              ) &&
+                                              hasDivarAccess(
+                                                child.requiresDivarAuth
+                                              )
                                           )
                                           .map((child) => (
                                             <Button

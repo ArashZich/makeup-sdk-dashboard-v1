@@ -714,5 +714,63 @@
     "deactivateCoupon": "غیرفعال‌سازی کد تخفیف",
     "deleteCouponConfirmation": "آیا از حذف کد تخفیف «{{code}}» اطمینان دارید؟",
     "deleteWarning": "این عمل کد تخفیف را غیرفعال می‌کند. کدهای تخفیف استفاده شده تحت تأثیر قرار نمی‌گیرند."
+  },
+
+  "divar": {
+    "title": "یکپارچه‌سازی با دیوار",
+    "description": "محصولات خود را به آگهی‌های دیوار اضافه کنید",
+    "connectWithDivar": "اتصال به حساب دیوار",
+    "alreadyConnected": "حساب دیوار متصل شده است",
+    "disconnectDivar": "قطع اتصال حساب دیوار",
+    "yourPosts": "آگهی‌های دیوار شما",
+    "noPosts": "شما هیچ آگهی فعالی در دیوار ندارید",
+    "noPostsDescription": "برای افزودن ویجت تست مجازی آرایش، ابتدا آگهی جدیدی در دیوار ایجاد کنید",
+    "postsCount": "تعداد آگهی‌ها: {{count}}",
+    "selectProduct": "انتخاب محصول",
+    "selectProductDescription": "محصولی که می‌خواهید به آگهی اضافه کنید را انتخاب کنید",
+    "addAddon": "افزودن ویجت تست مجازی",
+    "removeAddon": "حذف ویجت تست مجازی",
+    "addonAdded": "ویجت تست مجازی با موفقیت اضافه شد",
+    "addonRemoved": "ویجت تست مجازی با موفقیت حذف شد",
+    "postTitle": "عنوان آگهی",
+    "postCategory": "دسته‌بندی",
+    "postStatus": "وضعیت",
+    "postPrice": "قیمت",
+    "postDate": "تاریخ ثبت",
+    "postCity": "شهر",
+    "postDistrict": "محله",
+    "tryOnAddon": "ویجت تست مجازی",
+    "viewOnDivar": "مشاهده در دیوار",
+    "connectedAs": "در حال اتصال به حساب دیوار",
+    "connectWithDivarDescription": "برای اضافه کردن ویجت تست مجازی به آگهی‌های خود، ابتدا به حساب کاربری دیوار متصل شوید.",
+    "status": {
+      "active": "فعال",
+      "inactive": "غیرفعال",
+      "expired": "منقضی شده"
+    },
+    "error": {
+      "fetchFailed": "خطا در دریافت آگهی‌های دیوار",
+      "addAddonFailed": "خطا در افزودن ویجت تست مجازی",
+      "removeAddonFailed": "خطا در حذف ویجت تست مجازی",
+      "connectionFailed": "خطا در اتصال به حساب دیوار",
+      "noProductSelected": "لطفاً یک محصول انتخاب کنید",
+      "authFailed": "خطا در احراز هویت با دیوار",
+      "userFetchFailed": "خطا در دریافت اطلاعات کاربر",
+      "general": "خطای غیرمنتظره رخ داده است"
+    },
+    "filters": {
+      "all": "همه آگهی‌ها",
+      "active": "فعال",
+      "withAddon": "دارای ویجت",
+      "withoutAddon": "بدون ویجت",
+      "inactive": "غیرفعال",
+      "expired": "منقضی شده",
+      "search": "جستجو در آگهی‌ها"
+    },
+    "connecting": "در حال اتصال به دیوار...",
+    "connected": "با موفقیت متصل شدید",
+    "redirectingMessage": "لطفا صبر کنید، در حال احراز هویت...",
+    "redirectingToDashboard": "در حال انتقال به داشبورد...",
+    "loginSuccess": "ورود با دیوار با موفقیت انجام شد"
   }
 }

@@ -1,5 +1,12 @@
 // src/api/types/auth.types.ts
 
+// مدل توکن‌های دیوار
+export interface DivarTokens {
+  accessToken: string;
+  refreshToken: string;
+  expiresAt: string; // به صورت ISO string
+}
+
 // مدل کاربر
 export interface User {
   _id: string;
@@ -18,6 +25,7 @@ export interface User {
   };
   createdAt: string;
   updatedAt: string;
+  divarTokens?: DivarTokens;
 }
 
 // مدل توکن

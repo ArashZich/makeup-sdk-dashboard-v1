@@ -714,5 +714,63 @@
     "deactivateCoupon": "Deactivate Coupon",
     "deleteCouponConfirmation": "Are you sure you want to delete coupon \"{{code}}\"?",
     "deleteWarning": "This action will deactivate the coupon. Used coupons will not be affected."
+  },
+
+  "divar": {
+    "title": "Divar Integration",
+    "description": "Add your products to your Divar listings",
+    "connectWithDivar": "Connect with Divar",
+    "alreadyConnected": "Connected to Divar",
+    "disconnectDivar": "Disconnect Divar",
+    "yourPosts": "Your Divar Listings",
+    "noPosts": "You don't have any active listings on Divar",
+    "noPostsDescription": "Create a new listing on Divar to add the Makeup Virtual Try-On widget",
+    "postsCount": "Listings count: {{count}}",
+    "selectProduct": "Select Product",
+    "selectProductDescription": "Choose a product you want to add to the listing",
+    "addAddon": "Add Virtual Try-On Widget",
+    "removeAddon": "Remove Virtual Try-On Widget",
+    "addonAdded": "Virtual Try-On widget added successfully",
+    "addonRemoved": "Virtual Try-On widget removed successfully",
+    "postTitle": "Listing Title",
+    "postCategory": "Category",
+    "postStatus": "Status",
+    "postPrice": "Price",
+    "postDate": "Date",
+    "postCity": "City",
+    "postDistrict": "District",
+    "tryOnAddon": "Virtual Try-On Widget",
+    "viewOnDivar": "View on Divar",
+    "connectedAs": "Connected as",
+    "connectWithDivarDescription": "To add the Virtual Try-On widget to your listings, connect to your Divar account first.",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "expired": "Expired"
+    },
+    "error": {
+      "fetchFailed": "Failed to fetch Divar listings",
+      "addAddonFailed": "Failed to add Virtual Try-On widget",
+      "removeAddonFailed": "Failed to remove Virtual Try-On widget",
+      "connectionFailed": "Failed to connect to Divar account",
+      "noProductSelected": "Please select a product",
+      "authFailed": "Authentication with Divar failed",
+      "userFetchFailed": "Failed to fetch user information",
+      "general": "An unexpected error occurred"
+    },
+    "filters": {
+      "all": "All Listings",
+      "active": "Active",
+      "withAddon": "With Widget",
+      "withoutAddon": "Without Widget",
+      "inactive": "Inactive",
+      "expired": "Expired",
+      "search": "Search listings"
+    },
+    "connecting": "Connecting to Divar...",
+    "connected": "Successfully Connected",
+    "redirectingMessage": "Please wait, authenticating...",
+    "redirectingToDashboard": "Redirecting to dashboard...",
+    "loginSuccess": "Successfully logged in with Divar"
   }
 }

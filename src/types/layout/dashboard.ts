@@ -20,6 +20,8 @@ export interface SidebarItem {
       | "success"
       | "warning";
   };
+  // اضافه کردن فیلد جدید که مشخص می‌کنه آیا این آیتم نیاز به اتصال دیوار داره
+  requiresDivarAuth?: boolean;
 }
 
 // تایپ برای گروه منوی سایدبار

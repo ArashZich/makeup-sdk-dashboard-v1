@@ -1,6 +1,11 @@
 // src/api/types/users.types.ts
 import { PaginatedResponse } from "@/types/common.types";
 
+export interface DivarTokens {
+  accessToken: string;
+  refreshToken: string;
+  expiresAt: string; // به صورت ISO string
+}
 // مدل کاربر در این فایل با مدل کاربر در auth.types.ts مشترک است
 // اما برای جلوگیری از وابستگی چرخشی، آن را اینجا هم تعریف می‌کنیم
 export interface User {
@@ -20,6 +25,7 @@ export interface User {
   };
   createdAt: string;
   updatedAt: string;
+  divarTokens?: DivarTokens;
 }
 
 // فیلترهای جستجوی کاربران

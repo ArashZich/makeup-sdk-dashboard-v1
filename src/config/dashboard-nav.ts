@@ -12,6 +12,8 @@ import {
   TagIcon,
   Users,
   User,
+  // اضافه کردن آیکون برای دیوار
+  ExternalLink,
 } from "lucide-react";
 import { SidebarGroup } from "@/types/layout/dashboard";
 
@@ -60,6 +62,16 @@ export const dashboardNavItems: SidebarGroup[] = [
         path: "/dashboard/plans",
         icon: BoxIcon,
         permission: "all",
+      },
+      // اضافه کردن آیتم دیوار به منو
+      {
+        id: "divar",
+        label: "divar.title",
+        path: "/dashboard/divar",
+        icon: ExternalLink,
+        permission: "all",
+        // نیاز به دیوار توکن
+        requiresDivarAuth: true,
       },
     ],
   },
