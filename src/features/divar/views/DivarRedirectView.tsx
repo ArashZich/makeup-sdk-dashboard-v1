@@ -4,67 +4,88 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCookies } from "@/lib/cookies";
-import { useAuthStore } from "@/store/auth.store";
+// import { useAuthStore } from "@/store/auth.store"; // دیگر نیازی به این نیست، از AuthContext استفاده می‌کنیم
 import { Loader } from "@/components/common/Loader";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { showToast } from "@/lib/toast";
-import { User } from "@/api/types/auth.types";
+import { User, DivarTokens } from "@/api/types/auth.types"; // DivarTokens اضافه شد
+import { useAuth } from "@/contexts/AuthContext"; // استفاده از AuthContext
 
 export function DivarRedirectView() {
   const { t } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { setCookie } = useCookies();
-  const { setAuth } = useAuthStore();
+  const { login: contextLogin, updateUser, user: currentUser } = useAuth(); // updateUser و currentUser اضافه شد
   const [isProcessing, setIsProcessing] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [processed, setProcessed] = useState(false); // Flag to prevent multiple processing
+  const [processed, setProcessed] = useState(false);
 
-  // Use useCallback to prevent the function from being recreated on each render
   const processParams = useCallback(async () => {
-    // Skip if already processed
     if (processed) return;
     setProcessed(true);
 
     try {
-      // دریافت پارامترها از URL
       const accessToken = searchParams.get("access_token");
       const refreshToken = searchParams.get("refresh_token");
       const userId = searchParams.get("user_id");
       const phone = searchParams.get("phone");
       const authSuccess = searchParams.get("auth_success");
       const hasActivePackage = searchParams.get("has_active_package");
+      const divarAccessToken = searchParams.get("divar_access_token"); // توکن دسترسی دیوار
+      const divarRefreshToken = searchParams.get("divar_refresh_token"); // توکن رفرش دیوار
+      const divarExpiresAt = searchParams.get("divar_expires_at"); // تاریخ انقضای توکن دیوار
 
-      // بررسی اعتبار پارامترها
       if (
         !accessToken ||
         !refreshToken ||
         !userId ||
         !phone ||
-        authSuccess !== "true"
+        authSuccess !== "true" ||
+        !divarAccessToken || // بررسی وجود توکن‌های دیوار
+        !divarRefreshToken ||
+        !divarExpiresAt
       ) {
         setError(t("divar.error.authFailed"));
         setIsProcessing(false);
         return;
       }
 
-      // به جای درخواست به API، یک آبجکت کاربر با اطلاعات موجود می‌سازیم
-      const user: User = {
+      const userFromParams: User = {
         _id: userId,
         phone: phone,
-        name: phone, // می‌تونیم در ابتدا از شماره تلفن به عنوان نام استفاده کنیم
+        name: phone,
         role: "user",
         verified: true,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+        divarTokens: {
+          // ذخیره توکن‌های دیوار
+          accessToken: divarAccessToken,
+          refreshToken: divarRefreshToken,
+          expiresAt: divarExpiresAt,
+        },
       };
 
-      // ذخیره توکن‌ها در کوکی
-      // ایجاد تاریخ انقضا برای توکن‌ها - مثلاً 7 روز برای refresh token
+      // اگر کاربر هنوز لاگین نکرده (currentUser وجود ندارد)، با اطلاعات جدید لاگین می‌کنیم
+      if (!currentUser) {
+        contextLogin(accessToken, refreshToken, userFromParams);
+      } else {
+        // اگر کاربر لاگین کرده، فقط اطلاعات divarTokens را به‌روزرسانی می‌کنیم
+        updateUser({
+          divarTokens: {
+            accessToken: divarAccessToken,
+            refreshToken: divarRefreshToken,
+            expiresAt: divarExpiresAt,
+          },
+        });
+        // ممکن است نیاز به ذخیره مجدد توکن‌های اصلی برنامه هم باشد اگر API دیوار آنها را برمی‌گرداند
+        // در اینجا فرض بر این است که توکن‌های اصلی برنامه تغییر نمی‌کنند
+      }
+
       const refreshExpires = new Date();
       refreshExpires.setDate(refreshExpires.getDate() + 7);
 
-      // و 1 روز برای access token
       const accessExpires = new Date();
       accessExpires.setDate(accessExpires.getDate() + 1);
 
@@ -78,23 +99,20 @@ export function DivarRedirectView() {
         path: "/",
       });
 
-      setCookie("user_role", user.role, {
+      setCookie("user_role", userFromParams.role, {
         expires: refreshExpires,
         path: "/",
       });
 
-      // ذخیره اطلاعات کاربر در استور
-      setAuth(user, accessToken, refreshToken);
+      // ذخیره توکن‌های دیوار در کوکی‌ها (اختیاری، بستگی به نحوه استفاده شما دارد)
+      // setCookie("divar_access_token", divarAccessToken, { expires: new Date(divarExpiresAt), path: "/" });
+      // setCookie("divar_refresh_token", divarRefreshToken, { expires: refreshExpires, path: "/" });
 
-      // نمایش پیام موفقیت
       showToast.success(t("divar.loginSuccess"));
 
-      // هدایت به صفحه داشبورد بعد از 2 ثانیه
       setTimeout(() => {
         const redirectPath =
-          hasActivePackage === "true"
-            ? "/dashboard/divar" // اگر بسته فعال داره، مستقیم به صفحه دیوار بره
-            : "/dashboard"; // در غیر این صورت به داشبورد اصلی
+          hasActivePackage === "true" ? "/dashboard/divar" : "/dashboard";
 
         router.push(redirectPath);
       }, 2000);
@@ -104,9 +122,17 @@ export function DivarRedirectView() {
     } finally {
       setIsProcessing(false);
     }
-  }, [searchParams, setCookie, setAuth, router, t, processed]);
+  }, [
+    processed,
+    searchParams,
+    setCookie,
+    contextLogin, // تغییر نام برای جلوگیری از تداخل
+    updateUser, // اضافه شد
+    currentUser, // اضافه شد
+    router,
+    t,
+  ]);
 
-  // Call processParams once when the component mounts
   useEffect(() => {
     processParams();
   }, [processParams]);

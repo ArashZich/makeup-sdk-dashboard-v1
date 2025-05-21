@@ -39,7 +39,7 @@ export function DashboardOverview() {
   const [activePackage, setActivePackage] = useState<Package | null>(null);
 
   useEffect(() => {
-    if (activePackages && activePackages.length > 0) {
+    if (activePackages && activePackages?.length > 0) {
       // فرض می‌کنیم اولین بسته فعال، بسته فعلی کاربر است
       setActivePackage(activePackages[0]);
     }

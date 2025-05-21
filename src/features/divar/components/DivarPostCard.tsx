@@ -1,10 +1,9 @@
 // src/features/divar/components/DivarPostCard.tsx
 "use client";
 
-import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { DivarPost } from "@/api/types/divar.types";
-import { formatCurrency, formatDate } from "@/lib/utils";
+// import { formatCurrency, formatDate } from "@/lib/utils"; // حذف شد چون فیلدهای مربوطه در تایپ نیستند
 import {
   Card,
   CardContent,
@@ -17,19 +16,19 @@ import {
   ExternalLink,
   PlusSquare,
   MinusSquare,
-  Image as ImageIcon,
   Tag,
-  MapPin,
+  // MapPin, // حذف شد
+  ImageIcon, // آیکون پیش‌فرض برای زمانی که عکس نیست
+  // Calendar, // حذف شد
 } from "lucide-react";
-import Image from "next/image";
 
 interface DivarPostCardProps {
   post: DivarPost;
   selectedProductId: string | null;
   onAddAddon: (postToken: string) => void;
   onRemoveAddon: (postToken: string) => void;
-  isAddingAddon: boolean;
-  isRemovingAddon: boolean;
+  isAddingAddonForToken: string | null;
+  isRemovingAddonForToken: string | null;
 }
 
 export function DivarPostCard({
@@ -37,71 +36,38 @@ export function DivarPostCard({
   selectedProductId,
   onAddAddon,
   onRemoveAddon,
-  isAddingAddon,
-  isRemovingAddon,
+  isAddingAddonForToken,
+  isRemovingAddonForToken,
 }: DivarPostCardProps) {
-  const { t, isRtl } = useLanguage();
+  const { t } = useLanguage(); // isRtl و formatCurrency و formatDate حذف شدند
 
-  // Format price if available
-  const formattedPrice = post.price
-    ? formatCurrency(
-        post.price,
-        isRtl ? "fa-IR" : "en-US",
-        isRtl ? "IRR" : "USD"
-      )
-    : null;
-
-  // Get status badge variant
-  const getStatusBadgeVariant = () => {
-    switch (post.status) {
-      case "active":
-        return "default";
-      case "inactive":
-        return "secondary";
-      case "expired":
-        return "outline";
-      default:
-        return "secondary";
-    }
-  };
-
-  // Handle add addon click
-  const handleAddAddon = () => {
+  const handleAddAddonClick = () => {
     onAddAddon(post.token);
   };
 
-  // Handle remove addon click
-  const handleRemoveAddon = () => {
+  const handleRemoveAddonClick = () => {
     onRemoveAddon(post.token);
   };
 
-  // Open post in Divar
   const openInDivar = () => {
     window.open(`https://divar.ir/v/${post.token}`, "_blank");
   };
 
+  const isCurrentlyAdding = isAddingAddonForToken === post.token;
+  const isCurrentlyRemoving = isRemovingAddonForToken === post.token;
+
   return (
     <Card className="overflow-hidden h-full flex flex-col">
-      <div className="relative aspect-video w-full">
-        {post.imageUrl ? (
-          <Image
-            src={post.imageUrl}
-            alt={post.title}
-            fill
-            className="object-cover"
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full bg-muted">
-            <ImageIcon className="h-10 w-10 text-muted-foreground opacity-50" />
-          </div>
-        )}
-
+      <div className="relative aspect-video w-full bg-muted flex items-center justify-center">
+        <ImageIcon className="h-16 w-16 text-muted-foreground opacity-30" />
+        {/* نمایش وضعیت آگهی حذف شد چون 'status' در DivarPost تعریف نشده است */}
+        {/*
         <div className="absolute top-2 right-2">
           <Badge variant={getStatusBadgeVariant()}>
             {t(`divar.status.${post.status}`)}
           </Badge>
         </div>
-
+        */}
         {post.hasMakeupVirtualTryOn && (
           <div className="absolute bottom-2 left-2">
             <Badge variant="primary" className="bg-primary/80 backdrop-blur-sm">
@@ -122,6 +88,8 @@ export function DivarPostCard({
       </CardHeader>
 
       <CardContent className="p-4 space-y-2 flex-grow">
+        {/* نمایش شهر و منطقه حذف شد چون 'city' و 'district' در DivarPost تعریف نشده‌اند */}
+        {/*
         {(post.city || post.district) && (
           <div className="flex items-center gap-1 text-sm">
             <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
@@ -130,12 +98,24 @@ export function DivarPostCard({
             </span>
           </div>
         )}
+        */}
 
+        {/* نمایش قیمت حذف شد چون 'price' در DivarPost تعریف نشده است */}
+        {/*
         {formattedPrice && <div className="font-medium">{formattedPrice}</div>}
+        */}
 
+        {/* نمایش تاریخ ایجاد حذف شد چون 'createdAt' در DivarPost تعریف نشده است */}
+        {/*
         <div className="text-xs text-muted-foreground">
           {formatDate(post.createdAt, isRtl ? "fa-IR" : "en-US")}
         </div>
+        */}
+
+        {/* Placeholder برای حفظ فضا اگر محتوای دیگری برای نمایش نیست */}
+        {!post.category && (
+          <div className="text-xs text-muted-foreground h-4"></div>
+        )}
       </CardContent>
 
       <CardFooter className="p-4 pt-0 flex flex-col sm:flex-row gap-2">
@@ -143,23 +123,23 @@ export function DivarPostCard({
           <Button
             variant="outline"
             size="sm"
-            onClick={handleRemoveAddon}
+            onClick={handleRemoveAddonClick}
             className="w-full"
-            disabled={isRemovingAddon}
+            disabled={isCurrentlyRemoving}
           >
             <MinusSquare className="h-4 w-4 mr-2" />
-            {t("divar.removeAddon")}
+            {isCurrentlyRemoving ? t("common.loading") : t("divar.removeAddon")}
           </Button>
         ) : (
           <Button
             variant="default"
             size="sm"
-            onClick={handleAddAddon}
+            onClick={handleAddAddonClick}
             className="w-full"
-            disabled={!selectedProductId || isAddingAddon}
+            disabled={!selectedProductId || isCurrentlyAdding}
           >
             <PlusSquare className="h-4 w-4 mr-2" />
-            {t("divar.addAddon")}
+            {isCurrentlyAdding ? t("common.loading") : t("divar.addAddon")}
           </Button>
         )}
 

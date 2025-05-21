@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useDivar } from "@/api/hooks/useDivar";
 import { useProducts } from "@/api/hooks/useProducts";
-import { useUserProfile } from "@/api/hooks/useUsers";
+import { useUserProfile } from "@/api/hooks/useUsers"; // استفاده از هوک پروفایل کاربر
 import { DivarPostFilters } from "../components/DivarPostFilters";
 import { DivarPostsList } from "../components/DivarPostsList";
 import { DivarConnectCard } from "../components/DivarConnectCard";
@@ -20,7 +20,7 @@ import {
 
 export function DivarIntegrationView() {
   const { t } = useLanguage();
-  const { profile } = useUserProfile();
+  const { profile } = useUserProfile(); // دریافت اطلاعات کاربر از جمله توکن دیوار
   const [statusFilter, setStatusFilter] = useState<
     "active" | "inactive" | "expired" | undefined
   >(undefined);
@@ -32,22 +32,26 @@ export function DivarIntegrationView() {
     null
   );
 
-  // Check if user is connected to Divar
+  // State برای مدیریت توکن آگهی در حال پردازش
+  const [processingAddonToken, setProcessingAddonToken] = useState<
+    string | null
+  >(null);
+  const [processingRemoveToken, setProcessingRemoveToken] = useState<
+    string | null
+  >(null);
+
   const isDivarConnected = !!profile?.divarTokens?.accessToken;
 
-  // Get divar posts
   const {
     getDivarPosts,
     addAddonToPost,
     removeAddonFromPost,
-    isAddingAddon,
-    isRemovingAddon,
+    isAddingAddon, // این دیگر به صورت مستقیم استفاده نمی‌شود
+    isRemovingAddon, // این دیگر به صورت مستقیم استفاده نمی‌شود
   } = useDivar();
 
-  // Get user's products
   const { getUserProducts } = useProducts();
 
-  // Fetch divar posts with filters
   const {
     data: postsData,
     isLoading: isLoadingPosts,
@@ -58,14 +62,12 @@ export function DivarIntegrationView() {
     hasMakeupVirtualTryOn: addonFilter,
   });
 
-  // Fetch user's products
   const {
     data: productsData,
     isLoading: isLoadingProducts,
     error: productsError,
   } = getUserProducts();
 
-  // Filter posts by search term
   const filteredPosts =
     searchTerm && postsData?.results
       ? postsData.results.filter((post) =>
@@ -73,35 +75,30 @@ export function DivarIntegrationView() {
         )
       : postsData?.results || [];
 
-  // Handle status filter change
   const handleStatusFilterChange = (
     status: "active" | "inactive" | "expired" | null
   ) => {
     setStatusFilter(status === null ? undefined : status);
   };
 
-  // Handle addon filter change
   const handleAddonFilterChange = (hasAddon: boolean | null) => {
     setAddonFilter(hasAddon === null ? undefined : hasAddon);
   };
 
-  // Handle search
   const handleSearch = (term: string) => {
     setSearchTerm(term);
   };
 
-  // Handle product selection
   const handleProductChange = (productId: string) => {
     setSelectedProductId(productId);
   };
 
-  // Handle add addon to post
   const handleAddAddon = async (postToken: string) => {
     if (!selectedProductId) {
       showToast.error(t("divar.error.noProductSelected"));
       return;
     }
-
+    setProcessingAddonToken(postToken); // تنظیم توکن در حال پردازش
     try {
       await addAddonToPost({
         postToken,
@@ -110,16 +107,20 @@ export function DivarIntegrationView() {
       refetchPosts();
     } catch (error) {
       console.error("Error adding addon:", error);
+    } finally {
+      setProcessingAddonToken(null); // پاک کردن توکن پس از اتمام
     }
   };
 
-  // Handle remove addon from post
   const handleRemoveAddon = async (postToken: string) => {
+    setProcessingRemoveToken(postToken); // تنظیم توکن در حال پردازش
     try {
       await removeAddonFromPost(postToken);
       refetchPosts();
     } catch (error) {
       console.error("Error removing addon:", error);
+    } finally {
+      setProcessingRemoveToken(null); // پاک کردن توکن پس از اتمام
     }
   };
 
@@ -200,8 +201,8 @@ export function DivarIntegrationView() {
               selectedProductId={selectedProductId}
               onAddAddon={handleAddAddon}
               onRemoveAddon={handleRemoveAddon}
-              isAddingAddon={isAddingAddon}
-              isRemovingAddon={isRemovingAddon}
+              isAddingAddonForToken={processingAddonToken} // پاس دادن توکن در حال پردازش
+              isRemovingAddonForToken={processingRemoveToken} // پاس دادن توکن در حال پردازش
             />
           </div>
         </>

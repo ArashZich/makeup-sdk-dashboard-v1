@@ -15,8 +15,8 @@ interface DivarPostsListProps {
   selectedProductId: string | null;
   onAddAddon: (postToken: string) => void;
   onRemoveAddon: (postToken: string) => void;
-  isAddingAddon: boolean;
-  isRemovingAddon: boolean;
+  isAddingAddonForToken: string | null; // اضافه شد
+  isRemovingAddonForToken: string | null; // اضافه شد
 }
 
 export function DivarPostsList({
@@ -26,12 +26,11 @@ export function DivarPostsList({
   selectedProductId,
   onAddAddon,
   onRemoveAddon,
-  isAddingAddon,
-  isRemovingAddon,
+  isAddingAddonForToken, // اضافه شد
+  isRemovingAddonForToken, // اضافه شد
 }: DivarPostsListProps) {
   const { t } = useLanguage();
 
-  // Loading state
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -40,7 +39,6 @@ export function DivarPostsList({
     );
   }
 
-  // Error state
   if (error) {
     return (
       <Alert variant="destructive">
@@ -53,7 +51,6 @@ export function DivarPostsList({
     );
   }
 
-  // Empty state
   if (posts.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -70,13 +67,13 @@ export function DivarPostsList({
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {posts.map((post) => (
         <DivarPostCard
-          key={post.token}
+          key={post.token} // اطمینان از key منحصر به فرد
           post={post}
           selectedProductId={selectedProductId}
           onAddAddon={onAddAddon}
           onRemoveAddon={onRemoveAddon}
-          isAddingAddon={isAddingAddon}
-          isRemovingAddon={isRemovingAddon}
+          isAddingAddonForToken={isAddingAddonForToken} // پاس داده شد
+          isRemovingAddonForToken={isRemovingAddonForToken} // پاس داده شد
         />
       ))}
     </div>
