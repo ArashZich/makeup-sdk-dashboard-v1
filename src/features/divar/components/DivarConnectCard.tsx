@@ -46,7 +46,7 @@ export function DivarConnectCard() {
               {t("divar.alreadyConnected")}
             </div>
             <p className="text-sm mt-2 text-muted-foreground">
-              {t("common.connectedAs")}: {profile?.name || profile?.phone}
+              {t("divar.connectedAs")}: {profile?.name || profile?.phone}
             </p>
           </div>
         ) : (
