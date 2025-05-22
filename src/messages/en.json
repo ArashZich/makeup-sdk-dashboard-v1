@@ -32,7 +32,8 @@
     "openSidebar": "Open Menu",
     "closeSidebar": "Close Menu",
     "error": {
-      "general": "An error occurred. Please try again."
+      "general": "An error occurred. Please try again.",
+      "title": "Error"
     },
     "success": {
       "update": "Updated successfully"

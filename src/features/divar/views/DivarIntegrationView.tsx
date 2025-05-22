@@ -5,22 +5,16 @@ import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useDivar } from "@/api/hooks/useDivar";
 import { useProducts } from "@/api/hooks/useProducts";
-import { useUserProfile } from "@/api/hooks/useUsers"; // استفاده از هوک پروفایل کاربر
+import { useUserProfile } from "@/api/hooks/useUsers";
 import { DivarPostFilters } from "../components/DivarPostFilters";
 import { DivarPostsList } from "../components/DivarPostsList";
 import { DivarConnectCard } from "../components/DivarConnectCard";
+import { ProductSelectorCard } from "../components/ProductSelectorCard";
 import { showToast } from "@/lib/toast";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 export function DivarIntegrationView() {
   const { t } = useLanguage();
-  const { profile } = useUserProfile(); // دریافت اطلاعات کاربر از جمله توکن دیوار
+  const { profile } = useUserProfile();
   const [statusFilter, setStatusFilter] = useState<
     "active" | "inactive" | "expired" | undefined
   >(undefined);
@@ -42,13 +36,7 @@ export function DivarIntegrationView() {
 
   const isDivarConnected = !!profile?.divarTokens?.accessToken;
 
-  const {
-    getDivarPosts,
-    addAddonToPost,
-    removeAddonFromPost,
-    isAddingAddon, // این دیگر به صورت مستقیم استفاده نمی‌شود
-    isRemovingAddon, // این دیگر به صورت مستقیم استفاده نمی‌شود
-  } = useDivar();
+  const { getDivarPosts, addAddonToPost, removeAddonFromPost } = useDivar();
 
   const { getUserProducts } = useProducts();
 
@@ -89,7 +77,7 @@ export function DivarIntegrationView() {
     setSearchTerm(term);
   };
 
-  const handleProductChange = (productId: string) => {
+  const handleProductSelect = (productId: string) => {
     setSelectedProductId(productId);
   };
 
@@ -98,7 +86,7 @@ export function DivarIntegrationView() {
       showToast.error(t("divar.error.noProductSelected"));
       return;
     }
-    setProcessingAddonToken(postToken); // تنظیم توکن در حال پردازش
+    setProcessingAddonToken(postToken);
     try {
       await addAddonToPost({
         postToken,
@@ -108,24 +96,23 @@ export function DivarIntegrationView() {
     } catch (error) {
       console.error("Error adding addon:", error);
     } finally {
-      setProcessingAddonToken(null); // پاک کردن توکن پس از اتمام
+      setProcessingAddonToken(null);
     }
   };
 
   const handleRemoveAddon = async (postToken: string) => {
-    setProcessingRemoveToken(postToken); // تنظیم توکن در حال پردازش
+    setProcessingRemoveToken(postToken);
     try {
       await removeAddonFromPost(postToken);
       refetchPosts();
-    } catch (error) {
-      console.error("Error removing addon:", error);
     } finally {
-      setProcessingRemoveToken(null); // پاک کردن توکن پس از اتمام
+      setProcessingRemoveToken(null);
     }
   };
 
   return (
     <div className="space-y-6">
+      {/* هدر صفحه */}
       <div>
         <h1 className="text-2xl font-bold tracking-tight">
           {t("divar.title")}
@@ -133,57 +120,32 @@ export function DivarIntegrationView() {
         <p className="text-muted-foreground">{t("divar.description")}</p>
       </div>
 
+      {/* کارت اتصال دیوار و انتخاب محصول در یک ردیف */}
       <DivarConnectCard />
 
       {isDivarConnected && (
+        <div className="w-full">
+          <ProductSelectorCard
+            products={productsData?.results || []}
+            selectedProductId={selectedProductId}
+            onProductSelect={handleProductSelect}
+            isLoading={isLoadingProducts}
+          />
+        </div>
+      )}
+
+      {isDivarConnected && (
         <>
-          <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+          {/* فیلترهای آگهی‌ها */}
+          <div>
             <DivarPostFilters
               onStatusChange={handleStatusFilterChange}
               onAddonFilterChange={handleAddonFilterChange}
               onSearch={handleSearch}
             />
-
-            <div className="w-full sm:w-64">
-              <div className="text-sm font-medium mb-2">
-                {t("divar.selectProduct")}
-              </div>
-              <Select
-                value={selectedProductId || ""}
-                onValueChange={handleProductChange}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder={t("divar.selectProduct")} />
-                </SelectTrigger>
-                <SelectContent>
-                  {isLoadingProducts ? (
-                    <SelectItem value="loading" disabled>
-                      {t("common.loading")}
-                    </SelectItem>
-                  ) : productsError ? (
-                    <SelectItem value="error" disabled>
-                      {t("common.error.general")}
-                    </SelectItem>
-                  ) : productsData?.results &&
-                    productsData.results.length > 0 ? (
-                    productsData.results.map((product) => (
-                      <SelectItem key={product._id} value={product._id}>
-                        {product.name}
-                      </SelectItem>
-                    ))
-                  ) : (
-                    <SelectItem value="no-products" disabled>
-                      {t("products.noProducts")}
-                    </SelectItem>
-                  )}
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-muted-foreground mt-1">
-                {t("divar.selectProductDescription")}
-              </p>
-            </div>
           </div>
 
+          {/* لیست آگهی‌ها */}
           <div>
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-medium">{t("divar.yourPosts")}</h2>
@@ -201,8 +163,8 @@ export function DivarIntegrationView() {
               selectedProductId={selectedProductId}
               onAddAddon={handleAddAddon}
               onRemoveAddon={handleRemoveAddon}
-              isAddingAddonForToken={processingAddonToken} // پاس دادن توکن در حال پردازش
-              isRemovingAddonForToken={processingRemoveToken} // پاس دادن توکن در حال پردازش
+              isAddingAddonForToken={processingAddonToken}
+              isRemovingAddonForToken={processingRemoveToken}
             />
           </div>
         </>

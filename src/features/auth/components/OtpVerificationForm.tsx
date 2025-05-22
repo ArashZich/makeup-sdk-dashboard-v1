@@ -19,15 +19,22 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Loader } from "@/components/common/Loader";
-import { toFarsiNumber, toEnglishNumber } from "@/lib/utils";
+import {
+  cleanOtpCode,
+  validateOtpCode,
+  convertPersianToEnglishNumbers,
+  convertEnglishToPersianNumbers,
+} from "@/lib/numberConverter";
 
 // اسکیمای اعتبارسنجی فرم
 const otpVerificationSchema = z.object({
   code: z
     .string()
-    .min(4, "کد تأیید باید حداقل ۴ رقم باشد")
-    .max(6, "کد تأیید نمی‌تواند بیشتر از ۶ رقم باشد")
-    .regex(/^\d+$/, "کد تأیید باید فقط شامل اعداد باشد"),
+    .min(1, "کد تأیید الزامی است")
+    .transform((val) => cleanOtpCode(val))
+    .refine((val) => validateOtpCode(val, 4, 6), {
+      message: "کد تأیید باید بین ۴ تا ۶ رقم باشد",
+    }),
   phone: z.string(),
 });
 
@@ -87,10 +94,8 @@ export function OtpVerificationForm({
   const onSubmit = async (values: OtpVerificationFormValues) => {
     setIsLoading(true);
     try {
-      // تبدیل اعداد فارسی به انگلیسی
-      const code = toEnglishNumber(values.code);
-
-      await verifyOtp({ phone: values.phone, code });
+      // کد از طریق schema پاک شده و اعتبارسنجی شده است
+      await verifyOtp({ phone: values.phone, code: values.code });
 
       // هدایت به صفحه داشبورد پس از احراز هویت موفق
       router.push("/dashboard");
@@ -105,14 +110,14 @@ export function OtpVerificationForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-6 w-full"
+        className="space-y-4 w-full"
         dir={isRtl ? "rtl" : "ltr"}
       >
-        <div className="text-center mb-6">
-          <p className="text-muted-foreground text-base">
+        <div className="text-center mb-4">
+          <p className="text-muted-foreground text-sm">
             {t("auth.enterOtp")}
             <br />
-            <span className="text-foreground font-medium mt-3 inline-block text-lg">
+            <span className="text-foreground font-medium mt-2 inline-block text-base">
               {phone}
             </span>
           </p>
@@ -123,17 +128,26 @@ export function OtpVerificationForm({
           name="code"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-base">{t("auth.verifyOtp")}</FormLabel>
+              <FormLabel className="text-sm font-medium">
+                {t("auth.verifyOtp")}
+              </FormLabel>
               <FormControl>
                 <Input
                   placeholder="12345"
                   {...field}
                   autoComplete="one-time-code"
                   disabled={isLoading}
-                  className={`text-center text-xl tracking-widest h-12 ${
+                  className={`text-center text-lg tracking-widest h-12 ${
                     isRtl ? "font-iran" : "font-montserrat"
                   }`}
                   maxLength={6}
+                  onChange={(e) => {
+                    // تبدیل اعداد فارسی به انگلیسی در هنگام تایپ
+                    const convertedValue = convertPersianToEnglishNumbers(
+                      e.target.value
+                    );
+                    field.onChange(convertedValue);
+                  }}
                 />
               </FormControl>
               <FormMessage />
@@ -143,7 +157,7 @@ export function OtpVerificationForm({
 
         <Button
           type="submit"
-          className="w-full h-12 text-base"
+          className="w-full h-10 text-sm"
           disabled={isLoading}
         >
           {isLoading ? (
@@ -157,14 +171,16 @@ export function OtpVerificationForm({
           {seconds > 0 ? (
             <p className="text-sm text-muted-foreground">
               {t("auth.remainingTimeToResend", {
-                seconds: isRtl ? toFarsiNumber(seconds.toString()) : seconds,
+                seconds: isRtl
+                  ? convertEnglishToPersianNumbers(seconds.toString())
+                  : seconds,
               })}
             </p>
           ) : (
             <Button
               type="button"
               variant="ghost"
-              className="text-base"
+              className="text-sm"
               onClick={handleResendOtp}
               disabled={isResending}
             >

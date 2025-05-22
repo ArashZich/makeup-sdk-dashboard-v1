@@ -1,4 +1,4 @@
-// src/features/auth/views/VerifyOtpView.tsx
+// src/features/auth/views/verify-otp.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -50,41 +50,38 @@ export default function VerifyOtpView() {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="flex items-center justify-center min-h-[200px]">
         <div className="text-center">
           <div className="mb-4">
-            <div className="h-12 w-12 mx-auto animate-spin rounded-full border-2 border-primary border-t-transparent" />
+            <div className="h-8 w-8 mx-auto animate-spin rounded-full border-2 border-primary border-t-transparent" />
           </div>
-          <p className="text-muted-foreground">{t("common.loading")}</p>
+          <p className="text-muted-foreground text-sm">{t("common.loading")}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="w-full max-w-md">
-      <div className="mb-8 text-center">
-        <h1 className="text-2xl font-bold tracking-tight">
-          {t("auth.verifyOtp")}
-        </h1>
-      </div>
-
-      <Card dir={isRtl ? "rtl" : "ltr"} className="px-2 sm:px-6">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-center text-xl">
-            {t("auth.enterOtp")}
+    <div className="w-full space-y-4">
+      <Card dir={isRtl ? "rtl" : "ltr"} className="border-border/50 shadow-lg">
+        <CardHeader className="pb-3 text-center">
+          <CardTitle className="text-lg font-bold">
+            {t("auth.verifyOtp")}
           </CardTitle>
+          <p className="text-sm text-muted-foreground mt-2">
+            {t("auth.enterOtp")}
+          </p>
         </CardHeader>
-        <CardContent className="py-6">
+        <CardContent className="py-4">
           <OtpVerificationForm phone={phone} onResendOtp={handleResendOtp} />
         </CardContent>
       </Card>
 
-      <div className="mt-6 text-center">
+      <div className="text-center">
         <Button
           variant="ghost"
           onClick={() => router.push("/auth/login")}
-          className="text-base"
+          className="text-sm text-muted-foreground hover:text-foreground"
         >
           {isRtl ? (
             <>

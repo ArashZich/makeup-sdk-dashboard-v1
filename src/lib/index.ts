@@ -4,3 +4,4 @@ export * from "./date";
 export * from "./fonts";
 export * from "./toast";
 export * from "./utils";
+export * from "./numberConverter";

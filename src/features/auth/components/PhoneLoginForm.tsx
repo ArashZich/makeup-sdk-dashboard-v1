@@ -19,14 +19,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Loader } from "@/components/common/Loader";
+import {
+  cleanPhoneNumber,
+  validateIranianPhoneNumber,
+  convertPersianToEnglishNumbers,
+} from "@/lib/numberConverter";
 
 // اسکیمای اعتبارسنجی فرم
 const phoneLoginSchema = z.object({
   phone: z
     .string()
-    .min(10, "شماره تلفن باید حداقل ۱۰ رقم باشد")
-    .max(11, "شماره تلفن نمی‌تواند بیشتر از ۱۱ رقم باشد")
-    .regex(/^09\d{9}$|^9\d{9}$/, "فرمت شماره تلفن صحیح نیست"),
+    .min(1, "شماره تلفن الزامی است")
+    .transform((val) => cleanPhoneNumber(val))
+    .refine((val) => validateIranianPhoneNumber(val), {
+      message: "فرمت شماره تلفن صحیح نیست. مثال: 09123456789",
+    }),
 });
 
 type PhoneLoginFormValues = z.infer<typeof phoneLoginSchema>;
@@ -47,15 +54,13 @@ export function PhoneLoginForm() {
   const onSubmit = async (values: PhoneLoginFormValues) => {
     setIsLoading(true);
     try {
-      // اطمینان حاصل کنیم که شماره تلفن با ۰۹ شروع می‌شود
-      const phone = values.phone.startsWith("09")
-        ? values.phone
-        : `09${values.phone.replace(/^9/, "")}`;
-
-      const result = await sendOtp({ phone });
+      // شماره تلفن از طریق schema پاک شده و اعتبارسنجی شده است
+      const result = await sendOtp({ phone: values.phone });
 
       // هدایت به صفحه تأیید کد با ارسال اطلاعات مورد نیاز
-      router.push(`/auth/verify-otp?phone=${phone}&userId=${result.userId}`);
+      router.push(
+        `/auth/verify-otp?phone=${values.phone}&userId=${result.userId}`
+      );
     } catch (error) {
       console.error("خطا در ارسال کد تأیید:", error);
     } finally {
@@ -67,7 +72,7 @@ export function PhoneLoginForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-6 w-full" // افزایش فاصله
+        className="space-y-4 w-full"
         dir={isRtl ? "rtl" : "ltr"}
       >
         <FormField
@@ -75,10 +80,9 @@ export function PhoneLoginForm() {
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-base">
+              <FormLabel className="text-sm font-medium">
                 {t("auth.enterPhone")}
-              </FormLabel>{" "}
-              {/* افزایش اندازه متن */}
+              </FormLabel>
               <FormControl>
                 <Input
                   placeholder="۰۹۱۲۳۴۵۶۷۸۹"
@@ -87,7 +91,14 @@ export function PhoneLoginForm() {
                   disabled={isLoading}
                   className={`${
                     isRtl ? "text-right" : "text-left"
-                  } h-12 text-lg`} // افزایش اندازه فیلد و متن
+                  } h-10 text-base`}
+                  onChange={(e) => {
+                    // تبدیل اعداد فارسی به انگلیسی در هنگام تایپ
+                    const convertedValue = convertPersianToEnglishNumbers(
+                      e.target.value
+                    );
+                    field.onChange(convertedValue);
+                  }}
                 />
               </FormControl>
               <FormMessage />
@@ -97,11 +108,9 @@ export function PhoneLoginForm() {
 
         <Button
           type="submit"
-          className="w-full h-12 text-base"
+          className="w-full h-10 text-sm"
           disabled={isLoading}
         >
-          {" "}
-          {/* افزایش اندازه دکمه و متن */}
           {isLoading ? (
             <Loader size="sm" variant="spinner" />
           ) : (
