@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { usersService } from "@/api/services/users-service";
 import { showToast } from "@/lib/toast";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useAuthStore } from "@/store/auth.store";
 import {
   UserFilters,
   UpdateProfileRequest,
@@ -17,6 +18,8 @@ import {
 export const useUserProfile = () => {
   const queryClient = useQueryClient();
   const { t } = useLanguage();
+  // همگام‌سازی با Zustand store
+  const { updateUser: updateUserStore } = useAuthStore();
 
   // دریافت پروفایل کاربر جاری
   const {
@@ -37,6 +40,8 @@ export const useUserProfile = () => {
     onSuccess: (data) => {
       // به‌روزرسانی کش
       queryClient.setQueryData(["userProfile"], data);
+      // همگام‌سازی با store
+      updateUserStore(data);
       showToast.success(t("common.success.update"));
     },
     onError: (error: any) => {
@@ -53,6 +58,8 @@ export const useUserProfile = () => {
     onSuccess: (data) => {
       // به‌روزرسانی کش
       queryClient.setQueryData(["userProfile"], data);
+      // همگام‌سازی با store
+      updateUserStore(data);
       showToast.success(t("common.success.update"));
     },
     onError: (error: any) => {
