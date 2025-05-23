@@ -435,14 +435,6 @@
       "patterns": "الگوها",
       "colors": "رنگ‌ها"
     },
-    "types": {
-      "lips": "رژ لب",
-      "eyeshadow": "سایه چشم",
-      "eyepencil": "مداد چشم",
-      "eyelashes": "مژه",
-      "blush": "رژ گونه",
-      "eyeliner": "خط چشم"
-    },
     "form": {
       "name": "نام محصول",
       "namePlaceholder": "نام محصول را وارد کنید",
@@ -471,7 +463,38 @@
       "colorHexCode": "کد رنگ (Hex)",
       "colorImageUrl": "آدرس تصویر رنگ",
       "colorImageUrlPlaceholder": "آدرس URL تصویر رنگ را وارد کنید",
-      "addColor": "افزودن رنگ"
+      "addColor": "افزودن رنگ",
+      "loadingPatterns": "در حال بارگذاری الگوها...",
+      "loadingTypes": "در حال بارگذاری انواع محصولات...",
+      "noActivePackage": "برای استفاده از این قابلیت، ابتدا یک بسته فعال خریداری کنید.",
+      "noAccessToType": "دسترسی به نوع محصول {{type}} ندارید.",
+      "noPatternsAvailable": "هیچ الگویی برای نوع {{type}} در دسترس نیست.",
+      "noTypesAvailable": "هیچ نوع محصولی در بسته شما موجود نیست.",
+      "pattern": "الگو",
+      "selectPattern": "انتخاب الگو",
+      "patternsSelected": "الگو انتخاب شده",
+      "availablePatterns": "الگوهای موجود",
+      "patternsForType": "الگوهای این نوع",
+      "noAccessToSelectedType": "به نوع محصول انتخابی دسترسی ندارید.",
+      "noAccess": "بدون دسترسی",
+      "typesAvailable": "نوع موجود",
+      "selectType": "انتخاب نوع محصول",
+      "uploadThumbnail": "آپلود تصویر محصول",
+      "addNewColor": "افزودن رنگ جدید",
+      "colorImage": "تصویر رنگ",
+      "uploadColorImage": "آپلود تصویر رنگ"
+    },
+    "types": {
+      "lips": "رژ لب",
+      "eyeshadow": "سایه چشم",
+      "eyepencil": "مداد چشم",
+      "eyeliner": "خط چشم",
+      "eyelashes": "مژه",
+      "blush": "رژگونه",
+      "concealer": "کانسیلر",
+      "foundation": "کرم پودر",
+      "brows": "ابرو",
+      "lens": "لنز"
     },
     "error": {
       "title": "خطا در دریافت محصولات",
@@ -773,5 +796,12 @@
     "redirectingMessage": "لطفا صبر کنید، در حال احراز هویت...",
     "redirectingToDashboard": "در حال انتقال به داشبورد...",
     "loginSuccess": "ورود با دیوار با موفقیت انجام شد"
+  },
+  "upload": {
+    "clickOrDrag": "کلیک کنید یا فایل را اینجا بکشید",
+    "maxSize": "حداکثر حجم",
+    "success": "فایل با موفقیت آپلود شد",
+    "error": "خطا در آپلود فایل",
+    "cancelled": "آپلود لغو شد"
   }
 }

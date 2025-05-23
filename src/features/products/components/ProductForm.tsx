@@ -1,4 +1,3 @@
-// src/features/products/components/ProductForm.tsx - اصلاح شده
 "use client";
 
 import { useState } from "react";
@@ -18,15 +17,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Loader } from "@/components/common/Loader";
+import { ImageUpload } from "@/components/common/ImageUpload";
 import {
   Dialog,
   DialogContent,
@@ -35,8 +28,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { PlusIcon, TrashIcon, SwatchBookIcon } from "lucide-react";
+import { ProductTypeSelect } from "./ProductTypeSelect";
+import { PatternSelect } from "./PatternSelect";
 import { ColorPicker } from "./ColorPicker";
+import { PlusIcon, TrashIcon } from "lucide-react";
 
 // Schema for product form
 const productFormSchema = z.object({
@@ -44,14 +39,9 @@ const productFormSchema = z.object({
     message: "Name must be at least 2 characters.",
   }),
   description: z.string().optional(),
-  type: z.enum([
-    "lips",
-    "eyeshadow",
-    "eyepencil",
-    "eyelashes",
-    "blush",
-    "eyeliner",
-  ]),
+  type: z.string().min(1, {
+    message: "Product type is required.",
+  }),
   code: z.string().min(1, {
     message: "Code is required.",
   }),
@@ -77,15 +67,12 @@ export function ProductForm({
   isLoading,
 }: ProductFormProps) {
   const { t } = useLanguage();
-  const [patterns, setPatterns] = useState<Pattern[]>(product?.patterns || []);
+  const [selectedPatterns, setSelectedPatterns] = useState<string[]>(
+    product?.patterns.map((p) => p.code) || []
+  );
   const [colors, setColors] = useState<Color[]>(product?.colors || []);
 
-  // New pattern/color form state
-  const [newPattern, setNewPattern] = useState<Pattern>({
-    name: "",
-    code: "",
-    imageUrl: "",
-  });
+  // New color form state
   const [newColor, setNewColor] = useState<Color>({
     name: "",
     hexCode: "",
@@ -98,25 +85,15 @@ export function ProductForm({
     defaultValues: {
       name: product?.name || "",
       description: product?.description || "",
-      type: product?.type || "lips",
+      type: product?.type || "",
       code: product?.code || "",
       thumbnail: product?.thumbnail || "",
-      active: product?.active ?? true, // اصلاح اینجا با استفاده از nullish coalescing
+      active: product?.active ?? true,
     },
   });
 
-  // Add a new pattern
-  const handleAddPattern = () => {
-    if (newPattern.name && newPattern.code) {
-      setPatterns([...patterns, { ...newPattern }]);
-      setNewPattern({ name: "", code: "", imageUrl: "" });
-    }
-  };
-
-  // Remove a pattern
-  const handleRemovePattern = (index: number) => {
-    setPatterns(patterns.filter((_, i) => i !== index));
-  };
+  // Watch type changes to reset patterns
+  const selectedType = form.watch("type");
 
   // Add a new color
   const handleAddColor = () => {
@@ -131,8 +108,26 @@ export function ProductForm({
     setColors(colors.filter((_, i) => i !== index));
   };
 
+  // Update color
+  const handleUpdateColor = (
+    index: number,
+    field: keyof Color,
+    value: string
+  ) => {
+    const updatedColors = [...colors];
+    updatedColors[index] = { ...updatedColors[index], [field]: value };
+    setColors(updatedColors);
+  };
+
   // Submit the form
   const handleFormSubmit = (values: ProductFormValues) => {
+    // تبدیل patterns از array of strings به array of Pattern objects
+    const patterns: Pattern[] = selectedPatterns.map((patternCode) => ({
+      name: patternCode, // یا می‌تونیم از API mapping بگیریم
+      code: patternCode,
+      imageUrl: "", // اختیاری
+    }));
+
     // Combine form values with patterns and colors
     const formData = {
       ...values,
@@ -145,7 +140,7 @@ export function ProductForm({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {product ? t("products.editProduct") : t("products.addProduct")}
@@ -204,58 +199,12 @@ export function ProductForm({
                 control={form.control}
                 name="type"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("products.form.type")}</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue
-                            placeholder={t("products.form.typePlaceholder")}
-                          />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="lips">
-                          {t("products.types.lips")}
-                        </SelectItem>
-                        <SelectItem value="eyeshadow">
-                          {t("products.types.eyeshadow")}
-                        </SelectItem>
-                        <SelectItem value="eyepencil">
-                          {t("products.types.eyepencil")}
-                        </SelectItem>
-                        <SelectItem value="eyelashes">
-                          {t("products.types.eyelashes")}
-                        </SelectItem>
-                        <SelectItem value="blush">
-                          {t("products.types.blush")}
-                        </SelectItem>
-                        <SelectItem value="eyeliner">
-                          {t("products.types.eyeliner")}
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Thumbnail */}
-              <FormField
-                control={form.control}
-                name="thumbnail"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("products.form.thumbnail")}</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={t("products.form.thumbnailPlaceholder")}
-                        {...field}
-                      />
-                    </FormControl>
+                  <FormItem className="col-span-1 sm:col-span-2">
+                    <ProductTypeSelect
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder={t("products.form.typePlaceholder")}
+                    />
                     <FormMessage />
                   </FormItem>
                 )}
@@ -273,6 +222,27 @@ export function ProductForm({
                         placeholder={t("products.form.descriptionPlaceholder")}
                         {...field}
                         rows={3}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Thumbnail Upload */}
+              <FormField
+                control={form.control}
+                name="thumbnail"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("products.form.thumbnail")}</FormLabel>
+                    <FormControl>
+                      <ImageUpload
+                        value={field.value}
+                        onChange={field.onChange}
+                        type="product"
+                        size="md"
+                        placeholder={t("products.form.uploadThumbnail")}
                       />
                     </FormControl>
                     <FormMessage />
@@ -301,109 +271,16 @@ export function ProductForm({
             </div>
 
             {/* Patterns Section */}
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <h3 className="text-sm font-medium">
-                  {t("products.form.patterns")}
-                </h3>
-                <span className="text-xs text-muted-foreground">
-                  {patterns.length} {t("products.form.patternsCount")}
-                </span>
-              </div>
-
-              {/* Existing patterns */}
-              {patterns.length > 0 && (
-                <div className="space-y-2">
-                  {patterns.map((pattern, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center gap-2 p-2 bg-muted rounded-md"
-                    >
-                      <SwatchBookIcon className="h-4 w-4 text-muted-foreground" />
-                      <div className="flex-1">
-                        <p className="text-sm font-medium">{pattern.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {pattern.code}
-                        </p>
-                      </div>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="h-7 w-7"
-                        onClick={() => handleRemovePattern(index)}
-                      >
-                        <TrashIcon className="h-4 w-4 text-destructive" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Add new pattern */}
-              <div className="flex gap-2 items-end">
-                <div className="space-y-2 flex-1">
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className="text-xs">
-                        {t("products.form.patternName")}
-                      </label>
-                      <Input
-                        value={newPattern.name}
-                        onChange={(e) =>
-                          setNewPattern({ ...newPattern, name: e.target.value })
-                        }
-                        placeholder={t("products.form.patternNamePlaceholder")}
-                        className="h-8"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs">
-                        {t("products.form.patternCode")}
-                      </label>
-                      <Input
-                        value={newPattern.code}
-                        onChange={(e) =>
-                          setNewPattern({ ...newPattern, code: e.target.value })
-                        }
-                        placeholder={t("products.form.patternCodePlaceholder")}
-                        className="h-8"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-xs">
-                      {t("products.form.patternImageUrl")}
-                    </label>
-                    <Input
-                      value={newPattern.imageUrl}
-                      onChange={(e) =>
-                        setNewPattern({
-                          ...newPattern,
-                          imageUrl: e.target.value,
-                        })
-                      }
-                      placeholder={t(
-                        "products.form.patternImageUrlPlaceholder"
-                      )}
-                      className="h-8"
-                    />
-                  </div>
-                </div>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  onClick={handleAddPattern}
-                >
-                  <PlusIcon className="h-4 w-4 mr-1" />
-                  {t("products.form.addPattern")}
-                </Button>
-              </div>
-            </div>
+            {selectedType && (
+              <PatternSelect
+                productType={selectedType}
+                selectedPatterns={selectedPatterns}
+                onChange={setSelectedPatterns}
+              />
+            )}
 
             {/* Colors Section */}
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <h3 className="text-sm font-medium">
                   {t("products.form.colors")}
@@ -415,27 +292,42 @@ export function ProductForm({
 
               {/* Existing colors */}
               {colors.length > 0 && (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {colors.map((color, index) => (
                     <div
                       key={index}
-                      className="flex items-center gap-2 p-2 bg-muted rounded-md"
+                      className="flex items-start gap-3 p-3 bg-muted rounded-md"
                     >
                       <div
-                        className="h-5 w-5 rounded-full"
+                        className="h-8 w-8 rounded-full border-2 border-background flex-shrink-0"
                         style={{ backgroundColor: color.hexCode }}
                       ></div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium">{color.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {color.hexCode}
-                        </p>
+                      <div className="flex-1 space-y-2">
+                        <Input
+                          value={color.name}
+                          onChange={(e) =>
+                            handleUpdateColor(index, "name", e.target.value)
+                          }
+                          placeholder={t("products.form.colorNamePlaceholder")}
+                          className="h-8"
+                        />
+                        <ColorPicker
+                          value={color.hexCode}
+                          onChange={(value) =>
+                            handleUpdateColor(index, "hexCode", value)
+                          }
+                          imageUrl={color.imageUrl}
+                          onImageChange={(url) =>
+                            handleUpdateColor(index, "imageUrl", url)
+                          }
+                          showImageUpload={true}
+                        />
                       </div>
                       <Button
                         type="button"
                         variant="ghost"
                         size="icon"
-                        className="h-7 w-7"
+                        className="h-8 w-8 flex-shrink-0"
                         onClick={() => handleRemoveColor(index)}
                       >
                         <TrashIcon className="h-4 w-4 text-destructive" />
@@ -446,61 +338,50 @@ export function ProductForm({
               )}
 
               {/* Add new color */}
-              <div className="flex gap-2 items-end">
-                <div className="space-y-2 flex-1">
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className="text-xs">
-                        {t("products.form.colorName")}
-                      </label>
-                      <Input
-                        value={newColor.name}
-                        onChange={(e) =>
-                          setNewColor({ ...newColor, name: e.target.value })
-                        }
-                        placeholder={t("products.form.colorNamePlaceholder")}
-                        className="h-8"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs">
-                        {t("products.form.colorHexCode")}
-                      </label>
-                      <ColorPicker
-                        value={newColor.hexCode}
-                        onChange={(color) =>
-                          setNewColor({
-                            ...newColor,
-                            hexCode: color,
-                          })
-                        }
-                        placeholder="#000000"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="text-xs">
-                      {t("products.form.colorImageUrl")}
-                    </label>
+              <div className="border rounded-md p-3 space-y-3">
+                <h4 className="text-sm font-medium">
+                  {t("products.form.addNewColor")}
+                </h4>
+                <div className="flex items-start gap-3">
+                  <div
+                    className="h-8 w-8 rounded-full border-2 border-background flex-shrink-0"
+                    style={{
+                      backgroundColor: newColor.hexCode || "#f0f0f0",
+                    }}
+                  ></div>
+                  <div className="flex-1 space-y-2">
                     <Input
-                      value={newColor.imageUrl}
+                      value={newColor.name}
                       onChange={(e) =>
-                        setNewColor({ ...newColor, imageUrl: e.target.value })
+                        setNewColor({ ...newColor, name: e.target.value })
                       }
-                      placeholder={t("products.form.colorImageUrlPlaceholder")}
+                      placeholder={t("products.form.colorNamePlaceholder")}
                       className="h-8"
                     />
+                    <ColorPicker
+                      value={newColor.hexCode}
+                      onChange={(value) =>
+                        setNewColor({ ...newColor, hexCode: value })
+                      }
+                      imageUrl={newColor.imageUrl}
+                      onImageChange={(url) =>
+                        setNewColor({ ...newColor, imageUrl: url })
+                      }
+                      showImageUpload={true}
+                    />
                   </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleAddColor}
+                    disabled={!newColor.name || !newColor.hexCode}
+                    className="flex-shrink-0"
+                  >
+                    <PlusIcon className="h-4 w-4 mr-1" />
+                    {t("products.form.addColor")}
+                  </Button>
                 </div>
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  onClick={handleAddColor}
-                >
-                  <PlusIcon className="h-4 w-4 mr-1" />
-                  {t("products.form.addColor")}
-                </Button>
               </div>
             </div>
 

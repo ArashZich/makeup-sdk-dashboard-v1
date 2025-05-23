@@ -9,6 +9,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { ImageUpload } from "@/components/common/ImageUpload";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PaletteIcon, CheckIcon, ClipboardCopyIcon } from "lucide-react";
 import { useClipboard } from "@/hooks/useClipboard";
@@ -16,15 +17,23 @@ import { useClipboard } from "@/hooks/useClipboard";
 interface ColorPickerProps {
   value: string;
   onChange: (value: string) => void;
+  imageUrl?: string;
+  onImageChange?: (url: string) => void;
   placeholder?: string;
   className?: string;
+  disabled?: boolean;
+  showImageUpload?: boolean;
 }
 
 export function ColorPicker({
   value,
   onChange,
+  imageUrl = "",
+  onImageChange,
   placeholder = "#000000",
   className,
+  disabled = false,
+  showImageUpload = true,
 }: ColorPickerProps) {
   const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
@@ -72,100 +81,130 @@ export function ColorPicker({
     }
   };
 
-  return (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-center gap-2">
-        <Input
-          value={value || ""}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder}
-          className="flex-1"
-        />
-        <Popover open={isOpen} onOpenChange={setIsOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              type="button"
-              variant="outline"
-              className="w-10 h-10 p-0 rounded-md flex items-center justify-center"
-              style={{
-                backgroundColor: isValidHex(normalizeColor(value))
-                  ? normalizeColor(value)
-                  : "#ffffff",
-              }}
-            >
-              <PaletteIcon
-                className={`h-4 w-4 ${
-                  value && isValidHex(normalizeColor(value))
-                    ? "text-white dark:text-black"
-                    : "text-gray-500"
-                }`}
-              />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-3" align="end">
-            <HexColorPicker
-              color={
-                isValidHex(normalizeColor(value))
-                  ? normalizeColor(value)
-                  : "#000000"
-              }
-              onChange={onChange}
-              className="mb-3"
-            />
+  // مدیریت تغییر عکس رنگ
+  const handleImageChange = (url: string) => {
+    if (onImageChange) {
+      onImageChange(url);
+    }
+  };
 
-            <div className="space-y-2">
-              <div className="text-xs text-muted-foreground">
-                {t("products.form.presetColors")}
+  return (
+    <div className="space-y-3">
+      {/* انتخاب رنگ */}
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-2">
+          <Input
+            value={value || ""}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={placeholder}
+            className="flex-1"
+            disabled={disabled}
+          />
+          <Popover open={isOpen} onOpenChange={setIsOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-10 h-10 p-0 rounded-md flex items-center justify-center"
+                style={{
+                  backgroundColor: isValidHex(normalizeColor(value))
+                    ? normalizeColor(value)
+                    : "#ffffff",
+                }}
+                disabled={disabled}
+              >
+                <PaletteIcon
+                  className={`h-4 w-4 ${
+                    value && isValidHex(normalizeColor(value))
+                      ? "text-white dark:text-black"
+                      : "text-gray-500"
+                  }`}
+                />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-3" align="end">
+              <HexColorPicker
+                color={
+                  isValidHex(normalizeColor(value))
+                    ? normalizeColor(value)
+                    : "#000000"
+                }
+                onChange={onChange}
+                className="mb-3"
+              />
+
+              <div className="space-y-2">
+                <div className="text-xs text-muted-foreground">
+                  {t("products.form.presetColors")}
+                </div>
+                <div className="grid grid-cols-5 gap-1.5">
+                  {presetColors.map((color) => (
+                    <button
+                      key={color}
+                      type="button"
+                      className="w-6 h-6 rounded-md border cursor-pointer transition-transform hover:scale-110"
+                      style={{ backgroundColor: color }}
+                      onClick={() => onChange(color)}
+                      title={color}
+                    />
+                  ))}
+                </div>
               </div>
-              <div className="grid grid-cols-5 gap-1.5">
-                {presetColors.map((color) => (
-                  <button
-                    key={color}
-                    type="button"
-                    className="w-6 h-6 rounded-md border cursor-pointer transition-transform hover:scale-110"
-                    style={{ backgroundColor: color }}
-                    onClick={() => onChange(color)}
-                    title={color}
-                  />
-                ))}
-              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
+
+        {/* نمایش رنگ و کپی */}
+        {value && isValidHex(normalizeColor(value)) && (
+          <div className="flex items-center">
+            <div
+              className="h-6 flex-1 rounded-md border flex items-center justify-center text-xs cursor-pointer"
+              style={{
+                backgroundColor: normalizeColor(value),
+                color:
+                  value.replace("#", "").toLowerCase() < "888888"
+                    ? "white"
+                    : "black",
+              }}
+              onClick={handleCopyColor}
+              title={t("common.copy")}
+            >
+              {normalizeColor(value).toUpperCase()}
+
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-5 w-5 ml-1"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleCopyColor();
+                }}
+              >
+                {isCopied ? (
+                  <CheckIcon className="h-3 w-3" />
+                ) : (
+                  <ClipboardCopyIcon className="h-3 w-3" />
+                )}
+              </Button>
             </div>
-          </PopoverContent>
-        </Popover>
+          </div>
+        )}
       </div>
 
-      {value && isValidHex(normalizeColor(value)) && (
-        <div className="flex items-center">
-          <div
-            className="h-6 flex-1 rounded-md border flex items-center justify-center text-xs cursor-pointer"
-            style={{
-              backgroundColor: normalizeColor(value),
-              color:
-                value.replace("#", "").toLowerCase() < "888888"
-                  ? "white"
-                  : "black",
-            }}
-            onClick={handleCopyColor}
-            title={t("common.copy")}
-          >
-            {normalizeColor(value).toUpperCase()}
-
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-5 w-5 ml-1"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleCopyColor();
-              }}
-            >
-              {isCopied ? (
-                <CheckIcon className="h-3 w-3" />
-              ) : (
-                <ClipboardCopyIcon className="h-3 w-3" />
-              )}
-            </Button>
-          </div>
+      {/* آپلود عکس رنگ */}
+      {showImageUpload && (
+        <div className="space-y-2">
+          <label className="text-sm font-medium">
+            {t("products.form.colorImage")}
+          </label>
+          <ImageUpload
+            value={imageUrl}
+            onChange={handleImageChange}
+            type="color"
+            size="sm"
+            placeholder={t("products.form.uploadColorImage")}
+            disabled={disabled}
+          />
         </div>
       )}
     </div>

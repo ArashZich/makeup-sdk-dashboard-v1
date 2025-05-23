@@ -439,9 +439,13 @@
       "lips": "Lipstick",
       "eyeshadow": "Eyeshadow",
       "eyepencil": "Eye Pencil",
+      "eyeliner": "Eyeliner",
       "eyelashes": "Eyelashes",
       "blush": "Blush",
-      "eyeliner": "Eyeliner"
+      "concealer": "Concealer",
+      "foundation": "Foundation",
+      "brows": "Brows",
+      "lens": "Lens"
     },
     "form": {
       "name": "Product Name",
@@ -471,7 +475,26 @@
       "colorHexCode": "Color Hex Code",
       "colorImageUrl": "Color Image URL",
       "colorImageUrlPlaceholder": "Enter color image URL",
-      "addColor": "Add Color"
+      "addColor": "Add Color",
+      "loadingPatterns": "Loading patterns...",
+      "loadingTypes": "Loading product types...",
+      "noActivePackage": "To use this feature, please purchase an active package first.",
+      "noAccessToType": "You don't have access to {{type}} product type.",
+      "noPatternsAvailable": "No patterns available for {{type}} type.",
+      "noTypesAvailable": "No product types available in your package.",
+      "pattern": "Pattern",
+      "selectPattern": "Select Pattern",
+      "patternsSelected": "patterns selected",
+      "availablePatterns": "Available patterns",
+      "patternsForType": "Patterns for this type",
+      "noAccessToSelectedType": "You don't have access to the selected product type.",
+      "noAccess": "No Access",
+      "typesAvailable": "types available",
+      "selectType": "Select Product Type",
+      "uploadThumbnail": "Upload Product Image",
+      "addNewColor": "Add New Color",
+      "colorImage": "Color Image",
+      "uploadColorImage": "Upload Color Image"
     },
     "error": {
       "title": "Error Fetching Products",
@@ -773,5 +796,12 @@
     "redirectingMessage": "Please wait, authenticating...",
     "redirectingToDashboard": "Redirecting to dashboard...",
     "loginSuccess": "Successfully logged in with Divar"
+  },
+  "upload": {
+    "clickOrDrag": "Click or drag file here",
+    "maxSize": "Max size",
+    "success": "File uploaded successfully",
+    "error": "Error uploading file",
+    "cancelled": "Upload cancelled"
   }
 }
