@@ -1,4 +1,4 @@
-// src/api/hooks/usePackages.ts
+// src/api/hooks/usePackages.ts - آپدیت شده
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { packagesService } from "@/api/services/packages-service";
 import { showToast } from "@/lib/toast";
@@ -9,6 +9,8 @@ import {
   UpdateSdkFeaturesRequest,
   ExtendPackageRequest,
   PackageStatus,
+  PurchasePlatform,
+  Package,
 } from "@/api/types/packages.types";
 
 /**
@@ -35,20 +37,90 @@ export const useUserPackages = () => {
     });
   };
 
+  // Helper functions جدید برای کار با purchasePlatform
+
+  /**
+   * فیلتر کردن بسته‌ها بر اساس پلتفرم خرید
+   * @param packages لیست بسته‌ها
+   * @param platform پلتفرم مورد نظر
+   */
+  const filterPackagesByPlatform = (
+    packages: Package[],
+    platform: PurchasePlatform
+  ): Package[] => {
+    return packages.filter((pkg) => pkg.purchasePlatform === platform);
+  };
+
+  /**
+   * گروه‌بندی بسته‌ها بر اساس پلتفرم خرید
+   * @param packages لیست بسته‌ها
+   */
+  const groupPackagesByPlatform = (packages: Package[]) => {
+    const grouped: Record<PurchasePlatform, Package[]> = {
+      normal: [],
+      divar: [],
+      torob: [],
+      basalam: [],
+    };
+
+    packages.forEach((pkg) => {
+      if (grouped[pkg.purchasePlatform]) {
+        grouped[pkg.purchasePlatform].push(pkg);
+      }
+    });
+
+    return grouped;
+  };
+
+  /**
+   * آمار بسته‌ها بر اساس پلتفرم
+   * @param packages لیست بسته‌ها
+   */
+  const getPackageStatsByPlatform = (packages: Package[]) => {
+    const stats: Record<
+      PurchasePlatform,
+      { count: number; active: number; expired: number }
+    > = {
+      normal: { count: 0, active: 0, expired: 0 },
+      divar: { count: 0, active: 0, expired: 0 },
+      torob: { count: 0, active: 0, expired: 0 },
+      basalam: { count: 0, active: 0, expired: 0 },
+    };
+
+    packages.forEach((pkg) => {
+      const platform = pkg.purchasePlatform;
+      if (stats[platform]) {
+        stats[platform].count++;
+        if (pkg.status === "active") {
+          stats[platform].active++;
+        } else if (pkg.status === "expired") {
+          stats[platform].expired++;
+        }
+      }
+    });
+
+    return stats;
+  };
+
   return {
     getUserPackages,
     getPackage,
+
+    // Helper functions جدید
+    filterPackagesByPlatform,
+    groupPackagesByPlatform,
+    getPackageStatsByPlatform,
   };
 };
 
 /**
- * هوک برای استفاده از API بسته‌ها برای ادمین
+ * هوک برای استفاده از API بسته‌ها برای ادمین - آپدیت شده
  */
 export const useAdminPackages = () => {
   const queryClient = useQueryClient();
   const { t } = useLanguage();
 
-  // دریافت همه بسته‌ها با فیلتر
+  // دریافت همه بسته‌ها با فیلتر - آپدیت شده با purchasePlatform
   const getAllPackages = (filters?: PackageFilters) => {
     return useQuery({
       queryKey: ["packages", filters],
@@ -57,7 +129,7 @@ export const useAdminPackages = () => {
     });
   };
 
-  // ایجاد بسته جدید
+  // ایجاد بسته جدید - آپدیت شده با purchasePlatform
   const createPackageMutation = useMutation({
     mutationFn: (data: CreatePackageRequest) =>
       packagesService.createPackage(data),
@@ -173,6 +245,78 @@ export const useAdminPackages = () => {
     },
   });
 
+  // Helper functions جدید برای ادمین
+
+  /**
+   * ایجاد بسته با پلتفرم خاص
+   * @param basePackage اطلاعات پایه بسته
+   * @param platform پلتفرم خرید
+   */
+  const createPackageForPlatform = async (
+    basePackage: Omit<CreatePackageRequest, "purchasePlatform">,
+    platform: PurchasePlatform
+  ) => {
+    const packageData: CreatePackageRequest = {
+      ...basePackage,
+      purchasePlatform: platform,
+    };
+
+    return createPackageMutation.mutateAsync(packageData);
+  };
+
+  /**
+   * فیلتر بسته‌ها بر اساس پلتفرم و وضعیت
+   * @param platform پلتفرم مورد نظر
+   * @param status وضعیت مورد نظر
+   */
+  const getPackagesByPlatformAndStatus = (
+    platform?: PurchasePlatform,
+    status?: PackageStatus
+  ) => {
+    const filters: PackageFilters = {};
+    if (platform) filters.purchasePlatform = platform;
+    if (status) filters.status = status;
+
+    return getAllPackages(filters);
+  };
+
+  /**
+   * آمار کلی بسته‌ها بر اساس پلتفرم
+   * @param packages لیست بسته‌ها
+   */
+  const getPlatformAnalytics = (packages: Package[]) => {
+    const analytics: Record<
+      PurchasePlatform,
+      {
+        total: number;
+        active: number;
+        expired: number;
+        suspended: number;
+        revenue: number; // اگر اطلاعات قیمت در دسترس باشد
+      }
+    > = {
+      normal: { total: 0, active: 0, expired: 0, suspended: 0, revenue: 0 },
+      divar: { total: 0, active: 0, expired: 0, suspended: 0, revenue: 0 },
+      torob: { total: 0, active: 0, expired: 0, suspended: 0, revenue: 0 },
+      basalam: { total: 0, active: 0, expired: 0, suspended: 0, revenue: 0 },
+    };
+
+    packages.forEach((pkg) => {
+      const platform = pkg.purchasePlatform;
+      if (analytics[platform]) {
+        analytics[platform].total++;
+        analytics[platform][pkg.status]++;
+
+        // اگر اطلاعات قیمت موجود باشد
+        if (typeof pkg.planId === "object" && "price" in pkg.planId) {
+          analytics[platform].revenue += pkg.planId.price;
+        }
+      }
+    });
+
+    return analytics;
+  };
+
   return {
     getAllPackages,
     createPackage: createPackageMutation.mutateAsync,
@@ -185,5 +329,10 @@ export const useAdminPackages = () => {
     isExtendingPackage: extendPackageMutation.isPending,
     isSuspendingPackage: suspendPackageMutation.isPending,
     isReactivatingPackage: reactivatePackageMutation.isPending,
+
+    // Helper functions جدید
+    createPackageForPlatform,
+    getPackagesByPlatformAndStatus,
+    getPlatformAnalytics,
   };
 };

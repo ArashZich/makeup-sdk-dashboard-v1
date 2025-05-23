@@ -1,5 +1,8 @@
-// src/api/types/plans.types.ts
+// src/api/types/plans.types.ts - آپدیت شده
 import { PaginatedResponse } from "@/types/common.types";
+
+// انواع پلتفرم‌ها
+export type TargetPlatform = "all" | "normal" | "divar" | "torob" | "basalam";
 
 // مدل ویژگی‌های پیش‌فرض SDK
 export interface DefaultSdkFeatures {
@@ -18,7 +21,7 @@ export interface RequestLimit {
   total: number;
 }
 
-// مدل پلن
+// مدل پلن - آپدیت شده با targetPlatforms
 export interface Plan {
   _id: string;
   name: string;
@@ -30,6 +33,7 @@ export interface Plan {
   defaultSdkFeatures: DefaultSdkFeatures;
   active: boolean;
   specialOffer: boolean;
+  targetPlatforms: TargetPlatform[]; // فیلد جدید اضافه شده
   createdAt: string;
   updatedAt: string;
 }
@@ -39,11 +43,12 @@ export interface PlanFilters {
   name?: string;
   active?: boolean;
   specialOffer?: boolean;
+  targetPlatforms?: TargetPlatform; // فیلتر جدید
   page?: number;
   limit?: number;
 }
 
-// مدل درخواست ایجاد پلن
+// مدل درخواست ایجاد پلن - آپدیت شده
 export interface CreatePlanRequest {
   name: string;
   description: string;
@@ -54,9 +59,10 @@ export interface CreatePlanRequest {
   defaultSdkFeatures: DefaultSdkFeatures;
   active: boolean;
   specialOffer: boolean;
+  targetPlatforms: TargetPlatform[]; // فیلد جدید
 }
 
-// مدل درخواست به‌روزرسانی پلن
+// مدل درخواست به‌روزرسانی پلن - آپدیت شده
 export interface UpdatePlanRequest {
   name?: string;
   description?: string;
@@ -67,6 +73,7 @@ export interface UpdatePlanRequest {
   defaultSdkFeatures?: DefaultSdkFeatures;
   active?: boolean;
   specialOffer?: boolean;
+  targetPlatforms?: TargetPlatform[]; // فیلد جدید
 }
 
 // تایپ پاسخ صفحه‌بندی شده پلن‌ها

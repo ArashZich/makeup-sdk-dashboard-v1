@@ -1,4 +1,5 @@
-// src/api/services/users-service.ts
+// src/api/services/users-service.ts - اضافه کردن تابع جدید
+
 import axios from "@/lib/axios";
 import {
   User,
@@ -8,6 +9,7 @@ import {
   CreateUserRequest,
   UpdateUserRequest,
   PaginatedUsers,
+  UserSdkFeaturesResponse, // تایپ جدید اضافه شده
 } from "@/api/types/users.types";
 
 export const usersService = {
@@ -16,6 +18,15 @@ export const usersService = {
    */
   getCurrentUser: async (): Promise<User> => {
     const response = await axios.get("/users/me");
+    return response.data;
+  },
+
+  /**
+   * دریافت ویژگی‌های SDK کاربر جاری (تابع جدید)
+   * بر اساس بسته فعال کاربر، لیست ویژگی‌های آرایشی و الگوهای مجاز را برمی‌گرداند
+   */
+  getUserSdkFeatures: async (): Promise<UserSdkFeaturesResponse> => {
+    const response = await axios.get("/users/me/sdk-features");
     return response.data;
   },
 
@@ -43,8 +54,6 @@ export const usersService = {
    */
   getAllUsers: async (filters?: UserFilters): Promise<PaginatedUsers> => {
     const response = await axios.get("/users", { params: filters });
-    console.log(response, "OOOO");
-
     return response.data;
   },
 

@@ -1,13 +1,16 @@
-// src/api/types/users.types.ts
+// src/api/types/users.types.ts - اضافه کردن تایپ‌های جدید
+
+// تایپ‌های موجود قبلی + تایپ‌های جدید SDK Features
+
 import { PaginatedResponse } from "@/types/common.types";
 
 export interface DivarTokens {
   accessToken: string;
   refreshToken: string;
-  expiresAt: string; // به صورت ISO string
+  expiresAt: string;
 }
-// مدل کاربر در این فایل با مدل کاربر در auth.types.ts مشترک است
-// اما برای جلوگیری از وابستگی چرخشی، آن را اینجا هم تعریف می‌کنیم
+
+// مدل کاربر اصلی (بدون تغییر)
 export interface User {
   _id: string;
   name: string;
@@ -28,7 +31,67 @@ export interface User {
   divarTokens?: DivarTokens;
 }
 
-// فیلترهای جستجوی کاربران
+// تایپ‌های جدید برای SDK Features
+export interface MakeupFeature {
+  type:
+    | "lips"
+    | "eyeshadow"
+    | "eyepencil"
+    | "eyeliner"
+    | "eyelashes"
+    | "blush"
+    | "concealer"
+    | "foundation"
+    | "brows"
+    | "lens";
+  patterns: string[];
+}
+
+export interface MediaFeatures {
+  allowedSources: string[];
+  allowedViews: string[];
+  comparisonModes: string[];
+}
+
+export interface PackageInfo {
+  planName: string;
+  endDate: string;
+  requestLimit: {
+    monthly: number;
+    remaining: number;
+  };
+}
+
+// پاسخ API دریافت ویژگی‌های SDK - کاربر با بسته فعال
+export interface UserSdkFeaturesWithPackage {
+  features: MakeupFeature[];
+  isPremium: boolean;
+  projectType: string;
+  mediaFeatures: MediaFeatures;
+  hasActivePackage: true;
+  packageInfo: PackageInfo;
+}
+
+// پاسخ API دریافت ویژگی‌های SDK - کاربر بدون بسته فعال
+export interface UserSdkFeaturesWithoutPackage {
+  features: [];
+  isPremium: false;
+  projectType: "none";
+  mediaFeatures: {
+    allowedSources: [];
+    allowedViews: [];
+    comparisonModes: [];
+  };
+  hasActivePackage: false;
+  message: string;
+}
+
+// تایپ اصلی پاسخ API
+export type UserSdkFeaturesResponse =
+  | UserSdkFeaturesWithPackage
+  | UserSdkFeaturesWithoutPackage;
+
+// تایپ‌های موجود قبلی (بدون تغییر)
 export interface UserFilters {
   name?: string;
   phone?: string;
@@ -37,7 +100,6 @@ export interface UserFilters {
   limit?: number;
 }
 
-// مدل درخواست به‌روزرسانی پروفایل
 export interface UpdateProfileRequest {
   name?: string;
   email?: string;
@@ -50,12 +112,10 @@ export interface UpdateProfileRequest {
   };
 }
 
-// مدل درخواست به‌روزرسانی دامنه‌های مجاز
 export interface UpdateDomainsRequest {
   domains: string[];
 }
 
-// مدل درخواست ایجاد کاربر جدید (توسط ادمین)
 export interface CreateUserRequest {
   name: string;
   phone: string;
@@ -71,10 +131,8 @@ export interface CreateUserRequest {
   };
 }
 
-// مدل درخواست به‌روزرسانی کاربر (توسط ادمین)
 export interface UpdateUserRequest extends UpdateProfileRequest {
   role?: "user" | "admin";
 }
 
-// تایپ پاسخ صفحه‌بندی شده کاربران
 export type PaginatedUsers = PaginatedResponse<User>;

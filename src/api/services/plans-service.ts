@@ -1,4 +1,4 @@
-// src/api/services/plans-service.ts
+// src/api/services/plans-service.ts - آپدیت شده
 import axios from "@/lib/axios";
 import {
   Plan,
@@ -9,7 +9,13 @@ import {
 
 export const plansService = {
   /**
-   * دریافت پلن‌های عمومی (فعال)
+   * دریافت پلن‌های عمومی (فعال) - آپدیت شده
+   * حالا بر اساس پلتفرم کاربر فیلتر می‌شود
+   *
+   * نکات مهم:
+   * - بدون توکن: فقط پلن‌های با targetPlatforms: ["all"] یا ["normal"]
+   * - با توکن کاربر عادی: پلن‌های "all" و "normal"
+   * - با توکن کاربر دیوار: پلن‌های "all" و "divar"
    */
   getPublicPlans: async (): Promise<Plan[]> => {
     const response = await axios.get("/plans/public");
@@ -18,7 +24,7 @@ export const plansService = {
 
   /**
    * دریافت همه پلن‌ها
-   * @param filters فیلترهای جستجو
+   * @param filters فیلترهای جستجو (شامل targetPlatforms جدید)
    */
   getAllPlans: async (filters?: PlanFilters): Promise<Plan[]> => {
     const response = await axios.get("/plans", { params: filters });
@@ -35,7 +41,7 @@ export const plansService = {
   },
 
   /**
-   * ایجاد پلن جدید (ادمین)
+   * ایجاد پلن جدید (ادمین) - آپدیت شده با targetPlatforms
    * @param data اطلاعات پلن جدید
    */
   createPlan: async (data: CreatePlanRequest): Promise<Plan> => {
@@ -44,7 +50,7 @@ export const plansService = {
   },
 
   /**
-   * به‌روزرسانی پلن (ادمین)
+   * به‌روزرسانی پلن (ادمین) - آپدیت شده با targetPlatforms
    * @param planId شناسه پلن
    * @param data اطلاعات جدید پلن
    */

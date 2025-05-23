@@ -1,4 +1,4 @@
-// src/api/services/packages-service.ts
+// src/api/services/packages-service.ts - آپدیت شده
 import axios from "@/lib/axios";
 import {
   Package,
@@ -31,8 +31,8 @@ export const packagesService = {
   },
 
   /**
-   * دریافت همه بسته‌ها (ادمین)
-   * @param filters فیلترهای جستجو
+   * دریافت همه بسته‌ها (ادمین) - آپدیت شده با فیلتر purchasePlatform
+   * @param filters فیلترهای جستجو (شامل purchasePlatform جدید)
    */
   getAllPackages: async (
     filters?: PackageFilters
@@ -42,8 +42,8 @@ export const packagesService = {
   },
 
   /**
-   * ایجاد بسته بدون پرداخت (ادمین)
-   * @param data اطلاعات بسته جدید
+   * ایجاد بسته بدون پرداخت (ادمین) - آپدیت شده با purchasePlatform
+   * @param data اطلاعات بسته جدید (شامل purchasePlatform)
    */
   createPackage: async (
     data: CreatePackageRequest

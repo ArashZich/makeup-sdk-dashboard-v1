@@ -1,4 +1,5 @@
-// src/api/hooks/useUsers.ts
+// src/api/hooks/useUsers.ts - اضافه کردن hook جدید
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { usersService } from "@/api/services/users-service";
 import { showToast } from "@/lib/toast";
@@ -10,6 +11,7 @@ import {
   UpdateDomainsRequest,
   CreateUserRequest,
   UpdateUserRequest,
+  UserSdkFeaturesResponse, // تایپ جدید
 } from "@/api/types/users.types";
 
 /**
@@ -18,7 +20,6 @@ import {
 export const useUserProfile = () => {
   const queryClient = useQueryClient();
   const { t } = useLanguage();
-  // همگام‌سازی با Zustand store
   const { updateUser: updateUserStore } = useAuthStore();
 
   // دریافت پروفایل کاربر جاری
@@ -38,9 +39,7 @@ export const useUserProfile = () => {
     mutationFn: (data: UpdateProfileRequest) =>
       usersService.updateProfile(data),
     onSuccess: (data) => {
-      // به‌روزرسانی کش
       queryClient.setQueryData(["userProfile"], data);
-      // همگام‌سازی با store
       updateUserStore(data);
       showToast.success(t("common.success.update"));
     },
@@ -56,9 +55,7 @@ export const useUserProfile = () => {
     mutationFn: (data: UpdateDomainsRequest) =>
       usersService.updateDomains(data),
     onSuccess: (data) => {
-      // به‌روزرسانی کش
       queryClient.setQueryData(["userProfile"], data);
-      // همگام‌سازی با store
       updateUserStore(data);
       showToast.success(t("common.success.update"));
     },
@@ -78,6 +75,85 @@ export const useUserProfile = () => {
     updateDomains: updateDomainsMutation.mutateAsync,
     isUpdatingProfile: updateProfileMutation.isPending,
     isUpdatingDomains: updateDomainsMutation.isPending,
+  };
+};
+
+/**
+ * هوک جدید برای دریافت ویژگی‌های SDK کاربر جاری
+ * این هوک بر اساس بسته فعال کاربر، ویژگی‌های مجاز SDK را برمی‌گرداند
+ */
+export const useUserSdkFeatures = () => {
+  const {
+    data: sdkFeatures,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery<UserSdkFeaturesResponse>({
+    queryKey: ["userSdkFeatures"],
+    queryFn: usersService.getUserSdkFeatures,
+    staleTime: 5 * 60 * 1000, // 5 دقیقه
+    refetchOnWindowFocus: false,
+  });
+
+  // Helper functions برای تسهیل کار با داده‌ها
+  const hasActivePackage = sdkFeatures?.hasActivePackage ?? false;
+  const isPremium = sdkFeatures?.isPremium ?? false;
+  const features = (
+    sdkFeatures?.hasActivePackage === true ? sdkFeatures.features : []
+  ) as any[];
+
+  // دریافت الگوهای مجاز برای یک نوع آرایش خاص
+  const getPatternsForType = (type: string): string[] => {
+    if (!sdkFeatures || !sdkFeatures.hasActivePackage) return [];
+
+    const feature = sdkFeatures.features.find((f) => f.type === type);
+    return feature?.patterns ?? [];
+  };
+
+  // بررسی دسترسی به یک نوع آرایش خاص
+  const hasAccessToType = (type: string): boolean => {
+    if (!sdkFeatures || !sdkFeatures.hasActivePackage) return false;
+
+    return sdkFeatures.features.some((f) => f.type === type);
+  };
+
+  // بررسی دسترسی به یک منبع رسانه‌ای
+  const hasMediaAccess = (source: string): boolean => {
+    if (!sdkFeatures || !sdkFeatures.hasActivePackage) return false;
+
+    return sdkFeatures.mediaFeatures.allowedSources.includes(source);
+  };
+
+  // دریافت اطلاعات بسته (اگر موجود باشد)
+  const packageInfo =
+    sdkFeatures?.hasActivePackage === true && "packageInfo" in sdkFeatures
+      ? sdkFeatures.packageInfo
+      : null;
+
+  // دریافت ویژگی‌های رسانه‌ای
+  const mediaFeatures =
+    sdkFeatures?.hasActivePackage === true && "mediaFeatures" in sdkFeatures
+      ? sdkFeatures.mediaFeatures
+      : { allowedSources: [], allowedViews: [], comparisonModes: [] };
+
+  return {
+    // داده‌های اصلی
+    sdkFeatures,
+    isLoading,
+    error,
+    refetch,
+
+    // Helper properties
+    hasActivePackage,
+    isPremium,
+    features,
+    packageInfo,
+    mediaFeatures,
+
+    // Helper functions
+    getPatternsForType,
+    hasAccessToType,
+    hasMediaAccess,
   };
 };
 
@@ -110,7 +186,6 @@ export const useAdminUsers = () => {
   const createUserMutation = useMutation({
     mutationFn: (data: CreateUserRequest) => usersService.createUser(data),
     onSuccess: () => {
-      // باطل کردن کش کاربران
       queryClient.invalidateQueries({ queryKey: ["users"] });
       showToast.success(t("common.success.create"));
     },
@@ -131,9 +206,7 @@ export const useAdminUsers = () => {
       data: UpdateUserRequest;
     }) => usersService.updateUser(userId, data),
     onSuccess: (data) => {
-      // به‌روزرسانی کش
       queryClient.setQueryData(["user", data._id], data);
-      // باطل کردن کش کاربران
       queryClient.invalidateQueries({ queryKey: ["users"] });
       showToast.success(t("common.success.update"));
     },
@@ -154,7 +227,6 @@ export const useAdminUsers = () => {
       data: UpdateDomainsRequest;
     }) => usersService.updateUserDomains(userId, data),
     onSuccess: (data) => {
-      // به‌روزرسانی کش
       queryClient.setQueryData(["user", data._id], data);
       showToast.success(t("common.success.update"));
     },
@@ -169,9 +241,7 @@ export const useAdminUsers = () => {
   const deleteUserMutation = useMutation({
     mutationFn: (userId: string) => usersService.deleteUser(userId),
     onSuccess: (_, userId) => {
-      // حذف از کش
       queryClient.removeQueries({ queryKey: ["user", userId] });
-      // باطل کردن کش کاربران
       queryClient.invalidateQueries({ queryKey: ["users"] });
       showToast.success(t("common.success.delete"));
     },
