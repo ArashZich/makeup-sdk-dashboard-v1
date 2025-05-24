@@ -19,12 +19,14 @@ export function SdkDashboardView() {
   const { getUserPackages } = useUserPackages();
 
   // دریافت بسته‌های فعال کاربر
-  const { data: activePackages, isLoading: isLoadingPackages } =
+  const { data: packagesData, isLoading: isLoadingPackages } =
     getUserPackages("active");
 
+  // تغییر: استفاده از results
+  const activePackages = packagesData?.results || [];
+
   // بسته فعال اول را استفاده می‌کنیم
-  const activePackage =
-    activePackages && activePackages.length > 0 ? activePackages[0] : null;
+  const activePackage = activePackages.length > 0 ? activePackages[0] : null;
 
   // استفاده از توکن SDK برای دریافت اطلاعات SDK
   const { status, isLoadingStatus, statusError, refetchStatus } = useSdk(
@@ -81,29 +83,29 @@ export function SdkDashboardView() {
           <p className="text-muted-foreground">{t("sdk.description")}</p>
         </div>
         <Button>
-          <ArrowUpRight className="mr-2 h-4 w-4" />
-          {t("sdk.viewDocumentation")}
+          <a
+            href="https://sdk.armogroup.tech/makeup/guide-v2/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2"
+          >
+            <ArrowUpRight className="mr-2 h-4 w-4" />
+            {t("sdk.viewDocumentation")}
+          </a>
         </Button>
       </div>
 
-      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
-        {/* کارت توکن SDK */}
-        <SdkTokenCard
-          token={activePackage.token}
-          packageId={activePackage._id}
-        />
+      {/* کارت توکن SDK */}
+      <SdkTokenCard token={activePackage.token} packageId={activePackage._id} />
 
-        {/* کارت آمار SDK */}
-        <SdkStatsCard status={status} />
-      </div>
+      {/* کارت آمار SDK */}
+      <SdkStatsCard status={status} />
 
-      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
-        {/* کارت ویژگی‌های SDK */}
-        <SdkFeaturesCard sdkFeatures={activePackage.sdkFeatures} />
+      {/* کارت ویژگی‌های SDK */}
+      <SdkFeaturesCard sdkFeatures={activePackage.sdkFeatures} />
 
-        {/* کارت یکپارچه‌سازی SDK */}
-        <SdkIntegrationCard token={activePackage.token} />
-      </div>
+      {/* کارت یکپارچه‌سازی SDK */}
+      <SdkIntegrationCard token={activePackage.token} />
     </div>
   );
 }

@@ -34,16 +34,22 @@ export function DashboardOverview() {
   const { getUserPackages } = useUserPackages();
   const { publicPlans, isLoadingPublicPlans } = usePlans();
 
-  const { data: activePackages, isLoading: isLoadingPackages } =
+  const { data: packagesData, isLoading: isLoadingPackages } =
     getUserPackages("active");
   const [activePackage, setActivePackage] = useState<Package | null>(null);
 
+  // تغییر: استفاده از results به جای فرض کردن که آرایه است
+  const activePackages = packagesData?.results || [];
+
+  console.log(packagesData, "packagesData");
   console.log(activePackages, "activePackages");
 
   useEffect(() => {
-    if (activePackages && activePackages?.length > 0) {
+    if (activePackages && activePackages.length > 0) {
       // فرض می‌کنیم اولین بسته فعال، بسته فعلی کاربر است
       setActivePackage(activePackages[0]);
+    } else {
+      setActivePackage(null);
     }
   }, [activePackages]);
 
@@ -137,26 +143,33 @@ export function DashboardOverview() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {activePackage.requestLimit?.remaining || 0}
+                {activePackage.requestLimit?.remaining === -1
+                  ? t("common.unlimited")
+                  : activePackage.requestLimit?.remaining || 0}
               </div>
               <p className="text-xs text-muted-foreground mt-1">
                 {t("dashboard.totalRequests")}:{" "}
-                {activePackage.requestLimit?.monthly || 0}
+                {activePackage.requestLimit?.monthly === -1
+                  ? t("common.unlimited")
+                  : activePackage.requestLimit?.monthly || 0}
               </p>
 
-              <div className="mt-4 h-2 w-full rounded-full bg-secondary">
-                <div
-                  className="h-2 rounded-full bg-primary"
-                  style={{
-                    width: `${Math.min(
-                      100,
-                      (activePackage.requestLimit?.remaining /
-                        activePackage.requestLimit?.monthly) *
-                        100 || 0
-                    )}%`,
-                  }}
-                ></div>
-              </div>
+              {/* فقط وقتی محدود باشه progress bar نشون بده */}
+              {activePackage.requestLimit?.monthly !== -1 && (
+                <div className="mt-4 h-2 w-full rounded-full bg-secondary">
+                  <div
+                    className="h-2 rounded-full bg-primary"
+                    style={{
+                      width: `${Math.min(
+                        100,
+                        (activePackage.requestLimit?.remaining /
+                          activePackage.requestLimit?.monthly) *
+                          100 || 0
+                      )}%`,
+                    }}
+                  ></div>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -164,7 +177,7 @@ export function DashboardOverview() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                {t("sdk.status")}
+                {t("sdk.statuss")}
               </CardTitle>
               <CheckCircle className="h-4 w-4 text-muted-foreground" />
             </CardHeader>

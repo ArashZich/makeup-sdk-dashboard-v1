@@ -7,10 +7,11 @@ export const metadata: Metadata = {
   description: "View and manage product details",
 };
 
-export default function ProductDetailsPage({
+export default async function ProductDetailsPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>; // تغییر: Promise اضافه شد
 }) {
-  return <ProductDetailsView productId={params.id} />;
+  const { id } = await params; // تغییر: await اضافه شد
+  return <ProductDetailsView productId={id} />;
 }

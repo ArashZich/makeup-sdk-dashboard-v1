@@ -56,7 +56,10 @@
     "highest": "Highest",
     "lowest": "Lowest",
     "all": "All",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "unlimited": "Unlimited",
+    "yes": "Yes",
+    "no": "No"
   },
   "auth": {
     "login": "Login",
@@ -273,7 +276,7 @@
   "sdk": {
     "title": "SDK",
     "description": "Manage and integrate Makeup Virtual SDK",
-    "status": "SDK Status",
+    "statuss": "SDK Status",
     "manageSDK": "Manage SDK",
     "token": "Token",
     "sdkToken": "SDK Token",
@@ -322,7 +325,40 @@
     "nextSteps": "Next Steps",
     "nextStep1": "Save your SDK token.",
     "nextStep2": "Review the SDK documentation to understand how to use it.",
-    "nextStep3": "Integrate the SDK into your application and start building!"
+    "nextStep3": "Integrate the SDK into your application and start building!",
+    "stats": {
+      "title": "SDK Statistics",
+      "description": "Your SDK usage statistics",
+      "status": "Status",
+      "expiryDate": "Expiry Date",
+      "requestLimit": "Request Limit",
+      "monthlyLimit": "Monthly Limit",
+      "usage": "Usage Statistics",
+      "totalRequests": "Total Requests",
+      "validateRequests": "Validate Requests",
+      "applyRequests": "Apply Requests",
+      "otherRequests": "Other Requests",
+      "projectType": "Project Type",
+      "premium": "Premium"
+    },
+    "status": {
+      "active": "Active",
+      "expired": "Expired",
+      "suspended": "Suspended"
+    },
+    "integration": {
+      "title": "Integration Guide",
+      "description": "How to implement SDK in your project",
+      "setup": "Setup",
+      "setupDescription": "Initial setup steps for SDK",
+      "step1": "Step 1: Add SDK Files",
+      "step2": "Step 2: Add Display Element",
+      "htmlDescription": "Add required CSS and JavaScript files to your project",
+      "jsDescription": "JavaScript code to initialize the SDK",
+      "reactDescription": "How to use SDK in React component",
+      "viewDocs": "View Full Documentation",
+      "examples": "Code Examples"
+    }
   },
   "profile": {
     "title": "Profile",

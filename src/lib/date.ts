@@ -73,3 +73,16 @@ export function getDuration(
 
   return parts.join(" و ") || "کمتر از یک روز";
 }
+
+// فرمت کردن تاریخ برای نمایش (تابع جدید)
+export function formatDate(date: Date | string, locale = "fa-IR"): string {
+  if (!date) return "";
+
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+
+  return new Intl.DateTimeFormat(locale, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(dateObj);
+}

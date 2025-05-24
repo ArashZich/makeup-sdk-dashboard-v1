@@ -56,8 +56,11 @@ export function NewTokenView() {
       try {
         if (status === "success" || !status) {
           // دریافت بسته‌های فعال کاربر
-          const packagesResult = await getUserPackages("active");
-          const packages = packagesResult?.data;
+          const packagesResult = getUserPackages("active");
+          const packagesData = await packagesResult.data;
+
+          // تغییر: استفاده از results
+          const packages = packagesData?.results;
 
           // بررسی وجود بسته فعال
           if (packages && packages.length > 0) {
