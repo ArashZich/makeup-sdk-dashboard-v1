@@ -68,7 +68,18 @@
     "of": "Of",
     "rowsPerPage": "Rows Per Page",
     "showing": "Showing",
-    "currency": { "toman": "Toman", "rial": "Rial" }
+    "currency": { "toman": "Toman", "rial": "Rial" },
+    "today": "Today",
+    "from": "From",
+    "filters": "Filters",
+    "activeFilters": "Active Filters",
+    "export": "Export",
+    "unknown": "Unknown",
+    "openMenu": "Open Menu",
+    "deleting": "Deleting...",
+    "pattern": "Pattern",
+    "color": "Color",
+    "total": "Total"
   },
   "auth": {
     "login": "Login",
@@ -608,7 +619,8 @@
     },
     "success": {
       "paymentCanceled": "Payment successfully canceled"
-    }
+    },
+    "paidAt": "Paid At"
   },
   "settings": {
     "title": "Settings",
@@ -863,6 +875,23 @@
         "recipient": "Recipient",
         "sentAt": "Sent At",
         "sentTo": "Sent To"
+      },
+      "details": {
+        "title": "Notification Details",
+        "notificationId": "Notification ID",
+        "messageContent": "Message Content",
+        "recipientInfo": "Recipient Information",
+        "sentTo": "Sent To",
+        "targetType": "Target Type",
+        "sentToAll": "Sent to all users",
+        "sentToPlanUsers": "Sent to plan users",
+        "sentToUser": "Sent to specific user",
+        "metadata": "Additional Data",
+        "dates": "Dates",
+        "sentAt": "Sent Date",
+        "readStatus": "Read Status",
+        "read": "Read",
+        "unread": "Unread"
       }
     },
     "packages": {
@@ -986,6 +1015,174 @@
       "deleteCouponConfirmation": "Are you sure you want to delete coupon \"{{code}}\"?",
       "deleteWarning": "This action will deactivate the coupon. Used coupons will not be affected.",
       "descriptionPlaceholder": "Enter coupon description"
+    },
+    "payments": {
+      "title": "Payments Management",
+      "description": "View and manage all system payments",
+      "allPayments": "All Payments",
+      "searchPlaceholder": "Search payments...",
+      "noPayments": "No payments found",
+      "stats": {
+        "totalPayments": "Total Payments",
+        "totalRevenue": "Total Revenue",
+        "successfulPayments": "Successful Payments",
+        "successRate": "Success Rate"
+      },
+      "table": {
+        "paymentId": "Payment ID",
+        "user": "User",
+        "plan": "Plan",
+        "amount": "Amount",
+        "status": "Status",
+        "date": "Date",
+        "paymentCode": "Payment Code",
+        "refId": "Reference ID"
+      },
+      "status": {
+        "pending": "Pending",
+        "success": "Success",
+        "failed": "Failed",
+        "canceled": "Canceled"
+      },
+      "filters": {
+        "filterByStatus": "Filter by Status",
+        "filterByPlan": "Filter by Plan",
+        "filterByUser": "Filter by User",
+        "allStatuses": "All Statuses",
+        "allPlans": "All Plans",
+        "dateRange": "Date Range",
+        "amountRange": "Amount Range",
+        "reset": "Reset Filters",
+        "allUsers": "All Users",
+        "minAmount": "Min Amount",
+        "maxAmount": "Max Amount"
+      },
+      "details": {
+        "title": "Payment Details",
+        "userInfo": "User Information",
+        "planInfo": "Plan Information",
+        "paymentDetails": "Payment Details",
+        "discount": "Discount",
+        "dates": "Dates",
+        "createdAt": "Created Date",
+        "paidAt": "Payment Date",
+        "nameLabel": "Name",
+        "phoneLabel": "Phone",
+        "duration": "Duration"
+      }
+    },
+    "products": {
+      "title": "Products Management",
+      "description": "View and manage all user products",
+      "allProducts": "All Products",
+      "createProduct": "Create New Product",
+      "editProduct": "Edit Product",
+      "searchPlaceholder": "Search products...",
+      "noProducts": "No products found",
+      "productCreated": "Product created successfully",
+      "productUpdated": "Product updated successfully",
+      "productDeleted": "Product deleted successfully",
+      "confirmDelete": "Are you sure you want to delete this product?",
+      "deleteWarning": "This action cannot be undone.",
+      "table": {
+        "productId": "Product ID",
+        "name": "Product Name",
+        "user": "User",
+        "type": "Type",
+        "code": "Code",
+        "uid": "Short ID",
+        "status": "Status",
+        "patterns": "Patterns",
+        "colors": "Colors",
+        "createdAt": "Created Date",
+        "actions": "Actions"
+      },
+      "types": {
+        "lips": "Lips",
+        "eyeshadow": "Eyeshadow",
+        "eyepencil": "Eye Pencil",
+        "eyelashes": "Eyelashes",
+        "blush": "Blush",
+        "eyeliner": "Eyeliner"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "filters": {
+        "filterByUser": "Filter by User",
+        "filterByType": "Filter by Type",
+        "filterByStatus": "Filter by Status",
+        "allUsers": "All Users",
+        "allTypes": "All Types",
+        "allStatuses": "All Statuses",
+        "reset": "Reset Filters"
+      },
+      "form": {
+        "title": "Product Form",
+        "nameLabel": "Product Name",
+        "namePlaceholder": "Enter product name",
+        "nameRequired": "Product name is required",
+        "descriptionLabel": "Description",
+        "descriptionPlaceholder": "Enter product description",
+        "descriptionRequired": "Description is required",
+        "typeLabel": "Product Type",
+        "typeSelectPlaceholder": "Select product type",
+        "typeRequired": "Product type is required",
+        "codeLabel": "Product Code",
+        "codePlaceholder": "Enter product code",
+        "codeRequired": "Product code is required",
+        "thumbnailLabel": "Thumbnail Image",
+        "thumbnailPlaceholder": "Enter thumbnail image URL",
+        "thumbnailRequired": "Thumbnail image is required",
+        "statusLabel": "Product Status",
+        "userLabel": "User",
+        "userSelectPlaceholder": "Select user",
+        "userRequired": "User selection is required",
+        "patternsLabel": "Patterns",
+        "patternsDescription": "Add at least one pattern",
+        "colorsLabel": "Colors",
+        "colorsDescription": "Add at least one color",
+        "patternName": "Pattern Name",
+        "patternCode": "Pattern Code",
+        "patternImageUrl": "Pattern Image URL",
+        "colorName": "Color Name",
+        "colorHexCode": "Color Hex Code",
+        "colorImageUrl": "Color Image URL",
+        "addPattern": "Add Pattern",
+        "addColor": "Add Color",
+        "removePattern": "Remove Pattern",
+        "removeColor": "Remove Color",
+        "creating": "Creating...",
+        "updating": "Updating...",
+        "createButton": "Create Product",
+        "updateButton": "Update Product",
+        "cancelButton": "Cancel"
+      },
+      "details": {
+        "title": "Product Details",
+        "basicInfo": "Basic Information",
+        "userInfo": "User Information",
+        "productCode": "Product Code",
+        "productUid": "Short ID",
+        "description": "Description",
+        "thumbnail": "Thumbnail Image",
+        "patternsInfo": "Patterns Information",
+        "colorsInfo": "Colors Information",
+        "patternName": "Pattern Name",
+        "patternCode": "Pattern Code",
+        "colorName": "Color Name",
+        "colorHex": "Hex Code",
+        "dates": "Dates",
+        "createdAt": "Created Date",
+        "updatedAt": "Last Updated",
+        "noPatterns": "No patterns defined",
+        "noColors": "No colors defined"
+      },
+      "fetchProducts": "Fetch Products",
+      "selectedUser": "Selected User",
+      "userProducts": "User Products",
+      "selectUserFirst": "Please select a user first"
     }
   },
 

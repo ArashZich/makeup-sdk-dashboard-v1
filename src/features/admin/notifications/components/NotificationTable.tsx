@@ -1,4 +1,3 @@
-// src/features/admin/notifications/components/NotificationTable.tsx
 "use client";
 
 import { useState } from "react";
@@ -12,6 +11,7 @@ import { Notification } from "@/api/types/notifications.types";
 import { User } from "@/api/types/users.types";
 import { Plan } from "@/api/types/plans.types";
 import { Eye, Users, User as UserIcon, Package } from "lucide-react";
+import { NotificationDetailsModal } from "./NotificationDetailsModal";
 
 interface NotificationTableProps {
   notifications: Notification[];
@@ -23,6 +23,8 @@ export function NotificationTable({
   isLoading = false,
 }: NotificationTableProps) {
   const { t } = useLanguage();
+  const [selectedNotification, setSelectedNotification] =
+    useState<Notification | null>(null);
 
   const getTypeVariant = (type: string) => {
     switch (type) {
@@ -77,7 +79,7 @@ export function NotificationTable({
 
     return {
       type: "unknown",
-      label: "نامشخص",
+      label: t("common.unknown"),
       icon: UserIcon,
     };
   };
@@ -120,6 +122,17 @@ export function NotificationTable({
       },
     },
     {
+      accessorKey: "read",
+      header: () => t("admin.notifications.details.readStatus"),
+      cell: ({ row }) => (
+        <Badge variant={row.original.read ? "default" : "secondary"}>
+          {row.original.read
+            ? t("admin.notifications.details.read")
+            : t("admin.notifications.details.unread")}
+        </Badge>
+      ),
+    },
+    {
       accessorKey: "createdAt",
       header: () => t("admin.notifications.table.sentAt"),
       cell: ({ row }) => (
@@ -136,10 +149,7 @@ export function NotificationTable({
           variant="ghost"
           size="sm"
           className="h-8 w-8 p-0"
-          onClick={() => {
-            // TODO: View notification details
-            console.log("View notification:", row.original._id);
-          }}
+          onClick={() => setSelectedNotification(row.original)}
         >
           <Eye className="h-4 w-4" />
           <span className="sr-only">{t("common.view")}</span>
@@ -159,14 +169,22 @@ export function NotificationTable({
   }
 
   return (
-    <DataTable
-      columns={columns}
-      data={notifications}
-      searchKey="title"
-      searchPlaceholder={t("admin.notifications.searchPlaceholder")}
-      noResultsText={t("admin.notifications.noNotifications")}
-      pagination={true}
-      pageSize={10}
-    />
+    <>
+      <DataTable
+        columns={columns}
+        data={notifications}
+        searchKey="title"
+        searchPlaceholder={t("admin.notifications.searchPlaceholder")}
+        noResultsText={t("admin.notifications.noNotifications")}
+        pagination={true}
+        pageSize={10}
+      />
+
+      <NotificationDetailsModal
+        notification={selectedNotification}
+        isOpen={!!selectedNotification}
+        onClose={() => setSelectedNotification(null)}
+      />
+    </>
   );
 }
