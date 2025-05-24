@@ -1,4 +1,4 @@
-// src/config/dashboard-nav.ts
+// src/config/dashboard-nav.ts - آپدیت شده
 import {
   BarChart4,
   Bell,
@@ -98,10 +98,7 @@ export const dashboardNavItems: SidebarGroup[] = [
         path: "/dashboard/notifications",
         icon: Bell,
         permission: "all",
-        badge: {
-          text: "9+",
-          variant: "danger",
-        },
+        // حذف badge ثابت - حالا از API می‌خونیم
       },
       {
         id: "profile",

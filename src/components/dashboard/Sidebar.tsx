@@ -1,4 +1,4 @@
-// src/components/dashboard/Sidebar.tsx - آپدیت شده
+// src/components/dashboard/Sidebar.tsx - آپدیت شده برای رفع مشکلات
 "use client";
 
 import { useState, useEffect } from "react";
@@ -6,7 +6,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUIStore } from "@/store/ui.store";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext"; // تغییر: از hook استفاده میکنیم
+import { useAuth } from "@/contexts/AuthContext";
+import { useNotifications } from "@/api/hooks/useNotifications"; // اضافه شده
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
 import { dashboardNavItems } from "@/config/dashboard-nav";
@@ -19,11 +20,15 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export function Sidebar() {
   const { t, isRtl } = useLanguage();
-  const { user } = useAuth(); // استفاده از hook به جای context
+  const { user } = useAuth();
   const pathname = usePathname();
   const { isSidebarOpen, toggleSidebar, setSidebarOpen } = useUIStore();
   const isMobile = useMediaQuery("(max-width: 1024px)");
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
+
+  // استفاده از hook نوتیفیکیشن برای دریافت تعداد خوانده نشده
+  const { getUnreadCount } = useNotifications();
+  const { count: unreadCount } = getUnreadCount();
 
   // بررسی دسترسی کاربر به آیتم‌های منو
   const hasPermission = (permission: "user" | "admin" | "all") => {
@@ -76,6 +81,31 @@ export function Sidebar() {
     }
   };
 
+  // تابع برای نمایش badge نوتیفیکیشن
+  const getBadgeForItem = (itemId: string) => {
+    if (itemId === "notifications" && unreadCount > 0) {
+      return {
+        text: unreadCount > 9 ? "9+" : unreadCount.toString(),
+        variant: "danger" as const,
+      };
+    }
+    return null;
+  };
+
+  // فیلتر کردن گروه‌هایی که آیتم دارند
+  const getVisibleGroups = () => {
+    return dashboardNavItems
+      .map((group) => ({
+        ...group,
+        items: group.items.filter(
+          (item) =>
+            hasPermission(item.permission ?? "all") &&
+            hasDivarAccess(item.requiresDivarAuth)
+        ),
+      }))
+      .filter((group) => group.items.length > 0); // فقط گروه‌هایی که آیتم دارند
+  };
+
   // انیمیشن باز/بسته شدن سایدبار
   const sidebarVariants = {
     open: {
@@ -89,6 +119,8 @@ export function Sidebar() {
       transition: { duration: 0.3 },
     },
   };
+
+  const visibleGroups = getVisibleGroups();
 
   // اگر سایدبار بسته باشد و در حالت دسکتاپ باشیم، تنها نوار کناری باریک را نمایش می‌دهیم
   if (!isSidebarOpen && !isMobile) {
@@ -105,15 +137,13 @@ export function Sidebar() {
         <Separator className="w-10" />
 
         <div className="flex flex-col gap-4 items-center">
-          {dashboardNavItems.map((group) => (
+          {visibleGroups.map((group) => (
             <div key={group.id} className="flex flex-col gap-3">
-              {group.items
-                .filter(
-                  (item) =>
-                    hasPermission(item.permission ?? "all") &&
-                    hasDivarAccess(item.requiresDivarAuth)
-                )
-                .map((item) => (
+              {group.items.map((item) => {
+                const dynamicBadge = getBadgeForItem(item.id);
+                const badge = dynamicBadge || item.badge;
+
+                return (
                   <Button
                     key={item.id}
                     variant="ghost"
@@ -128,21 +158,22 @@ export function Sidebar() {
                   >
                     <Link href={item.path} onClick={handleItemClick}>
                       <item.icon size={20} />
-                      {item.badge && (
+                      {badge && (
                         <Badge
                           variant={
-                            item.badge.variant === "danger"
+                            badge.variant === "danger"
                               ? "destructive"
                               : "default"
                           }
                           className="absolute -top-1 -right-1 h-5 min-w-5 flex items-center justify-center"
                         >
-                          {item.badge.text}
+                          {badge.text}
                         </Badge>
                       )}
                     </Link>
                   </Button>
-                ))}
+                );
+              })}
             </div>
           ))}
         </div>
@@ -190,10 +221,12 @@ export function Sidebar() {
               </Button>
             </div>
 
-            <ScrollArea className="flex-1">
-              <div className="px-2 py-4">
-                {dashboardNavItems.map((group) => (
-                  <div key={group.id} className="mb-4">
+            {/* اضافه کردن ScrollArea با flex-1 برای تا پایین صفحه بودن */}
+            <ScrollArea className="flex-1 h-full">
+              <div className="px-2 py-4 space-y-4">
+                {visibleGroups.map((group) => (
+                  <div key={group.id}>
+                    {/* نمایش عنوان گروه فقط اگر title وجود داشته باشد */}
                     {group.title && (
                       <div className="px-3 mb-2">
                         <h2 className="text-xs font-medium text-sidebar-foreground/60 uppercase tracking-wider">
@@ -203,13 +236,11 @@ export function Sidebar() {
                     )}
 
                     <div className="space-y-1">
-                      {group.items
-                        .filter(
-                          (item) =>
-                            hasPermission(item.permission ?? "all") &&
-                            hasDivarAccess(item.requiresDivarAuth)
-                        )
-                        .map((item) => (
+                      {group.items.map((item) => {
+                        const dynamicBadge = getBadgeForItem(item.id);
+                        const badge = dynamicBadge || item.badge;
+
+                        return (
                           <div key={item.id}>
                             {item.children ? (
                               <div>
@@ -309,29 +340,31 @@ export function Sidebar() {
                                 >
                                   <item.icon size={18} />
                                   <span>{t(item.label)}</span>
-                                  {item.badge && (
+                                  {badge && (
                                     <Badge
                                       variant={
-                                        item.badge.variant === "danger"
+                                        badge.variant === "danger"
                                           ? "destructive"
                                           : "default"
                                       }
                                       className="ms-auto"
                                     >
-                                      {item.badge.text}
+                                      {badge.text}
                                     </Badge>
                                   )}
                                 </Link>
                               </Button>
                             )}
                           </div>
-                        ))}
+                        );
+                      })}
                     </div>
                   </div>
                 ))}
               </div>
             </ScrollArea>
 
+            {/* Footer ثابت در پایین */}
             <div className="p-4 border-t border-border">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
