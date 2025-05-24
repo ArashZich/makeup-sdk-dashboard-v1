@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -67,10 +67,8 @@ export function ProductForm({
   isLoading,
 }: ProductFormProps) {
   const { t } = useLanguage();
-  const [selectedPatterns, setSelectedPatterns] = useState<string[]>(
-    product?.patterns.map((p) => p.code) || []
-  );
-  const [colors, setColors] = useState<Color[]>(product?.colors || []);
+  const [selectedPatterns, setSelectedPatterns] = useState<string[]>([]);
+  const [colors, setColors] = useState<Color[]>([]);
 
   // New color form state
   const [newColor, setNewColor] = useState<Color>({
@@ -79,18 +77,52 @@ export function ProductForm({
     imageUrl: "",
   });
 
+  // ✅ هر بار که product تغییر کنه، state ها رو ریست کن
+  useEffect(() => {
+    if (product) {
+      setSelectedPatterns(product.patterns.map((p) => p.code) || []);
+      setColors(product.colors || []);
+    } else {
+      setSelectedPatterns([]);
+      setColors([]);
+    }
+  }, [product]);
+
   // Initialize form with existing product or defaults
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
     defaultValues: {
-      name: product?.name || "",
-      description: product?.description || "",
-      type: product?.type || "",
-      code: product?.code || "",
-      thumbnail: product?.thumbnail || "",
-      active: product?.active ?? true,
+      name: "",
+      description: "",
+      type: "",
+      code: "",
+      thumbnail: "",
+      active: true,
     },
   });
+
+  // ✅ هر بار که product تغییر کنه، فرم رو ریست کن
+  useEffect(() => {
+    if (product) {
+      form.reset({
+        name: product.name || "",
+        description: product.description || "",
+        type: product.type || "",
+        code: product.code || "",
+        thumbnail: product.thumbnail || "",
+        active: product.active ?? true,
+      });
+    } else {
+      form.reset({
+        name: "",
+        description: "",
+        type: "",
+        code: "",
+        thumbnail: "",
+        active: true,
+      });
+    }
+  }, [product, form]);
 
   // Watch type changes to reset patterns
   const selectedType = form.watch("type");
@@ -119,23 +151,48 @@ export function ProductForm({
     setColors(updatedColors);
   };
 
-  // Submit the form
+  // ✅ Submit the form - کاملاً فیکس شده
   const handleFormSubmit = (values: ProductFormValues) => {
+    console.log("🔵 Form Values:", values);
+    console.log("🔵 Selected Patterns:", selectedPatterns);
+    console.log("🔵 Colors:", colors);
+
     // تبدیل patterns از array of strings به array of Pattern objects
     const patterns: Pattern[] = selectedPatterns.map((patternCode) => ({
-      name: patternCode, // یا می‌تونیم از API mapping بگیریم
+      name: patternCode,
       code: patternCode,
-      imageUrl: "", // اختیاری
+      imageUrl: "",
     }));
 
-    // Combine form values with patterns and colors
-    const formData = {
-      ...values,
-      patterns,
-      colors,
+    // ✅ پاک کردن _id از colors - فیکس شده
+    const cleanColors = colors.map((color) => ({
+      name: color.name,
+      hexCode: color.hexCode,
+      imageUrl: color.imageUrl || "",
+    }));
+
+    // ✅ فقط فیلدهای مجاز - سخت‌کد شده تا مطمئن باشیم
+    const cleanFormData = {
+      name: values.name,
+      description: values.description || undefined,
+      type: values.type,
+      code: values.code,
+      thumbnail: values.thumbnail || undefined,
+      active: values.active,
+      patterns: patterns,
+      colors: cleanColors, // ✅ استفاده از cleanColors بجای colors
     };
 
-    onSubmit(formData);
+    // ✅ حذف فیلدهای undefined
+    const finalData = Object.fromEntries(
+      Object.entries(cleanFormData).filter(([_, value]) => {
+        return value !== undefined && value !== null && value !== "";
+      })
+    );
+
+    console.log("🟢 Final Data to Submit:", finalData);
+
+    onSubmit(finalData);
   };
 
   return (

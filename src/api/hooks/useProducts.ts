@@ -16,17 +16,12 @@ export const useProducts = () => {
   const queryClient = useQueryClient();
   const { t } = useLanguage();
 
-  // دریافت محصولات کاربر جاری
-  const getUserProducts = (
-    userId: string,
-    filters?: ProductFilters,
-    options?: { enabled?: boolean } // این خط رو اضافه کردیم
-  ) => {
+  // ✅ دریافت محصولات کاربر جاری (بدون userId)
+  const getUserProducts = (filters?: ProductFilters) => {
     return useQuery({
-      queryKey: ["adminUserProducts", userId, filters],
-      queryFn: () => productsService.getUserProducts(userId, filters),
+      queryKey: ["userProducts", filters],
+      queryFn: () => productsService.getCurrentUserProducts(filters),
       staleTime: 5 * 60 * 1000, // 5 دقیقه
-      enabled: options?.enabled ?? true, // اگر enabled نداده بشه، true میشه
     });
   };
 
@@ -125,16 +120,26 @@ export const useAdminProducts = () => {
   const queryClient = useQueryClient();
   const { t } = useLanguage();
 
-  // دریافت محصولات کاربر
+  // ✅ دریافت محصولات یک کاربر خاص (با userId برای ادمین)
   const getUserProducts = (
     userId: string,
     filters?: ProductFilters,
-    p0?: { enabled: boolean }
+    options?: { enabled?: boolean }
   ) => {
     return useQuery({
       queryKey: ["adminUserProducts", userId, filters],
       queryFn: () => productsService.getUserProducts(userId, filters),
       staleTime: 5 * 60 * 1000, // 5 دقیقه
+      enabled: options?.enabled ?? Boolean(userId), // ✅ فقط اگر userId موجود باشه
+    });
+  };
+
+  // ✅ دریافت تمام محصولات (برای ادمین)
+  const getAllProducts = (filters?: ProductFilters) => {
+    return useQuery({
+      queryKey: ["adminAllProducts", filters],
+      queryFn: () => productsService.getAllProducts(filters),
+      staleTime: 5 * 60 * 1000,
     });
   };
 
@@ -215,7 +220,8 @@ export const useAdminProducts = () => {
   });
 
   return {
-    getUserProducts,
+    getUserProducts, // برای یک کاربر خاص
+    getAllProducts, // برای تمام محصولات
     createProductForUser: createProductForUserMutation.mutateAsync,
     updateUserProduct: updateUserProductMutation.mutateAsync,
     deleteUserProduct: deleteUserProductMutation.mutateAsync,

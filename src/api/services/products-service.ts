@@ -21,6 +21,17 @@ export const productsService = {
   },
 
   /**
+   * ✅ دریافت همه محصولات (ادمین)
+   * @param filters فیلترهای جستجو
+   */
+  getAllProducts: async (
+    filters?: ProductFilters
+  ): Promise<PaginatedProducts> => {
+    const response = await axios.get("/products", { params: filters });
+    return response.data;
+  },
+
+  /**
    * ایجاد محصول جدید
    * @param data اطلاعات محصول جدید
    */
@@ -48,7 +59,7 @@ export const productsService = {
   },
 
   /**
-   * به‌روزرسانی محصول
+   * ✅ به‌روزرسانی محصول - فیکس شده برای حذف فیلدهای غیرمجاز
    * @param productId شناسه محصول
    * @param data اطلاعات جدید محصول
    */
@@ -56,7 +67,11 @@ export const productsService = {
     productId: string,
     data: UpdateProductRequest
   ): Promise<Product> => {
-    const response = await axios.put(`/products/${productId}`, data);
+    // ✅ حذف فیلدهای غیرمجاز قبل از ارسال
+    const { _id, __v, createdAt, updatedAt, userId, uid, ...cleanData } =
+      data as any;
+
+    const response = await axios.put(`/products/${productId}`, cleanData);
     return response.data;
   },
 
@@ -98,7 +113,7 @@ export const productsService = {
   },
 
   /**
-   * به‌روزرسانی محصول کاربر (ادمین)
+   * ✅ به‌روزرسانی محصول کاربر (ادمین) - فیکس شده
    * @param userId شناسه کاربر
    * @param productId شناسه محصول
    * @param data اطلاعات جدید محصول
@@ -108,9 +123,20 @@ export const productsService = {
     productId: string,
     data: UpdateProductRequest
   ): Promise<Product> => {
+    // ✅ حذف فیلدهای غیرمجاز قبل از ارسال
+    const {
+      _id,
+      __v,
+      createdAt,
+      updatedAt,
+      userId: userIdField,
+      uid,
+      ...cleanData
+    } = data as any;
+
     const response = await axios.put(
       `/products/user/${userId}/${productId}`,
-      data
+      cleanData
     );
     return response.data;
   },
