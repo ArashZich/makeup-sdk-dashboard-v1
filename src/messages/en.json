@@ -67,7 +67,8 @@
     "page": "Page",
     "of": "Of",
     "rowsPerPage": "Rows Per Page",
-    "showing": "Showing"
+    "showing": "Showing",
+    "currency": { "toman": "Toman", "rial": "Rial" }
   },
   "auth": {
     "login": "Login",
@@ -751,8 +752,51 @@
       }
     },
     "analytics": {
-      "title": "Analytics",
-      "description": "System analytics and statistics"
+      "title": "Analytics & Statistics",
+      "description": "View comprehensive system and revenue statistics",
+      "revenue": {
+        "title": "Revenue Statistics",
+        "totalRevenue": "Total Revenue",
+        "totalOrders": "Total Orders",
+        "avgOrderValue": "Average Order Value",
+        "growthRate": "Growth Rate",
+        "lastPeriod": "Compared to last period",
+        "thisMonth": "This Month",
+        "lastMonth": "Last Month",
+        "thisYear": "This Year",
+        "export": "Export Excel",
+        "platforms": {
+          "normal": "Normal",
+          "divar": "Divar",
+          "torob": "Torob",
+          "basalam": "Basalam",
+          "comparison": "Platform Comparison"
+        }
+      },
+      "timeRange": {
+        "week": "Last Week",
+        "month": "Last Month",
+        "halfyear": "Last 6 Months",
+        "year": "Last Year",
+        "all": "All Time",
+        "title": "Time Range",
+        "select": "Select time range",
+        "selected": "Selected range"
+      },
+      "charts": {
+        "revenueOverTime": "Revenue Over Time",
+        "platformComparison": "Platform Comparison",
+        "orderTrends": "Order Trends",
+        "noData": "No data available to display"
+      },
+      "export": {
+        "platform": "Platform",
+        "total": "Total",
+        "exporting": "Exporting...",
+        "selectFormat": "Select Format",
+        "csv": "CSV File",
+        "json": "JSON File"
+      }
     },
     "notifications": {
       "title": "Notifications Management",
