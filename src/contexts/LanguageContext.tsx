@@ -8,6 +8,7 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
+import { DirectionProvider } from "@radix-ui/react-direction";
 import { useCookies } from "@/lib/cookies";
 import { iranSans, montserrat } from "@/lib/fonts";
 
@@ -156,7 +157,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
 
   return (
     <LanguageContext.Provider value={value}>
-      {children}
+      <DirectionProvider dir={direction}>{children}</DirectionProvider>
     </LanguageContext.Provider>
   );
 };

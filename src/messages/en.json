@@ -682,7 +682,13 @@
     "noData": "No data available",
     "noDataDescription": "No usage statistics available for this product yet",
     "productInfo": "Product Information",
-    "thisMonth": "This Month"
+    "thisMonth": "This Month",
+    "date": "Date",
+    "total": "Total",
+    "successful": "Successful",
+    "requestsBreakdown": "Requests Breakdown",
+    "thisWeek": "This Week Stats",
+    "noUsageData": "No usage data"
   },
   "admin": {
     "title": "Admin",

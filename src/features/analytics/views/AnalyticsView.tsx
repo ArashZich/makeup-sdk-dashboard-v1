@@ -37,13 +37,14 @@ export function AnalyticsView() {
   const { getUserAnalytics, downloadAnalytics, isDownloadingAnalytics } =
     useUserAnalytics();
 
+  // **مهم: تغییر اینجا - پارامتر رو به صورت object پاس می‌کنیم**
   const {
     data: analytics,
     isLoading,
     error,
     refetch,
     isRefetching,
-  } = getUserAnalytics(timeRange);
+  } = getUserAnalytics({ timeRange }); // اینجا تغییر کردیم
 
   // Function to process time distribution data for chart
   const processTimeDistributionData = () => {
@@ -71,7 +72,7 @@ export function AnalyticsView() {
   // Handle download analytics
   const handleDownload = async () => {
     try {
-      await downloadAnalytics();
+      await downloadAnalytics({});
     } catch (error) {
       console.error("Error downloading analytics:", error);
     }

@@ -683,7 +683,13 @@
     "downloadError": "خطا در دانلود آنالیتیکس",
     "noData": "داده‌ای موجود نیست",
     "noDataDescription": "هنوز آماری از استفاده این محصول وجود ندارد",
-    "productInfo": "اطلاعات محصول"
+    "productInfo": "اطلاعات محصول",
+    "date": "تاریخ",
+    "total": "مجموع",
+    "successful": "موفق",
+    "requestsBreakdown": "تحلیل درخواست‌ها",
+    "thisWeek": "آمار این هفته",
+    "noUsageData": "داده‌ای موجود نیست"
   },
   "admin": {
     "title": "مدیریت",
