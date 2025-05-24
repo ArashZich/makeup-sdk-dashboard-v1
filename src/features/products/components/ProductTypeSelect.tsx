@@ -1,3 +1,4 @@
+// src/features/products/components/ProductTypeSelect.tsx
 "use client";
 
 import { useUserSdkFeatures } from "@/api/hooks/useUsers";
@@ -20,9 +21,10 @@ import {
   SparklesIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ProductType, getAllProductTypes } from "@/constants/product-patterns";
 
 // آیکون‌های مربوط به هر نوع محصول
-const PRODUCT_TYPE_ICONS = {
+const PRODUCT_TYPE_ICONS: Record<ProductType, React.ComponentType<any>> = {
   lips: EyeIcon,
   eyeshadow: EyeIcon,
   eyepencil: EyeIcon,
@@ -32,8 +34,7 @@ const PRODUCT_TYPE_ICONS = {
   concealer: SparklesIcon,
   foundation: SparklesIcon,
   brows: EyeIcon,
-  lens: EyeIcon,
-} as const;
+};
 
 interface ProductTypeSelectProps {
   value: string;
@@ -41,6 +42,7 @@ interface ProductTypeSelectProps {
   className?: string;
   disabled?: boolean;
   placeholder?: string;
+  showSdkValidation?: boolean; // آیا بر اساس SDK کاربر محدود شود
 }
 
 export function ProductTypeSelect({
@@ -49,6 +51,7 @@ export function ProductTypeSelect({
   className,
   disabled = false,
   placeholder,
+  showSdkValidation = true,
 }: ProductTypeSelectProps) {
   const { t } = useLanguage();
 
@@ -60,13 +63,18 @@ export function ProductTypeSelect({
     hasAccessToType,
   } = useUserSdkFeatures();
 
-  // دریافت انواع محصولات مجاز
-  const availableTypes = hasActivePackage
-    ? features.map((feature) => feature.type)
-    : [];
+  // دریافت همه انواع محصولات از constants
+  const allProductTypes = getAllProductTypes();
 
-  // Loading state
-  if (isLoading) {
+  // انواع محصولات مجاز (بر اساس SDK یا همه)
+  const availableTypes = showSdkValidation
+    ? hasActivePackage
+      ? features.map((feature) => feature.type)
+      : []
+    : allProductTypes;
+
+  // Loading state - فقط اگر SDK validation فعال باشه
+  if (showSdkValidation && isLoading) {
     return (
       <div className={cn("space-y-2", className)}>
         <Label>{t("products.form.type")}</Label>
@@ -80,8 +88,8 @@ export function ProductTypeSelect({
     );
   }
 
-  // No active package
-  if (!hasActivePackage) {
+  // No active package - فقط اگر SDK validation فعال باشه
+  if (showSdkValidation && !hasActivePackage) {
     return (
       <div className={cn("space-y-2", className)}>
         <Label>{t("products.form.type")}</Label>
@@ -111,8 +119,7 @@ export function ProductTypeSelect({
   }
 
   const getTypeIcon = (type: string) => {
-    const IconComponent =
-      PRODUCT_TYPE_ICONS[type as keyof typeof PRODUCT_TYPE_ICONS];
+    const IconComponent = PRODUCT_TYPE_ICONS[type as ProductType];
     return IconComponent ? (
       <IconComponent className="h-4 w-4" />
     ) : (
@@ -143,7 +150,7 @@ export function ProductTypeSelect({
               <div className="flex items-center gap-2">
                 {getTypeIcon(type)}
                 <span>{t(`products.types.${type}`)}</span>
-                {!hasAccessToType(type) && (
+                {showSdkValidation && !hasAccessToType(type) && (
                   <Badge variant="destructive" className="text-xs ml-auto">
                     {t("products.form.noAccess")}
                   </Badge>
@@ -154,16 +161,8 @@ export function ProductTypeSelect({
         </SelectContent>
       </Select>
 
-      {/* نمایش تعداد پترن‌های موجود برای نوع انتخاب شده */}
-      {value && hasAccessToType(value) && (
-        <div className="text-xs text-muted-foreground">
-          {t("products.form.patternsForType")}:{" "}
-          {features.find((f) => f.type === value)?.patterns.length || 0}
-        </div>
-      )}
-
       {/* هشدار عدم دسترسی */}
-      {value && !hasAccessToType(value) && (
+      {showSdkValidation && value && !hasAccessToType(value) && (
         <Alert variant="destructive">
           <AlertTriangleIcon className="h-4 w-4" />
           <AlertDescription>

@@ -1,18 +1,30 @@
 // src/api/types/products.types.ts
 import { PaginatedResponse } from "@/types/common.types";
 
-// مدل الگو
+// ✅ تایپ‌های محصول یکپارچه شده با constants
+export type ProductType =
+  | "lips"
+  | "eyeshadow"
+  | "eyepencil"
+  | "eyeliner"
+  | "eyelashes"
+  | "blush"
+  | "concealer"
+  | "foundation"
+  | "brows";
+
+// مدل الگو - ساده‌سازی شده
 export interface Pattern {
-  name: string;
-  code: string;
-  imageUrl: string;
+  name: string; // همان کد pattern (مثل "normal", "matte")
+  code: string; // همان name
+  imageUrl?: string; // اختیاری شده
 }
 
 // مدل رنگ
 export interface Color {
   name: string;
   hexCode: string;
-  imageUrl: string;
+  imageUrl?: string; // اختیاری شده
 }
 
 // مدل محصول
@@ -21,10 +33,10 @@ export interface Product {
   userId: string;
   name: string;
   description: string;
-  type: "lips" | "eyeshadow" | "eyepencil" | "eyelashes" | "blush" | "eyeliner";
+  type: ProductType; // ✅ تایپ یکپارچه شده
   code: string;
   uid: string;
-  thumbnail: string;
+  thumbnail?: string; // اختیاری شده
   patterns: Pattern[];
   colors: Color[];
   active: boolean;
@@ -35,6 +47,7 @@ export interface Product {
 // فیلترهای جستجوی محصولات
 export interface ProductFilters {
   active?: boolean;
+  type?: ProductType; // ✅ تایپ یکپارچه شده
   page?: number;
   limit?: number;
 }
@@ -42,10 +55,10 @@ export interface ProductFilters {
 // مدل درخواست ایجاد محصول
 export interface CreateProductRequest {
   name: string;
-  description: string;
-  type: "lips" | "eyeshadow" | "eyepencil" | "eyelashes" | "blush" | "eyeliner";
+  description?: string;
+  type: ProductType; // ✅ تایپ یکپارچه شده
   code: string;
-  thumbnail: string;
+  thumbnail?: string; // اختیاری شده
   patterns: Pattern[];
   colors: Color[];
   active: boolean;

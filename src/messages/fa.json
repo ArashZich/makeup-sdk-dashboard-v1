@@ -1104,7 +1104,10 @@
         "eyepencil": "مداد چشم",
         "eyelashes": "مژه",
         "blush": "رژگونه",
-        "eyeliner": "خط چشم"
+        "eyeliner": "خط چشم",
+        "concealer": "کانسیلر",
+        "foundation": "پودر",
+        "brows": "ابرو"
       },
       "status": {
         "active": "فعال",
@@ -1250,5 +1253,13 @@
     "success": "فایل با موفقیت آپلود شد",
     "error": "خطا در آپلود فایل",
     "cancelled": "آپلود لغو شد"
+  },
+  "patterns": {
+    "normal": "عادی",
+    "matte": "مات",
+    "glossy": "براق",
+    "glitter": "اکلیلی",
+    "lashed": "مژه‌دار",
+    "long-lash": "مژه بلند"
   }
 }

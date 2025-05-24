@@ -1,3 +1,4 @@
+// src/features/products/components/ProductForm.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -6,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Product, Pattern, Color } from "@/api/types/products.types";
+import { ProductType } from "@/constants/product-patterns";
 import {
   Form,
   FormControl,
@@ -151,36 +153,36 @@ export function ProductForm({
     setColors(updatedColors);
   };
 
-  // ✅ Submit the form - کاملاً فیکس شده
+  // ✅ Submit the form - ساده‌سازی patterns
   const handleFormSubmit = (values: ProductFormValues) => {
     console.log("🔵 Form Values:", values);
     console.log("🔵 Selected Patterns:", selectedPatterns);
     console.log("🔵 Colors:", colors);
 
-    // تبدیل patterns از array of strings به array of Pattern objects
+    // ✅ تبدیل patterns به فرمت ساده (فقط کد pattern)
     const patterns: Pattern[] = selectedPatterns.map((patternCode) => ({
-      name: patternCode,
-      code: patternCode,
-      imageUrl: "",
+      name: patternCode, // همان کد pattern
+      code: patternCode, // همان کد pattern
+      imageUrl: "", // خالی (اختیاری)
     }));
 
-    // ✅ پاک کردن _id از colors - فیکس شده
+    // ✅ پاک کردن _id از colors
     const cleanColors = colors.map((color) => ({
       name: color.name,
       hexCode: color.hexCode,
       imageUrl: color.imageUrl || "",
     }));
 
-    // ✅ فقط فیلدهای مجاز - سخت‌کد شده تا مطمئن باشیم
+    // ✅ فقط فیلدهای مجاز
     const cleanFormData = {
       name: values.name,
       description: values.description || undefined,
-      type: values.type,
+      type: values.type as ProductType,
       code: values.code,
       thumbnail: values.thumbnail || undefined,
       active: values.active,
       patterns: patterns,
-      colors: cleanColors, // ✅ استفاده از cleanColors بجای colors
+      colors: cleanColors,
     };
 
     // ✅ حذف فیلدهای undefined
@@ -261,6 +263,7 @@ export function ProductForm({
                       value={field.value}
                       onChange={field.onChange}
                       placeholder={t("products.form.typePlaceholder")}
+                      showSdkValidation={true}
                     />
                     <FormMessage />
                   </FormItem>
@@ -327,10 +330,10 @@ export function ProductForm({
               />
             </div>
 
-            {/* Patterns Section */}
+            {/* Patterns Section - ساده‌سازی شده */}
             {selectedType && (
               <PatternSelect
-                productType={selectedType}
+                productType={selectedType as ProductType}
                 selectedPatterns={selectedPatterns}
                 onChange={setSelectedPatterns}
               />
@@ -377,7 +380,7 @@ export function ProductForm({
                           onImageChange={(url) =>
                             handleUpdateColor(index, "imageUrl", url)
                           }
-                          showImageUpload={true}
+                          showImageUpload={false} // ✅ عکس اختیاری شد
                         />
                       </div>
                       <Button
@@ -424,7 +427,7 @@ export function ProductForm({
                       onImageChange={(url) =>
                         setNewColor({ ...newColor, imageUrl: url })
                       }
-                      showImageUpload={true}
+                      showImageUpload={false} // ✅ عکس اختیاری شد
                     />
                   </div>
                   <Button

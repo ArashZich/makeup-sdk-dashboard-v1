@@ -1,7 +1,7 @@
+// src/features/products/components/PatternSelect.tsx
 "use client";
 
 import { useState, useEffect } from "react";
-import { useUserSdkFeatures } from "@/api/hooks/useUsers";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
   Select,
@@ -14,17 +14,15 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader } from "@/components/common/Loader";
-import {
-  SwatchBookIcon,
-  PlusIcon,
-  XIcon,
-  AlertTriangleIcon,
-} from "lucide-react";
+import { SwatchBookIcon, PlusIcon, XIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  getAllowedPatternsForType,
+  ProductType,
+} from "@/constants/product-patterns";
 
 interface PatternSelectProps {
-  productType: string;
+  productType: ProductType;
   selectedPatterns: string[];
   onChange: (patterns: string[]) => void;
   className?: string;
@@ -43,24 +41,15 @@ export function PatternSelect({
   const { t } = useLanguage();
   const [selectedPattern, setSelectedPattern] = useState<string>("");
 
-  const {
-    sdkFeatures,
-    isLoading,
-    hasActivePackage,
-    getPatternsForType,
-    hasAccessToType,
-  } = useUserSdkFeatures();
-
   // دریافت پترن‌های مجاز برای نوع محصول
-  const availablePatterns = getPatternsForType(productType);
-  const hasAccess = hasAccessToType(productType);
+  const availablePatterns = getAllowedPatternsForType(productType);
 
   // پاک کردن انتخاب پترن وقتی نوع محصول تغییر می‌کنه
   useEffect(() => {
-    if (productType && (!hasAccess || availablePatterns.length === 0)) {
+    if (productType && availablePatterns.length === 0) {
       onChange([]);
     }
-  }, [productType, hasAccess, availablePatterns.length, onChange]);
+  }, [productType, availablePatterns.length, onChange]);
 
   const handleAddPattern = () => {
     if (selectedPattern && !selectedPatterns.includes(selectedPattern)) {
@@ -80,51 +69,6 @@ export function PatternSelect({
   const handleSingleSelect = (pattern: string) => {
     onChange([pattern]);
   };
-
-  // Loading state
-  if (isLoading) {
-    return (
-      <div className={cn("space-y-2", className)}>
-        <Label>{t("products.form.patterns")}</Label>
-        <div className="flex items-center gap-2 p-3 border rounded-md">
-          <Loader size="sm" />
-          <span className="text-sm text-muted-foreground">
-            {t("products.form.loadingPatterns")}
-          </span>
-        </div>
-      </div>
-    );
-  }
-
-  // No active package
-  if (!hasActivePackage) {
-    return (
-      <div className={cn("space-y-2", className)}>
-        <Label>{t("products.form.patterns")}</Label>
-        <Alert>
-          <AlertTriangleIcon className="h-4 w-4" />
-          <AlertDescription>
-            {t("products.form.noActivePackage")}
-          </AlertDescription>
-        </Alert>
-      </div>
-    );
-  }
-
-  // No access to product type
-  if (!hasAccess) {
-    return (
-      <div className={cn("space-y-2", className)}>
-        <Label>{t("products.form.patterns")}</Label>
-        <Alert>
-          <AlertTriangleIcon className="h-4 w-4" />
-          <AlertDescription>
-            {t("products.form.noAccessToType", { type: productType })}
-          </AlertDescription>
-        </Alert>
-      </div>
-    );
-  }
 
   // No patterns available for this type
   if (availablePatterns.length === 0) {
@@ -159,7 +103,7 @@ export function PatternSelect({
               <SelectItem key={pattern} value={pattern}>
                 <div className="flex items-center gap-2">
                   <SwatchBookIcon className="h-4 w-4" />
-                  {pattern}
+                  {t(`patterns.${pattern}`)}
                 </div>
               </SelectItem>
             ))}
@@ -189,7 +133,7 @@ export function PatternSelect({
               className="flex items-center gap-1"
             >
               <SwatchBookIcon className="h-3 w-3" />
-              {pattern}
+              {t(`patterns.${pattern}`)}
               {!disabled && (
                 <Button
                   variant="ghost"
@@ -223,7 +167,7 @@ export function PatternSelect({
                   <SelectItem key={pattern} value={pattern}>
                     <div className="flex items-center gap-2">
                       <SwatchBookIcon className="h-4 w-4" />
-                      {pattern}
+                      {t(`patterns.${pattern}`)}
                     </div>
                   </SelectItem>
                 ))}

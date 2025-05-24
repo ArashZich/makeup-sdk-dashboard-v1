@@ -503,8 +503,7 @@
       "blush": "Blush",
       "concealer": "Concealer",
       "foundation": "Foundation",
-      "brows": "Brows",
-      "lens": "Lens"
+      "brows": "Brows"
     },
     "form": {
       "name": "Product Name",
@@ -1249,5 +1248,13 @@
     "success": "File uploaded successfully",
     "error": "Error uploading file",
     "cancelled": "Upload cancelled"
+  },
+  "patterns": {
+    "normal": "Normal",
+    "matte": "Matte",
+    "glossy": "Glossy",
+    "glitter": "Glitter",
+    "lashed": "Lashed",
+    "long-lash": "Long Lash"
   }
 }
