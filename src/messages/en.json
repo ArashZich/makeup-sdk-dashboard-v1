@@ -59,7 +59,10 @@
     "refresh": "Refresh",
     "unlimited": "Unlimited",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "reset": "Reset",
+    "entries": "entries",
+    "days": "days"
   },
   "auth": {
     "login": "Login",
@@ -749,51 +752,195 @@
     "analytics": {
       "title": "Analytics",
       "description": "System analytics and statistics"
+    },
+    "notifications": {
+      "title": "Notifications Management",
+      "description": "Send and manage system notifications",
+      "sendNotification": "Send Notification",
+      "allNotifications": "All Notifications",
+      "sendToAll": "Send to All",
+      "sendToUsers": "Send to Specific Users",
+      "sendToPlan": "Send to Plan Users",
+      "notificationSent": "Notification sent",
+      "searchPlaceholder": "Search notifications...",
+      "noNotifications": "No notifications found",
+      "form": {
+        "title": "Send New Notification",
+        "usersDescription": "Separate user IDs with commas",
+        "titleLabel": "Notification Title",
+        "titlePlaceholder": "Enter notification title",
+        "messageLabel": "Notification Message",
+        "messagePlaceholder": "Enter full notification message",
+        "typeLabel": "Notification Type",
+        "typeSelectPlaceholder": "Select notification type",
+        "targetLabel": "Send Target",
+        "targetSelectPlaceholder": "Select send target",
+        "planLabel": "Target Plan",
+        "planSelectPlaceholder": "Select a plan",
+        "usersLabel": "Target Users",
+        "usersPlaceholder": "Enter user IDs",
+        "sendSmsLabel": "Send SMS",
+        "sendSmsDescription": "Also send SMS in addition to internal notification",
+        "sending": "Sending...",
+        "sendButton": "Send Notification",
+        "validation": {
+          "titleRequired": "Notification title is required",
+          "messageRequired": "Notification message is required",
+          "typeRequired": "Notification type is required",
+          "targetRequired": "Send target is required",
+          "planRequired": "Plan selection is required",
+          "usersRequired": "At least one user must be selected"
+        }
+      },
+      "targets": {
+        "all": "All Users",
+        "plan": "Plan Users",
+        "users": "Specific Users"
+      },
+      "types": {
+        "expiry": "Package Expiry",
+        "payment": "Payment",
+        "system": "System",
+        "other": "Other"
+      },
+      "stats": {
+        "totalSent": "Total Sent",
+        "successCount": "Successful",
+        "recipients": "Recipients"
+      },
+      "filters": {
+        "allTypes": "All Types",
+        "allTargets": "All Targets",
+        "filterByType": "Filter by Type",
+        "filterByTarget": "Filter by Target"
+      },
+      "table": {
+        "recipient": "Recipient",
+        "sentAt": "Sent At",
+        "sentTo": "Sent To"
+      }
+    },
+    "packages": {
+      "title": "Packages Management",
+      "description": "Manage and view user packages",
+      "createPackage": "Create New Package",
+      "extendPackage": "Extend Package",
+      "suspendPackage": "Suspend Package",
+      "reactivatePackage": "Reactivate Package",
+      "viewDetails": "View Details",
+      "noPackages": "No packages found",
+      "searchPlaceholder": "Search packages...",
+      "purchasePlatform": "Purchase Platform",
+      "requestLimit": "Request Limit",
+      "monthlyLimit": "Monthly",
+      "remainingRequests": "Remaining",
+      "platformLabels": {
+        "normal": "Normal",
+        "divar": "Divar",
+        "torob": "Torob",
+        "basalam": "Basalam"
+      },
+      "form": {
+        "title": "Create New Package",
+        "selectUser": "Select a user",
+        "selectPlan": "Select a plan",
+        "selectPlatform": "Select purchase platform",
+        "userLabel": "User",
+        "planLabel": "Plan",
+        "platformLabel": "Purchase Platform",
+        "durationLabel": "Custom Duration (days)",
+        "durationPlaceholder": "Optional - plan default duration will be used",
+        "durationDescription": "If left empty, the plan's default duration will be used",
+        "platformDescription": "Platform through which the package was purchased",
+        "creating": "Creating...",
+        "createButton": "Create Package",
+        "validation": {
+          "userRequired": "User selection is required",
+          "planRequired": "Plan selection is required",
+          "durationMin": "Duration must be at least 1 day"
+        }
+      },
+      "extend": {
+        "title": "Extend Package",
+        "description": "Enter the number of days you want to add to the package.",
+        "daysLabel": "Number of Days",
+        "daysPlaceholder": "30",
+        "extending": "Extending...",
+        "extendButton": "Extend Package",
+        "validation": {
+          "daysMin": "Days must be at least 1",
+          "daysMax": "Days cannot be more than 365"
+        }
+      },
+      "suspend": {
+        "title": "Suspend Package",
+        "description": "Are you sure you want to suspend this package? The suspended package will be unusable.",
+        "suspending": "Suspending...",
+        "suspendButton": "Suspend Package"
+      },
+      "reactivate": {
+        "title": "Reactivate Package",
+        "description": "Are you sure you want to reactivate this package? The package will be usable again.",
+        "reactivating": "Reactivating...",
+        "reactivateButton": "Reactivate Package"
+      },
+      "success": {
+        "created": "Package created successfully",
+        "extended": "Package extended successfully",
+        "suspended": "Package suspended successfully",
+        "reactivated": "Package reactivated successfully"
+      },
+      "error": {
+        "createFailed": "Error creating package",
+        "extendFailed": "Error extending package",
+        "suspendFailed": "Error suspending package",
+        "reactivateFailed": "Error reactivating package"
+      }
+    },
+    "coupons": {
+      "title": "Discount Coupons",
+      "description": "Manage discount coupons",
+      "addCoupon": "Add Coupon",
+      "editCoupon": "Edit Coupon",
+      "deleteCoupon": "Delete Coupon",
+      "addCouponDescription": "Add a new discount coupon",
+      "editCouponDescription": "Edit coupon information",
+      "code": "Coupon Code",
+      "codePlaceholder": "Enter coupon code",
+      "codeCannotBeChanged": "Coupon code cannot be changed",
+      "discountPercent": "Discount Percent",
+      "percentPlaceholder": "Enter discount percent",
+      "maxAmount": "Max Discount Amount",
+      "maxAmountPlaceholder": "Enter max discount amount",
+      "maxAmountDescription": "Maximum discount amount (0 for unlimited)",
+      "maxUsage": "Max Usage Count",
+      "maxUsagePlaceholder": "Enter max usage count",
+      "usedCount": "Used Count",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "expiresAt": "Expires At",
+      "selectDate": "Select date",
+      "active": "Active",
+      "activeDescription": "Coupon is active and can be used",
+      "planRestrictions": "Plan Restrictions",
+      "planRestrictionsDescription": "This coupon can only be used for selected plans",
+      "userRestrictions": "User Restrictions",
+      "userRestrictionsDescription": "This coupon can only be used by selected users",
+      "userIdPlaceholder": "Enter user ID",
+      "addUser": "Add User",
+      "currentUsers": "Current Users",
+      "noUsersAdded": "No users added",
+      "userIdExists": "This user has already been added",
+      "manageCoupons": "Manage Coupons",
+      "noCoupons": "No coupons available",
+      "addFirstCoupon": "Add First Coupon",
+      "search": "Search coupons...",
+      "days": "days",
+      "noPlansAvailable": "No plans available",
+      "deactivateCoupon": "Deactivate Coupon",
+      "deleteCouponConfirmation": "Are you sure you want to delete coupon \"{{code}}\"?",
+      "deleteWarning": "This action will deactivate the coupon. Used coupons will not be affected."
     }
-  },
-  "admin.coupons": {
-    "title": "Discount Coupons",
-    "description": "Manage discount coupons",
-    "addCoupon": "Add Coupon",
-    "editCoupon": "Edit Coupon",
-    "deleteCoupon": "Delete Coupon",
-    "addCouponDescription": "Add a new discount coupon",
-    "editCouponDescription": "Edit coupon information",
-    "code": "Coupon Code",
-    "codePlaceholder": "Enter coupon code",
-    "codeCannotBeChanged": "Coupon code cannot be changed",
-    "discountPercent": "Discount Percent",
-    "percentPlaceholder": "Enter discount percent",
-    "maxAmount": "Max Discount Amount",
-    "maxAmountPlaceholder": "Enter max discount amount",
-    "maxAmountDescription": "Maximum discount amount (0 for unlimited)",
-    "maxUsage": "Max Usage Count",
-    "maxUsagePlaceholder": "Enter max usage count",
-    "usedCount": "Used Count",
-    "startDate": "Start Date",
-    "endDate": "End Date",
-    "expiresAt": "Expires At",
-    "selectDate": "Select date",
-    "active": "Active",
-    "activeDescription": "Coupon is active and can be used",
-    "planRestrictions": "Plan Restrictions",
-    "planRestrictionsDescription": "This coupon can only be used for selected plans",
-    "userRestrictions": "User Restrictions",
-    "userRestrictionsDescription": "This coupon can only be used by selected users",
-    "userIdPlaceholder": "Enter user ID",
-    "addUser": "Add User",
-    "currentUsers": "Current Users",
-    "noUsersAdded": "No users added",
-    "userIdExists": "This user has already been added",
-    "manageCoupons": "Manage Coupons",
-    "noCoupons": "No coupons available",
-    "addFirstCoupon": "Add First Coupon",
-    "search": "Search coupons...",
-    "days": "days",
-    "noPlansAvailable": "No plans available",
-    "deactivateCoupon": "Deactivate Coupon",
-    "deleteCouponConfirmation": "Are you sure you want to delete coupon \"{{code}}\"?",
-    "deleteWarning": "This action will deactivate the coupon. Used coupons will not be affected."
   },
 
   "divar": {

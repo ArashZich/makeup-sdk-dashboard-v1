@@ -1,0 +1,343 @@
+// src/features/admin/packages/views/PackageDetailsView.tsx
+"use client";
+
+import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { useAdminPackages } from "@/api/hooks/usePackages";
+import { ExtendPackageDialog } from "../components/ExtendPackageDialog";
+import { SuspendPackageDialog } from "../components/SuspendPackageDialog";
+import { ArrowLeft, Calendar, Pause, Play } from "lucide-react";
+import { formatDate } from "@/lib/date";
+import { formatCurrency } from "@/lib/utils";
+import { ExtendPackageRequest } from "@/api/types/packages.types";
+
+export function PackageDetailsView() {
+  const { t } = useLanguage();
+  const router = useRouter();
+  const params = useParams();
+  const packageId = params.id as string;
+
+  // State مدیریت دیالوگ‌ها
+  const [showExtendDialog, setShowExtendDialog] = useState(false);
+  const [showSuspendDialog, setShowSuspendDialog] = useState(false);
+  const [suspendAction, setSuspendAction] = useState<"suspend" | "reactivate">(
+    "suspend"
+  );
+
+  // دریافت اطلاعات بسته
+  const { getAllPackages } = useAdminPackages();
+  const { data: packagesData } = getAllPackages();
+  const packageData = packagesData?.results.find((p) => p._id === packageId);
+
+  // عملیات‌های بسته
+  const {
+    extendPackage,
+    suspendPackage,
+    reactivatePackage,
+    isExtendingPackage,
+    isSuspendingPackage,
+    isReactivatingPackage,
+  } = useAdminPackages();
+
+  const handleBack = () => {
+    router.back();
+  };
+
+  // مدیریت تمدید بسته
+  const handleExtendConfirm = async (data: ExtendPackageRequest) => {
+    try {
+      await extendPackage({ packageId, data });
+      setShowExtendDialog(false);
+    } catch (error) {
+      console.error("Error extending package:", error);
+    }
+  };
+
+  // مدیریت تعلیق/فعال‌سازی بسته
+  const handleSuspend = () => {
+    setSuspendAction("suspend");
+    setShowSuspendDialog(true);
+  };
+
+  const handleReactivate = () => {
+    setSuspendAction("reactivate");
+    setShowSuspendDialog(true);
+  };
+
+  const handleSuspendConfirm = async () => {
+    try {
+      if (suspendAction === "suspend") {
+        await suspendPackage(packageId);
+      } else {
+        await reactivatePackage(packageId);
+      }
+      setShowSuspendDialog(false);
+    } catch (error) {
+      console.error("Error updating package status:", error);
+    }
+  };
+
+  if (!packageData) {
+    return (
+      <div className="text-center py-8">
+        <p>{t("packages.error.packageNotFound")}</p>
+      </div>
+    );
+  }
+
+  const user =
+    typeof packageData.userId === "object" ? packageData.userId : null;
+  const plan =
+    typeof packageData.planId === "object" ? packageData.planId : null;
+
+  return (
+    <div className="space-y-6">
+      {/* هدر صفحه */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4 space-x-reverse">
+          <Button variant="outline" size="icon" onClick={handleBack}>
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">
+              {t("packages.packageDetails")}
+            </h1>
+            <p className="text-muted-foreground">
+              {user?.name} - {plan?.name}
+            </p>
+          </div>
+        </div>
+
+        {/* دکمه‌های عملیات */}
+        <div className="flex items-center space-x-2 space-x-reverse">
+          <Button variant="outline" onClick={() => setShowExtendDialog(true)}>
+            <Calendar className="mr-2 h-4 w-4" />
+            {t("admin.packages.extendPackage")}
+          </Button>
+
+          {packageData.status === "active" ? (
+            <Button variant="destructive" onClick={handleSuspend}>
+              <Pause className="mr-2 h-4 w-4" />
+              {t("admin.packages.suspendPackage")}
+            </Button>
+          ) : packageData.status === "suspended" ? (
+            <Button variant="default" onClick={handleReactivate}>
+              <Play className="mr-2 h-4 w-4" />
+              {t("admin.packages.reactivatePackage")}
+            </Button>
+          ) : null}
+        </div>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2">
+        {/* اطلاعات کلی */}
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("common.generalInfo")}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">
+                {t("common.status")}
+              </span>
+              <Badge
+                variant={
+                  packageData.status === "active"
+                    ? "default"
+                    : packageData.status === "expired"
+                    ? "destructive"
+                    : "secondary"
+                }
+              >
+                {t(`packages.status.${packageData.status}`)}
+              </Badge>
+            </div>
+
+            <Separator />
+
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">
+                {t("admin.packages.purchasePlatform")}
+              </span>
+              <Badge variant="outline">
+                {t(
+                  `admin.packages.platformLabels.${packageData.purchasePlatform}`
+                )}
+              </Badge>
+            </div>
+
+            <Separator />
+
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">
+                {t("packages.startDate")}
+              </span>
+              <span>{formatDate(packageData.startDate)}</span>
+            </div>
+
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">
+                {t("packages.endDate")}
+              </span>
+              <span>{formatDate(packageData.endDate)}</span>
+            </div>
+
+            <Separator />
+
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">
+                {t("packages.packageId")}
+              </span>
+              <span className="text-sm font-mono">{packageData._id}</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* محدودیت درخواست‌ها */}
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("packages.requestLimits")}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">
+                {t("admin.packages.monthlyLimit")}
+              </span>
+              <span>
+                {packageData.requestLimit.monthly.toLocaleString("fa-IR")}
+              </span>
+            </div>
+
+            <Separator />
+
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">
+                {t("admin.packages.remainingRequests")}
+              </span>
+              <span>
+                {packageData.requestLimit.remaining.toLocaleString("fa-IR")}
+              </span>
+            </div>
+
+            <Separator />
+
+            <div className="text-sm text-muted-foreground">
+              {t("packages.usageProgress")}:{" "}
+              {Math.round(
+                ((packageData.requestLimit.monthly -
+                  packageData.requestLimit.remaining) /
+                  packageData.requestLimit.monthly) *
+                  100
+              )}
+              %
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* اطلاعات کاربر */}
+        {user && (
+          <Card>
+            <CardHeader>
+              <CardTitle>{t("profile.title")}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">
+                  {t("common.name")}
+                </span>
+                <span>{user.name}</span>
+              </div>
+
+              <Separator />
+
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">
+                  {t("common.phone")}
+                </span>
+                <span>{user.phone}</span>
+              </div>
+
+              {user.email && (
+                <>
+                  <Separator />
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">
+                      {t("common.email")}
+                    </span>
+                    <span>{user.email}</span>
+                  </div>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* اطلاعات پلن */}
+        {plan && (
+          <Card>
+            <CardHeader>
+              <CardTitle>{t("plans.title")}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">
+                  {t("common.name")}
+                </span>
+                <span>{plan.name}</span>
+              </div>
+
+              <Separator />
+
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">
+                  {t("plans.price")}
+                </span>
+                <span>{formatCurrency(plan.price)}</span>
+              </div>
+
+              <Separator />
+
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">
+                  {t("plans.duration")}
+                </span>
+                <span>
+                  {plan.duration} {t("common.days")}
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+
+      {/* دیالوگ تمدید بسته */}
+      <ExtendPackageDialog
+        open={showExtendDialog}
+        onOpenChange={setShowExtendDialog}
+        onConfirm={handleExtendConfirm}
+        isLoading={isExtendingPackage}
+        packageId={packageId}
+      />
+
+      {/* دیالوگ تعلیق/فعال‌سازی بسته */}
+      <SuspendPackageDialog
+        open={showSuspendDialog}
+        onOpenChange={setShowSuspendDialog}
+        onConfirm={handleSuspendConfirm}
+        isLoading={isSuspendingPackage || isReactivatingPackage}
+        action={suspendAction}
+      />
+    </div>
+  );
+}

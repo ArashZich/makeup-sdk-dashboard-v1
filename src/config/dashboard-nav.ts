@@ -136,9 +136,16 @@ export const dashboardNavItems: SidebarGroup[] = [
       },
       {
         id: "admin-packages",
-        label: "packages.title",
+        label: "admin.packages.title",
         path: "/dashboard/admin/packages",
-        icon: BoxIcon,
+        icon: Package,
+        permission: "admin",
+      },
+      {
+        id: "admin-notifications",
+        label: "admin.notifications.title",
+        path: "/dashboard/admin/notifications",
+        icon: Bell,
         permission: "admin",
       },
       {

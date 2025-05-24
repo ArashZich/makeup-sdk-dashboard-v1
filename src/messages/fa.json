@@ -59,7 +59,10 @@
     "refresh": "به‌روزرسانی",
     "unlimited": "نامحدود",
     "yes": "بله",
-    "no": "خیر"
+    "no": "خیر",
+    "reset": "ریست",
+    "entries": "مورد",
+    "days": "روز"
   },
   "auth": {
     "login": "ورود",
@@ -750,51 +753,195 @@
     "analytics": {
       "title": "آنالیتیکس",
       "description": "آنالیتیکس و آمار سیستم"
+    },
+    "coupons": {
+      "title": "کدهای تخفیف",
+      "description": "مدیریت کدهای تخفیف",
+      "addCoupon": "افزودن کد تخفیف",
+      "editCoupon": "ویرایش کد تخفیف",
+      "deleteCoupon": "حذف کد تخفیف",
+      "addCouponDescription": "افزودن کد تخفیف جدید",
+      "editCouponDescription": "ویرایش اطلاعات کد تخفیف",
+      "code": "کد تخفیف",
+      "codePlaceholder": "کد تخفیف را وارد کنید",
+      "codeCannotBeChanged": "کد تخفیف قابل تغییر نیست",
+      "discountPercent": "درصد تخفیف",
+      "percentPlaceholder": "درصد تخفیف را وارد کنید",
+      "maxAmount": "حداکثر مبلغ تخفیف",
+      "maxAmountPlaceholder": "حداکثر مبلغ تخفیف را وارد کنید",
+      "maxAmountDescription": "حداکثر مبلغ تخفیف (0 برای بدون محدودیت)",
+      "maxUsage": "حداکثر دفعات استفاده",
+      "maxUsagePlaceholder": "حداکثر دفعات استفاده را وارد کنید",
+      "usedCount": "دفعات استفاده",
+      "startDate": "تاریخ شروع",
+      "endDate": "تاریخ پایان",
+      "expiresAt": "تاریخ انقضا",
+      "selectDate": "انتخاب تاریخ",
+      "active": "فعال",
+      "activeDescription": "کد تخفیف فعال است و قابل استفاده می‌باشد",
+      "planRestrictions": "محدودیت‌های پلن",
+      "planRestrictionsDescription": "این کد تخفیف فقط برای پلن‌های انتخاب شده قابل استفاده است",
+      "userRestrictions": "محدودیت‌های کاربر",
+      "userRestrictionsDescription": "این کد تخفیف فقط برای کاربران انتخاب شده قابل استفاده است",
+      "userIdPlaceholder": "شناسه کاربر را وارد کنید",
+      "addUser": "افزودن کاربر",
+      "currentUsers": "کاربران فعلی",
+      "noUsersAdded": "هیچ کاربری اضافه نشده است",
+      "userIdExists": "این کاربر قبلاً اضافه شده است",
+      "manageCoupons": "مدیریت کدهای تخفیف",
+      "noCoupons": "هیچ کد تخفیفی موجود نیست",
+      "addFirstCoupon": "افزودن اولین کد تخفیف",
+      "search": "جستجو در کدهای تخفیف...",
+      "days": "روز",
+      "noPlansAvailable": "هیچ پلنی موجود نیست",
+      "deactivateCoupon": "غیرفعال‌سازی کد تخفیف",
+      "deleteCouponConfirmation": "آیا از حذف کد تخفیف «{{code}}» اطمینان دارید؟",
+      "deleteWarning": "این عمل کد تخفیف را غیرفعال می‌کند. کدهای تخفیف استفاده شده تحت تأثیر قرار نمی‌گیرند."
+    },
+    "packages": {
+      "title": "مدیریت بسته‌ها",
+      "description": "مدیریت و مشاهده بسته‌های کاربران",
+      "createPackage": "ایجاد بسته جدید",
+      "extendPackage": "تمدید بسته",
+      "suspendPackage": "تعلیق بسته",
+      "reactivatePackage": "فعال‌سازی مجدد بسته",
+      "viewDetails": "مشاهده جزئیات",
+      "noPackages": "هیچ بسته‌ای یافت نشد",
+      "searchPlaceholder": "جستجو در بسته‌ها...",
+      "purchasePlatform": "پلتفرم خرید",
+      "requestLimit": "محدودیت درخواست",
+      "monthlyLimit": "ماهانه",
+      "remainingRequests": "باقی‌مانده",
+      "platformLabels": {
+        "normal": "عادی",
+        "divar": "دیوار",
+        "torob": "ترب",
+        "basalam": "باسلام"
+      },
+      "form": {
+        "title": "ایجاد بسته جدید",
+        "selectUser": "کاربر را انتخاب کنید",
+        "selectPlan": "پلن را انتخاب کنید",
+        "selectPlatform": "پلتفرم خرید را انتخاب کنید",
+        "userLabel": "کاربر",
+        "planLabel": "پلن",
+        "platformLabel": "پلتفرم خرید",
+        "durationLabel": "مدت زمان دلخواه (روز)",
+        "durationPlaceholder": "اختیاری - مدت زمان پیش‌فرض پلن استفاده می‌شود",
+        "durationDescription": "در صورت خالی گذاشتن، مدت زمان پیش‌فرض پلن استفاده می‌شود",
+        "platformDescription": "پلتفرمی که از طریق آن بسته خریداری شده است",
+        "creating": "در حال ایجاد...",
+        "createButton": "ایجاد بسته",
+        "validation": {
+          "userRequired": "انتخاب کاربر الزامی است",
+          "planRequired": "انتخاب پلن الزامی است",
+          "durationMin": "مدت زمان باید حداقل 1 روز باشد"
+        }
+      },
+      "extend": {
+        "title": "تمدید بسته",
+        "description": "تعداد روزهایی که می‌خواهید به بسته اضافه کنید را وارد کنید.",
+        "daysLabel": "تعداد روز",
+        "daysPlaceholder": "30",
+        "extending": "در حال تمدید...",
+        "extendButton": "تمدید بسته",
+        "validation": {
+          "daysMin": "تعداد روز باید حداقل 1 باشد",
+          "daysMax": "تعداد روز نمی‌تواند بیشتر از 365 باشد"
+        }
+      },
+      "suspend": {
+        "title": "تعلیق بسته",
+        "description": "آیا از تعلیق این بسته اطمینان دارید؟ بسته تعلیق شده غیرقابل استفاده خواهد بود.",
+        "suspending": "در حال تعلیق...",
+        "suspendButton": "تعلیق بسته"
+      },
+      "reactivate": {
+        "title": "فعال‌سازی مجدد بسته",
+        "description": "آیا از فعال‌سازی مجدد این بسته اطمینان دارید؟ بسته مجدداً قابل استفاده خواهد شد.",
+        "reactivating": "در حال فعال‌سازی...",
+        "reactivateButton": "فعال‌سازی مجدد"
+      },
+      "success": {
+        "created": "بسته با موفقیت ایجاد شد",
+        "extended": "بسته با موفقیت تمدید شد",
+        "suspended": "بسته با موفقیت متوقف شد",
+        "reactivated": "بسته با موفقیت فعال شد"
+      },
+      "error": {
+        "createFailed": "خطا در ایجاد بسته",
+        "extendFailed": "خطا در تمدید بسته",
+        "suspendFailed": "خطا در تعلیق بسته",
+        "reactivateFailed": "خطا در فعال‌سازی بسته"
+      }
+    },
+    "notifications": {
+      "title": "مدیریت اطلاع‌رسانی‌ها",
+      "description": "ارسال و مدیریت اطلاعیه‌های سیستم",
+      "sendNotification": "ارسال اطلاعیه",
+      "allNotifications": "همه اطلاعیه‌ها",
+      "sendToAll": "ارسال به همه",
+      "sendToUsers": "ارسال به کاربران خاص",
+      "sendToPlan": "ارسال به کاربران پلن خاص",
+      "notificationSent": "اطلاعیه ارسال شد",
+      "searchPlaceholder": "جستجو در اطلاعیه‌ها...",
+      "noNotifications": "هیچ اطلاعیه‌ای یافت نشد",
+      "form": {
+        "title": "ارسال اطلاعیه جدید",
+        "usersDescription": "شناسه کاربران را با کاما جدا کنید",
+        "titleLabel": "عنوان اطلاعیه",
+        "titlePlaceholder": "عنوان اطلاعیه را وارد کنید",
+        "messageLabel": "متن اطلاعیه",
+        "messagePlaceholder": "متن کامل اطلاعیه را وارد کنید",
+        "typeLabel": "نوع اطلاعیه",
+        "typeSelectPlaceholder": "نوع اطلاعیه را انتخاب کنید",
+        "targetLabel": "مقصد ارسال",
+        "targetSelectPlaceholder": "مقصد ارسال را انتخاب کنید",
+        "planLabel": "پلن مورد نظر",
+        "planSelectPlaceholder": "پلن را انتخاب کنید",
+        "usersLabel": "کاربران مقصد",
+        "usersPlaceholder": "شناسه کاربران را وارد کنید",
+        "sendSmsLabel": "ارسال پیامک",
+        "sendSmsDescription": "علاوه بر اطلاعیه داخلی، پیامک نیز ارسال شود",
+        "sending": "در حال ارسال...",
+        "sendButton": "ارسال اطلاعیه",
+        "validation": {
+          "titleRequired": "عنوان اطلاعیه الزامی است",
+          "messageRequired": "متن اطلاعیه الزامی است",
+          "typeRequired": "نوع اطلاعیه الزامی است",
+          "targetRequired": "مقصد ارسال الزامی است",
+          "planRequired": "انتخاب پلن الزامی است",
+          "usersRequired": "حداقل یک کاربر باید انتخاب شود"
+        }
+      },
+      "targets": {
+        "all": "همه کاربران",
+        "plan": "کاربران پلن خاص",
+        "users": "کاربران خاص"
+      },
+      "types": {
+        "expiry": "انقضای بسته",
+        "payment": "پرداخت",
+        "system": "سیستم",
+        "other": "سایر"
+      },
+      "stats": {
+        "totalSent": "کل ارسالی",
+        "successCount": "موفق",
+        "recipients": "دریافت‌کننده"
+      },
+      "filters": {
+        "allTypes": "همه انواع",
+        "allTargets": "همه مقاصد",
+        "filterByType": "فیلتر بر اساس نوع",
+        "filterByTarget": "فیلتر بر اساس مقصد"
+      },
+      "table": {
+        "recipient": "دریافت‌کننده",
+        "sentAt": "زمان ارسال",
+        "sentTo": "ارسال شده به"
+      }
     }
-  },
-  "admin.coupons": {
-    "title": "کدهای تخفیف",
-    "description": "مدیریت کدهای تخفیف",
-    "addCoupon": "افزودن کد تخفیف",
-    "editCoupon": "ویرایش کد تخفیف",
-    "deleteCoupon": "حذف کد تخفیف",
-    "addCouponDescription": "افزودن کد تخفیف جدید",
-    "editCouponDescription": "ویرایش اطلاعات کد تخفیف",
-    "code": "کد تخفیف",
-    "codePlaceholder": "کد تخفیف را وارد کنید",
-    "codeCannotBeChanged": "کد تخفیف قابل تغییر نیست",
-    "discountPercent": "درصد تخفیف",
-    "percentPlaceholder": "درصد تخفیف را وارد کنید",
-    "maxAmount": "حداکثر مبلغ تخفیف",
-    "maxAmountPlaceholder": "حداکثر مبلغ تخفیف را وارد کنید",
-    "maxAmountDescription": "حداکثر مبلغ تخفیف (0 برای بدون محدودیت)",
-    "maxUsage": "حداکثر دفعات استفاده",
-    "maxUsagePlaceholder": "حداکثر دفعات استفاده را وارد کنید",
-    "usedCount": "دفعات استفاده",
-    "startDate": "تاریخ شروع",
-    "endDate": "تاریخ پایان",
-    "expiresAt": "تاریخ انقضا",
-    "selectDate": "انتخاب تاریخ",
-    "active": "فعال",
-    "activeDescription": "کد تخفیف فعال است و قابل استفاده می‌باشد",
-    "planRestrictions": "محدودیت‌های پلن",
-    "planRestrictionsDescription": "این کد تخفیف فقط برای پلن‌های انتخاب شده قابل استفاده است",
-    "userRestrictions": "محدودیت‌های کاربر",
-    "userRestrictionsDescription": "این کد تخفیف فقط برای کاربران انتخاب شده قابل استفاده است",
-    "userIdPlaceholder": "شناسه کاربر را وارد کنید",
-    "addUser": "افزودن کاربر",
-    "currentUsers": "کاربران فعلی",
-    "noUsersAdded": "هیچ کاربری اضافه نشده است",
-    "userIdExists": "این کاربر قبلاً اضافه شده است",
-    "manageCoupons": "مدیریت کدهای تخفیف",
-    "noCoupons": "هیچ کد تخفیفی موجود نیست",
-    "addFirstCoupon": "افزودن اولین کد تخفیف",
-    "search": "جستجو در کدهای تخفیف...",
-    "days": "روز",
-    "noPlansAvailable": "هیچ پلنی موجود نیست",
-    "deactivateCoupon": "غیرفعال‌سازی کد تخفیف",
-    "deleteCouponConfirmation": "آیا از حذف کد تخفیف «{{code}}» اطمینان دارید؟",
-    "deleteWarning": "این عمل کد تخفیف را غیرفعال می‌کند. کدهای تخفیف استفاده شده تحت تأثیر قرار نمی‌گیرند."
   },
 
   "divar": {
