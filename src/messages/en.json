@@ -74,7 +74,9 @@
       "invalidPhone": "Invalid phone number",
       "invalidOtp": "Invalid verification code",
       "expiredOtp": "Verification code expired"
-    }
+    },
+    "loggingOut": "Logging out...",
+    "logoutSuccess": "Successfully logged out"
   },
   "dashboard": {
     "title": "Makeup SDK Dashboard",
@@ -431,9 +433,10 @@
     "noColorsAvailable": "No colors defined for this product",
     "idCopied": "Product ID copied",
     "tabs": {
-      "info": "Information",
+      "info": "Info",
       "patterns": "Patterns",
-      "colors": "Colors"
+      "colors": "Colors",
+      "analytics": "Analytics"
     },
     "types": {
       "lips": "Lipstick",
@@ -500,7 +503,9 @@
       "title": "Error Fetching Products",
       "fetchFailed": "Failed to fetch products. Please try again.",
       "productNotFound": "Product not found"
-    }
+    },
+    "color": "{{count}} Colors",
+    "pattern": "{{count}} Patterns"
   },
   "payments": {
     "title": "Payments",
@@ -632,7 +637,16 @@
     "error": {
       "title": "Error Fetching Analytics",
       "fetchFailed": "Failed to fetch analytics data. Please try again."
-    }
+    },
+    "productAnalytics": "Product Analytics",
+    "productAnalyticsDescription": "Usage statistics and analysis for this product",
+    "loading": "Loading analytics...",
+    "downloadSuccess": "Analytics downloaded successfully",
+    "downloadError": "Error downloading analytics",
+    "noData": "No data available",
+    "noDataDescription": "No usage statistics available for this product yet",
+    "productInfo": "Product Information",
+    "thisMonth": "This Month"
   },
   "admin": {
     "title": "Admin",

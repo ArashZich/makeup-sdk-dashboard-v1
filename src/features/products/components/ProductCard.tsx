@@ -1,9 +1,10 @@
-// src/features/products/components/ProductCard.tsx
+// src/features/products/components/ProductCard.tsx - آپدیت شده
 "use client";
 
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useRouter } from "next/navigation";
 import { Product } from "@/api/types/products.types";
+import { ProductAnalyticsPreview } from "./ProductAnalyticsPreview";
 import {
   Card,
   CardContent,
@@ -35,9 +36,15 @@ interface ProductCardProps {
   product: Product;
   onEdit: (product: Product) => void;
   onDelete: (productId: string) => void;
+  showAnalytics?: boolean; // پارامتر جدید
 }
 
-export function ProductCard({ product, onEdit, onDelete }: ProductCardProps) {
+export function ProductCard({
+  product,
+  onEdit,
+  onDelete,
+  showAnalytics = true,
+}: ProductCardProps) {
   const { t, isRtl } = useLanguage();
   const router = useRouter();
 
@@ -79,19 +86,19 @@ export function ProductCard({ product, onEdit, onDelete }: ProductCardProps) {
         </div>
       </CardHeader>
 
-      <CardContent className="p-4 space-y-2">
+      <CardContent className="p-4 space-y-3">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-1">
             <PaletteIcon className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm text-muted-foreground">
-              {t("products.colors", { count: product.colors.length })}
+              {t("products.color", { count: product.colors.length })}
             </span>
           </div>
 
           <div className="flex items-center gap-1">
             <SwatchBookIcon className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm text-muted-foreground">
-              {t("products.patterns", { count: product.patterns.length })}
+              {t("products.pattern", { count: product.patterns.length })}
             </span>
           </div>
         </div>
@@ -101,6 +108,9 @@ export function ProductCard({ product, onEdit, onDelete }: ProductCardProps) {
             {product.description}
           </p>
         )}
+
+        {/* نمایش پیش‌نمایش آنالیتیکس */}
+        {showAnalytics && <ProductAnalyticsPreview product={product} />}
       </CardContent>
 
       <CardFooter className="p-4 pt-0 flex justify-between gap-2">

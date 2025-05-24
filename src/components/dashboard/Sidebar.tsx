@@ -1,4 +1,4 @@
-// src/components/dashboard/Sidebar.tsx
+// src/components/dashboard/Sidebar.tsx - آپدیت شده
 "use client";
 
 import { useState, useEffect } from "react";
@@ -6,8 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useUIStore } from "@/store/ui.store";
 import { useLanguage } from "@/contexts/LanguageContext";
-// import { useAuthStore } from "@/store/auth.store";
-import { useAuth } from "@/contexts/AuthContext"; // این خط اضافه می‌شود
+import { useAuth } from "@/contexts/AuthContext"; // تغییر: از hook استفاده میکنیم
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
 import { dashboardNavItems } from "@/config/dashboard-nav";
@@ -20,7 +19,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export function Sidebar() {
   const { t, isRtl } = useLanguage();
-  const { user } = useAuth();
+  const { user } = useAuth(); // استفاده از hook به جای context
   const pathname = usePathname();
   const { isSidebarOpen, toggleSidebar, setSidebarOpen } = useUIStore();
   const isMobile = useMediaQuery("(max-width: 1024px)");

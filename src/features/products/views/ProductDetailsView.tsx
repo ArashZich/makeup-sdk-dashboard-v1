@@ -7,6 +7,7 @@ import { useProducts } from "@/api/hooks/useProducts";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ProductForm } from "../components/ProductForm";
 import { DeleteProductDialog } from "../components/DeleteProductDialog";
+import { ProductAnalytics } from "../components/ProductAnalytics";
 import { Loader } from "@/components/common/Loader";
 import { Button } from "@/components/ui/button";
 import {
@@ -230,7 +231,7 @@ export function ProductDetailsView({ productId }: ProductDetailsViewProps) {
                 onValueChange={setActiveTab}
                 className="w-full"
               >
-                <TabsList className="grid w-full grid-cols-3">
+                <TabsList className="grid w-full grid-cols-4">
                   <TabsTrigger value="info">
                     {t("products.tabs.info")}
                   </TabsTrigger>
@@ -239,6 +240,9 @@ export function ProductDetailsView({ productId }: ProductDetailsViewProps) {
                   </TabsTrigger>
                   <TabsTrigger value="colors">
                     {t("products.tabs.colors")}
+                  </TabsTrigger>
+                  <TabsTrigger value="analytics">
+                    {t("products.tabs.analytics")}
                   </TabsTrigger>
                 </TabsList>
 
@@ -382,6 +386,11 @@ export function ProductDetailsView({ productId }: ProductDetailsViewProps) {
                       </p>
                     </div>
                   )}
+                </TabsContent>
+
+                {/* Analytics Tab */}
+                <TabsContent value="analytics" className="mt-4">
+                  <ProductAnalytics product={product} />
                 </TabsContent>
               </Tabs>
             </CardContent>

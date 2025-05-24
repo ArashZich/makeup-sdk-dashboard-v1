@@ -1,11 +1,11 @@
-// src/features/auth/components/PhoneLoginForm.tsx
+// src/features/auth/components/PhoneLoginForm.tsx - آپدیت شده
 "use client";
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuth } from "@/api/hooks/useAuth";
+import { useAuthActions } from "@/api/hooks/useAuth"; // تغییر
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -40,9 +40,8 @@ type PhoneLoginFormValues = z.infer<typeof phoneLoginSchema>;
 
 export function PhoneLoginForm() {
   const { t, isRtl } = useLanguage();
-  const { sendOtp } = useAuth();
+  const { sendOtp, isSendingOtp } = useAuthActions(); // تغییر
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<PhoneLoginFormValues>({
     resolver: zodResolver(phoneLoginSchema),
@@ -52,9 +51,7 @@ export function PhoneLoginForm() {
   });
 
   const onSubmit = async (values: PhoneLoginFormValues) => {
-    setIsLoading(true);
     try {
-      // شماره تلفن از طریق schema پاک شده و اعتبارسنجی شده است
       const result = await sendOtp({ phone: values.phone });
 
       // هدایت به صفحه تأیید کد با ارسال اطلاعات مورد نیاز
@@ -63,8 +60,6 @@ export function PhoneLoginForm() {
       );
     } catch (error) {
       console.error("خطا در ارسال کد تأیید:", error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -88,12 +83,11 @@ export function PhoneLoginForm() {
                   placeholder="۰۹۱۲۳۴۵۶۷۸۹"
                   {...field}
                   autoComplete="tel"
-                  disabled={isLoading}
+                  disabled={isSendingOtp}
                   className={`${
                     isRtl ? "text-right" : "text-left"
                   } h-10 text-base`}
                   onChange={(e) => {
-                    // تبدیل اعداد فارسی به انگلیسی در هنگام تایپ
                     const convertedValue = convertPersianToEnglishNumbers(
                       e.target.value
                     );
@@ -109,9 +103,9 @@ export function PhoneLoginForm() {
         <Button
           type="submit"
           className="w-full h-10 text-sm"
-          disabled={isLoading}
+          disabled={isSendingOtp}
         >
-          {isLoading ? (
+          {isSendingOtp ? (
             <Loader size="sm" variant="spinner" />
           ) : (
             t("auth.sendOtp")

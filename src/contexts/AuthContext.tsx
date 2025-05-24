@@ -1,4 +1,4 @@
-// src/contexts/AuthContext.tsx
+// src/contexts/AuthContext.tsx - آپدیت شده
 "use client";
 
 import React, {
@@ -10,9 +10,11 @@ import React, {
   ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { useCookies } from "@/lib/cookies";
 import { User } from "@/api/types/auth.types";
 import { useAuthStore } from "@/store/auth.store";
+import { authService } from "@/api/services/auth-service";
 import axios from "@/lib/axios";
 
 interface AuthContextType {
@@ -23,6 +25,7 @@ interface AuthContextType {
   login: (token: string, refreshToken: string, userData: User) => void;
   logout: () => void;
   updateUser: (userData: Partial<User>) => void;
+  refreshUserData: () => Promise<void>; // جدید
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -33,6 +36,7 @@ const AuthContext = createContext<AuthContextType>({
   login: () => {},
   logout: () => {},
   updateUser: () => {},
+  refreshUserData: async () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -43,6 +47,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { getCookie, setCookie, removeCookie } = useCookies();
   const authCheckRef = useRef(false);
 
@@ -53,37 +58,49 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     updateUser: updateUserStore,
   } = useAuthStore();
 
-  useEffect(() => {
-    // بررسی وضعیت احراز هویت هنگام بارگذاری اولیه
-    const checkAuth = async () => {
-      // اگر قبلاً بررسی شده، اجرا نکن
-      if (authCheckRef.current) return;
+  // بررسی وضعیت احراز هویت هنگام بارگذاری اولیه
+  const checkAuth = async () => {
+    if (authCheckRef.current) return;
 
-      const token = getCookie("access_token");
+    const token = getCookie("access_token");
 
-      if (token) {
-        try {
-          // درخواست برای دریافت اطلاعات کاربر جاری
-          const response = await axios.get("/users/me");
-          setUser(response.data);
-          // همگام‌سازی با store
-          setAuthStore(response.data, token, getCookie("refresh_token") || "");
-        } catch (error) {
-          // در صورت خطا، کوکی‌ها را پاک کرده و کاربر را به صفحه ورود هدایت می‌کنیم
-          removeCookie("access_token");
-          removeCookie("refresh_token");
-          removeCookie("user_role");
-          setUser(null);
-          clearAuthStore();
-        }
+    if (token) {
+      try {
+        const response = await axios.get("/users/me");
+        setUser(response.data);
+        setAuthStore(response.data, token, getCookie("refresh_token") || "");
+      } catch (error) {
+        // در صورت خطا، کوکی‌ها را پاک کرده و logout کن
+        removeCookie("access_token");
+        removeCookie("refresh_token");
+        removeCookie("user_role");
+        setUser(null);
+        clearAuthStore();
+        queryClient.clear();
       }
+    }
 
-      setIsLoading(false);
-      authCheckRef.current = true;
-    };
+    setIsLoading(false);
+    authCheckRef.current = true;
+  };
 
+  // refresh کردن اطلاعات کاربر
+  const refreshUserData = async () => {
+    const token = getCookie("access_token");
+    if (!token) return;
+
+    try {
+      const response = await axios.get("/users/me");
+      setUser(response.data);
+      setAuthStore(response.data, token, getCookie("refresh_token") || "");
+    } catch (error) {
+      console.error("Error refreshing user data:", error);
+    }
+  };
+
+  useEffect(() => {
     checkAuth();
-  }, [getCookie, removeCookie, setAuthStore, clearAuthStore]);
+  }, []);
 
   const login = (token: string, refreshToken: string, userData: User) => {
     // ذخیره توکن‌ها در کوکی
@@ -101,7 +118,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
     // تنظیم اطلاعات کاربر
     setUser(userData);
-    // همگام‌سازی با store
     setAuthStore(userData, token, refreshToken);
 
     // هدایت به داشبورد
@@ -116,8 +132,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
     // پاک کردن اطلاعات کاربر
     setUser(null);
-    // همگام‌سازی با store
     clearAuthStore();
+
+    // پاک کردن تمام cache های React Query
+    queryClient.clear();
+
+    // پاک کردن localStorage های مربوطه
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("user-settings");
+      localStorage.removeItem("auth-storage");
+    }
 
     // هدایت به صفحه ورود
     router.push("/auth/login");
@@ -127,7 +151,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     setUser((prev) => {
       if (!prev) return null;
       const newUser = { ...prev, ...userData };
-      // همگام‌سازی با store
       updateUserStore(userData);
       return newUser;
     });
@@ -146,6 +169,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         login,
         logout,
         updateUser,
+        refreshUserData,
       }}
     >
       {children}

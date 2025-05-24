@@ -1,9 +1,10 @@
-// src/features/auth/views/verify-otp.tsx
+// src/features/auth/views/verify-otp.tsx - آپدیت شده
 "use client";
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAuth } from "@/api/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext"; // تغییر
+import { useAuthActions } from "@/api/hooks/useAuth"; // تغییر
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { OtpVerificationForm } from "../components/OtpVerificationForm";
@@ -13,7 +14,8 @@ import { showToast } from "@/lib/toast";
 
 export default function VerifyOtpView() {
   const { t, isRtl } = useLanguage();
-  const { user, isLoading, sendOtp } = useAuth();
+  const { user, isLoading } = useAuth(); // از context
+  const { sendOtp } = useAuthActions(); // از actions
   const router = useRouter();
   const searchParams = useSearchParams();
 

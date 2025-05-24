@@ -1,16 +1,16 @@
-// src/features/auth/views/login.tsx
+// src/features/auth/views/login.tsx - آپدیت شده
 "use client";
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/api/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext"; // تغییر
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PhoneLoginForm } from "../components/PhoneLoginForm";
 
 export default function LoginView() {
   const { t, isRtl } = useLanguage();
-  const { user, isLoading } = useAuth();
+  const { user, isLoading } = useAuth(); // از context
   const router = useRouter();
 
   // اگر کاربر قبلاً احراز هویت شده باشد، به داشبورد هدایت می‌شود

@@ -1,14 +1,15 @@
-// src/components/dashboard/Header.tsx
+// src/components/dashboard/Header.tsx - آپدیت شده
 "use client";
 
-import { useState } from "react";
 import { useUIStore } from "@/store/ui.store";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/api/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext"; // از context استفاده میکنیم
+import { useAuthActions } from "@/api/hooks/useAuth"; // برای logout action
 import { Button } from "@/components/ui/button";
 import { ThemeSwitcher } from "@/components/common/ThemeSwitcher";
 import { LanguageSwitcher } from "@/components/common/LanguageSwitcher";
 import { NotificationsDropdown } from "@/components/dashboard/NotificationsDropdown";
+import { Loader } from "@/components/common/Loader";
 import { User, LogOut, Settings, Menu, X } from "lucide-react";
 import {
   DropdownMenu,
@@ -23,18 +24,18 @@ import { useNotifications } from "@/api/hooks/useNotifications";
 
 export function Header() {
   const { t, isRtl } = useLanguage();
-  const { user, logout } = useAuth();
+  const { user } = useAuth(); // از context
+  const { logout, isLoggingOut } = useAuthActions(); // از actions hook
   const { toggleSidebar, isSidebarOpen } = useUIStore();
   const router = useRouter();
 
-  // استفاده از هوک جدید برای دریافت تعداد اطلاعیه‌های خوانده نشده
+  // استفاده از هوک برای دریافت تعداد اطلاعیه‌های خوانده نشده
   const { getUnreadCount } = useNotifications();
   const { hasUnread, count } = getUnreadCount();
 
   const handleLogout = async () => {
     try {
       await logout();
-      router.push("/auth/login");
     } catch (error) {
       console.error("Error logging out:", error);
     }
@@ -83,6 +84,7 @@ export function Header() {
               variant="ghost"
               size="icon"
               className="relative h-9 w-9 rounded-full"
+              disabled={isLoggingOut}
             >
               <Avatar className="h-9 w-9">
                 <AvatarFallback className="bg-primary text-primary-foreground">
@@ -101,20 +103,37 @@ export function Header() {
               </p>
             </div>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => router.push("/dashboard/profile")}>
+            <DropdownMenuItem
+              onClick={() => router.push("/dashboard/profile")}
+              disabled={isLoggingOut}
+            >
               <User className="mr-2 h-4 w-4" />
               {t("profile.title")}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => router.push("/dashboard/settings")}
+              disabled={isLoggingOut}
             >
               <Settings className="mr-2 h-4 w-4" />
               {t("settings.title")}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>
-              <LogOut className="mr-2 h-4 w-4" />
-              {t("auth.logout")}
+            <DropdownMenuItem
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className="text-destructive focus:text-destructive"
+            >
+              {isLoggingOut ? (
+                <>
+                  <Loader size="sm" variant="spinner" className="mr-2" />
+                  {t("auth.loggingOut")}
+                </>
+              ) : (
+                <>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  {t("auth.logout")}
+                </>
+              )}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

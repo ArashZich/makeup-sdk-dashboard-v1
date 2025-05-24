@@ -1,10 +1,10 @@
-// src/api/hooks/useAuth.ts
-import { useMutation, useQuery } from "@tanstack/react-query";
+// src/api/hooks/useAuth.ts - ساده شده
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authService } from "@/api/services/auth-service";
 import { useCookies } from "@/lib/cookies";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuthStore } from "@/store/auth.store";
+import { useAuth as useAuthContext } from "@/contexts/AuthContext"; // استفاده از context
 import { showToast } from "@/lib/toast";
 import {
   SendOtpRequest,
@@ -13,27 +13,14 @@ import {
 } from "@/api/types/auth.types";
 
 /**
- * هوک برای استفاده از API احراز هویت
+ * هوک برای actions احراز هویت (login/logout)
  */
-export const useAuth = () => {
+export const useAuthActions = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { setCookie, removeCookie } = useCookies();
-  const { setAuth, clearAuth } = useAuthStore();
+  const { login: contextLogin, logout: contextLogout } = useAuthContext();
   const { t } = useLanguage();
-
-  // استفاده از query برای دریافت اطلاعات کاربر جاری
-  const {
-    data: user,
-    isLoading,
-    isError,
-    refetch,
-  } = useQuery({
-    queryKey: ["currentUser"],
-    queryFn: authService.getCurrentUser,
-    enabled: false, // به صورت پیش‌فرض غیرفعال است
-    retry: 1,
-    staleTime: 5 * 60 * 1000, // 5 دقیقه
-  });
 
   // استفاده از mutation برای ارسال درخواست OTP
   const sendOtpMutation = useMutation({
@@ -54,20 +41,12 @@ export const useAuth = () => {
   const verifyOtpMutation = useMutation({
     mutationFn: (data: VerifyOtpRequest) => authService.verifyOtp(data),
     onSuccess: (data) => {
-      // ذخیره توکن‌ها در کوکی
-      setCookie("access_token", data.tokens.access.token, {
-        expires: new Date(data.tokens.access.expires),
-      });
-      setCookie("refresh_token", data.tokens.refresh.token, {
-        expires: new Date(data.tokens.refresh.expires),
-      });
-      setCookie("user_role", data.user.role, {
-        expires: new Date(data.tokens.refresh.expires),
-      });
-
-      // ذخیره اطلاعات کاربر در store
-      setAuth(data.user, data.tokens.access.token, data.tokens.refresh.token);
-
+      // استفاده از context login
+      contextLogin(
+        data.tokens.access.token,
+        data.tokens.refresh.token,
+        data.user
+      );
       showToast.success(t("auth.loginSuccess"));
       return data;
     },
@@ -83,20 +62,12 @@ export const useAuth = () => {
   const oauthLoginMutation = useMutation({
     mutationFn: (data: OAuthLoginRequest) => authService.oauthLogin(data),
     onSuccess: (data) => {
-      // ذخیره توکن‌ها در کوکی
-      setCookie("access_token", data.tokens.access.token, {
-        expires: new Date(data.tokens.access.expires),
-      });
-      setCookie("refresh_token", data.tokens.refresh.token, {
-        expires: new Date(data.tokens.refresh.expires),
-      });
-      setCookie("user_role", data.user.role, {
-        expires: new Date(data.tokens.refresh.expires),
-      });
-
-      // ذخیره اطلاعات کاربر در store
-      setAuth(data.user, data.tokens.access.token, data.tokens.refresh.token);
-
+      // استفاده از context login
+      contextLogin(
+        data.tokens.access.token,
+        data.tokens.refresh.token,
+        data.user
+      );
       showToast.success(t("auth.loginSuccess"));
       return data;
     },
@@ -112,38 +83,25 @@ export const useAuth = () => {
   const logoutMutation = useMutation({
     mutationFn: authService.logout,
     onSuccess: () => {
-      // حذف توکن‌ها از کوکی
-      removeCookie("access_token");
-      removeCookie("refresh_token");
-      removeCookie("user_role");
-
-      // پاک کردن اطلاعات کاربر از store
-      clearAuth();
-
-      // هدایت به صفحه ورود
-      router.push("/auth/login");
+      // استفاده از context logout
+      contextLogout();
+      showToast.success(t("auth.logoutSuccess"));
+    },
+    onError: (error: any) => {
+      // حتی اگر logout از سرور با خطا مواجه شد، کاربر رو logout کن
+      contextLogout();
     },
   });
 
-  // بررسی وضعیت فعلی احراز هویت
-  const checkAuth = async () => {
-    try {
-      const result = await refetch();
-      return result.data;
-    } catch (error) {
-      clearAuth();
-      return null;
-    }
-  };
-
   return {
-    user,
-    isLoading,
-    isError,
     sendOtp: sendOtpMutation.mutateAsync,
     verifyOtp: verifyOtpMutation.mutateAsync,
     oauthLogin: oauthLoginMutation.mutateAsync,
     logout: logoutMutation.mutateAsync,
-    checkAuth,
+
+    // loading states
+    isSendingOtp: sendOtpMutation.isPending,
+    isVerifyingOtp: verifyOtpMutation.isPending,
+    isLoggingOut: logoutMutation.isPending,
   };
 };

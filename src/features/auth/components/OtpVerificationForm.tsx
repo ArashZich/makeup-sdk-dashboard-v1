@@ -1,11 +1,11 @@
-// src/features/auth/components/OtpVerificationForm.tsx
+// src/features/auth/components/OtpVerificationForm.tsx - آپدیت شده
 "use client";
 
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuth } from "@/api/hooks/useAuth";
+import { useAuthActions } from "@/api/hooks/useAuth"; // تغییر
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -50,11 +50,10 @@ export function OtpVerificationForm({
   onResendOtp,
 }: OtpVerificationFormProps) {
   const { t, isRtl } = useLanguage();
-  const { verifyOtp } = useAuth();
+  const { verifyOtp, isVerifyingOtp } = useAuthActions(); // تغییر
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
-  const [seconds, setSeconds] = useState(120); // ۲ دقیقه برای ارسال مجدد
+  const [seconds, setSeconds] = useState(120);
 
   const form = useForm<OtpVerificationFormValues>({
     resolver: zodResolver(otpVerificationSchema),
@@ -85,24 +84,18 @@ export function OtpVerificationForm({
     setIsResending(true);
     try {
       await onResendOtp();
-      setSeconds(120); // دوباره تنظیم شمارنده به ۲ دقیقه
+      setSeconds(120);
     } finally {
       setIsResending(false);
     }
   };
 
   const onSubmit = async (values: OtpVerificationFormValues) => {
-    setIsLoading(true);
     try {
-      // کد از طریق schema پاک شده و اعتبارسنجی شده است
       await verifyOtp({ phone: values.phone, code: values.code });
-
-      // هدایت به صفحه داشبورد پس از احراز هویت موفق
-      router.push("/dashboard");
+      // navigation خودکار توسط context انجام میشه
     } catch (error) {
       console.error("خطا در تأیید کد:", error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -136,13 +129,12 @@ export function OtpVerificationForm({
                   placeholder="12345"
                   {...field}
                   autoComplete="one-time-code"
-                  disabled={isLoading}
+                  disabled={isVerifyingOtp}
                   className={`text-center text-lg tracking-widest h-12 ${
                     isRtl ? "font-iran" : "font-montserrat"
                   }`}
                   maxLength={6}
                   onChange={(e) => {
-                    // تبدیل اعداد فارسی به انگلیسی در هنگام تایپ
                     const convertedValue = convertPersianToEnglishNumbers(
                       e.target.value
                     );
@@ -158,9 +150,9 @@ export function OtpVerificationForm({
         <Button
           type="submit"
           className="w-full h-10 text-sm"
-          disabled={isLoading}
+          disabled={isVerifyingOtp}
         >
-          {isLoading ? (
+          {isVerifyingOtp ? (
             <Loader size="sm" variant="spinner" />
           ) : (
             t("auth.verifyOtp")
