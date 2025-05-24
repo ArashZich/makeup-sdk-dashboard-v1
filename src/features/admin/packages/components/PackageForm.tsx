@@ -158,7 +158,7 @@ export function PackageForm({ onSubmit, isLoading = false }: PackageFormProps) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {plansData?.map((plan) => (
+                      {plansData?.results.map((plan) => (
                         <SelectItem key={plan._id} value={plan._id}>
                           {plan.name} - {plan.duration} {t("common.days")}
                         </SelectItem>

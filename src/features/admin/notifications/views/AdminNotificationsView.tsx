@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { Plus, RefreshCw } from "lucide-react";
+import { Plus, RefreshCw, ArrowLeft } from "lucide-react"; // 🔄 اضافه شده
 import { SendNotificationForm } from "../components/SendNotificationForm";
 import { NotificationTable } from "../components/NotificationTable";
 import { NotificationFilters } from "../components/NotificationFilters";
@@ -19,25 +19,20 @@ export function AdminNotificationsView() {
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState("overview");
 
-  // اصلاح نوع filters
   const [filters, setFilters] = useState<{
-    type?: NotificationType; // بجای string
+    type?: NotificationType;
     target?: string;
   }>({});
 
   // Fetch notifications
   const { getAllNotifications } = useAdminNotifications();
 
-  // تبدیل filters به فرمت مناسب API
   const apiFilters = useMemo(() => {
     const result: any = {};
 
     if (filters.type) {
       result.type = filters.type;
     }
-
-    // target رو نمی‌فرستیم به API چون client-side فیلتر می‌کنیم
-    // فقط type رو می‌فرستیم
 
     return result;
   }, [filters.type]);
@@ -51,13 +46,9 @@ export function AdminNotificationsView() {
 
   const notifications = notificationsData?.results || [];
 
-  // Memoized filtered data
   const filteredNotifications = useMemo(() => {
     let filtered = notifications;
 
-    // type filter توی API اعمال میشه، اینجا نیازی نیست
-
-    // فقط target filter رو client-side اعمال می‌کنیم
     if (filters.target) {
       filtered = filtered.filter((notification) => {
         if (filters.target === "all_users") {
@@ -78,6 +69,11 @@ export function AdminNotificationsView() {
 
   const handleRefresh = () => {
     refetch();
+  };
+
+  // 🔄 اضافه شده: تابع بازگشت
+  const handleBackToOverview = () => {
+    setActiveTab("overview");
   };
 
   if (error) {
@@ -181,12 +177,43 @@ export function AdminNotificationsView() {
         </TabsContent>
 
         {/* Send Notification Tab */}
-        <TabsContent value="send">
+        <TabsContent value="send" className="space-y-6">
+          {/* 🔄 اضافه شده: دکمه بازگشت */}
+          <div className="flex items-center gap-2 mb-4">
+            <Button variant="outline" onClick={handleBackToOverview} size="sm">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              {t("common.back")}
+            </Button>
+            <div>
+              <h2 className="text-xl font-semibold">
+                {t("admin.notifications.sendNotification")}
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                {t("admin.notifications.form.title")}
+              </p>
+            </div>
+          </div>
           <SendNotificationForm />
         </TabsContent>
 
         {/* All Notifications Tab */}
         <TabsContent value="all" className="space-y-6">
+          {/* 🔄 اضافه شده: دکمه بازگشت */}
+          <div className="flex items-center gap-2 mb-4">
+            <Button variant="outline" onClick={handleBackToOverview} size="sm">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              {t("common.back")}
+            </Button>
+            <div>
+              <h2 className="text-xl font-semibold">
+                {t("admin.notifications.allNotifications")}
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                {t("admin.notifications.description")}
+              </p>
+            </div>
+          </div>
+
           <Card>
             <CardHeader>
               <CardTitle>{t("admin.notifications.allNotifications")}</CardTitle>

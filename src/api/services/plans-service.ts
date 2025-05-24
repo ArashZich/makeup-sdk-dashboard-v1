@@ -5,6 +5,7 @@ import {
   PlanFilters,
   CreatePlanRequest,
   UpdatePlanRequest,
+  PaginatedPlans,
 } from "@/api/types/plans.types";
 
 export const plansService = {
@@ -26,7 +27,7 @@ export const plansService = {
    * دریافت همه پلن‌ها
    * @param filters فیلترهای جستجو (شامل targetPlatforms جدید)
    */
-  getAllPlans: async (filters?: PlanFilters): Promise<Plan[]> => {
+  getAllPlans: async (filters?: PlanFilters): Promise<PaginatedPlans> => {
     const response = await axios.get("/plans", { params: filters });
     return response.data;
   },

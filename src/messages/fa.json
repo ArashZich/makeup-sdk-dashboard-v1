@@ -62,7 +62,12 @@
     "no": "خیر",
     "reset": "ریست",
     "entries": "مورد",
-    "days": "روز"
+    "days": "روز",
+    "description": "توضیحات",
+    "page": "صفحه",
+    "of": "از",
+    "rowsPerPage": "در هر صفحه",
+    "showing": "نمایش"
   },
   "auth": {
     "login": "ورود",
@@ -793,7 +798,8 @@
       "noPlansAvailable": "هیچ پلنی موجود نیست",
       "deactivateCoupon": "غیرفعال‌سازی کد تخفیف",
       "deleteCouponConfirmation": "آیا از حذف کد تخفیف «{{code}}» اطمینان دارید؟",
-      "deleteWarning": "این عمل کد تخفیف را غیرفعال می‌کند. کدهای تخفیف استفاده شده تحت تأثیر قرار نمی‌گیرند."
+      "deleteWarning": "این عمل کد تخفیف را غیرفعال می‌کند. کدهای تخفیف استفاده شده تحت تأثیر قرار نمی‌گیرند.",
+      "descriptionPlaceholder": "توضیحات کوپون رو وارد نمایید."
     },
     "packages": {
       "title": "مدیریت بسته‌ها",
@@ -873,6 +879,16 @@
       }
     },
     "notifications": {
+      "title": "اطلاعیه‌ها",
+      "description": "ارسال و مدیریت اطلاعیه‌ها",
+      "sendNotification": "ارسال اطلاعیه",
+      "allNotifications": "همه اطلاعیه‌ها",
+      "sendToAll": "ارسال به همه",
+      "sendToUsers": "ارسال به کاربران",
+      "sendToPlan": "ارسال به پلن‌ها",
+      "notificationSent": "اطلاعیه ارسال شد",
+      "searchPlaceholder": "جستجو در اطلاعیه‌ها...",
+      "noNotifications": "هیچ اطلاعیه‌ای یافت نشد",
       "form": {
         "title": "ارسال اطلاعیه جدید",
         "titleLabel": "عنوان اطلاعیه",
@@ -912,8 +928,11 @@
         "system": "سیستم",
         "other": "سایر"
       },
-      "searchPlaceholder": "جستجو در اطلاعیه‌ها...",
-      "noNotifications": "هیچ اطلاعیه‌ای یافت نشد",
+      "stats": {
+        "totalSent": "ارسال شده",
+        "successCount": "موفق",
+        "recipients": "گیرندگان"
+      },
       "filters": {
         "allTypes": "همه انواع",
         "allTargets": "همه مقاصد",

@@ -62,7 +62,12 @@
     "no": "No",
     "reset": "Reset",
     "entries": "entries",
-    "days": "days"
+    "days": "days",
+    "description": "Description",
+    "page": "Page",
+    "of": "Of",
+    "rowsPerPage": "Rows Per Page",
+    "showing": "Showing"
   },
   "auth": {
     "login": "Login",
@@ -749,7 +754,6 @@
       "title": "Analytics",
       "description": "System analytics and statistics"
     },
-
     "notifications": {
       "title": "Notifications Management",
       "description": "Send and manage system notifications",
@@ -817,7 +821,6 @@
         "sentTo": "Sent To"
       }
     },
-
     "packages": {
       "title": "Packages Management",
       "description": "Manage and view user packages",
@@ -937,7 +940,8 @@
       "noPlansAvailable": "No plans available",
       "deactivateCoupon": "Deactivate Coupon",
       "deleteCouponConfirmation": "Are you sure you want to delete coupon \"{{code}}\"?",
-      "deleteWarning": "This action will deactivate the coupon. Used coupons will not be affected."
+      "deleteWarning": "This action will deactivate the coupon. Used coupons will not be affected.",
+      "descriptionPlaceholder": "Enter coupon description"
     }
   },
 

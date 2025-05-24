@@ -29,7 +29,7 @@ export function EditPlanView() {
   const { data: plans, isLoading, error } = getAllPlans();
 
   // پیدا کردن پلن فعلی از لیست پلن‌ها
-  const plan = plans?.find((p) => p._id === planId);
+  const plan = plans?.results.find((p) => p._id === planId);
 
   const handleSubmit = async (data: any) => {
     try {

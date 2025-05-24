@@ -47,7 +47,7 @@ export function PlanDetailsView() {
   const { data: plans, isLoading, error } = getAllPlans();
 
   // پیدا کردن پلن مورد نظر
-  const plan = plans?.find((p) => p._id === planId);
+  const plan = plans?.results.find((p) => p._id === planId);
 
   const handleDelete = async () => {
     if (!plan) return;

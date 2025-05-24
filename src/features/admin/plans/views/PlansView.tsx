@@ -77,8 +77,8 @@ export function PlansView() {
           <AlertTitle>{t("common.error.title")}</AlertTitle>
           <AlertDescription>{t("common.error.fetchFailed")}</AlertDescription>
         </Alert>
-      ) : plans && plans.length > 0 ? (
-        <PlanTable plans={plans} onDeletePlan={handleDeleteClick} />
+      ) : plans && plans?.results.length > 0 ? (
+        <PlanTable plans={plans?.results} onDeletePlan={handleDeleteClick} />
       ) : (
         <div className="text-center py-12">
           <Package className="mx-auto h-12 w-12 text-muted-foreground" />

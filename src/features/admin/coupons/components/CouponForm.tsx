@@ -395,9 +395,9 @@ export function CouponForm({
                         <div className="flex items-center justify-center h-32">
                           <Loader size="md" text="common.loading" />
                         </div>
-                      ) : plans && plans.length > 0 ? (
+                      ) : plans && plans.results.length > 0 ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                          {plans.map((plan) => {
+                          {plans?.results.map((plan) => {
                             const isSelected = form
                               .watch("forPlans")
                               ?.includes(plan._id);
