@@ -1,3 +1,4 @@
+// src/features/admin/products/components/ProductTable.tsx
 "use client";
 
 import { useState } from "react";
@@ -26,6 +27,7 @@ import { DataTable } from "@/components/common/DataTable";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { formatDate } from "@/lib/date";
 import { Product } from "@/api/types/products.types";
+import { ProductType } from "@/constants/product-patterns";
 import { User } from "@/api/types/users.types";
 import { Eye, Edit, Trash2, MoreHorizontal, Copy, Image } from "lucide-react";
 import { useClipboard } from "@/hooks/useClipboard";
@@ -51,7 +53,8 @@ export function ProductTable({
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [productToDelete, setProductToDelete] = useState<string | null>(null);
 
-  const getTypeVariant = (type: string) => {
+  // ✅ به‌روزرسانی شده برای تمام تایپ‌های جدید
+  const getTypeVariant = (type: ProductType) => {
     switch (type) {
       case "lips":
         return "default";
@@ -65,6 +68,12 @@ export function ProductTable({
         return "default";
       case "eyeliner":
         return "secondary";
+      case "concealer":
+        return "default";
+      case "foundation":
+        return "secondary";
+      case "brows":
+        return "outline";
       default:
         return "outline";
     }

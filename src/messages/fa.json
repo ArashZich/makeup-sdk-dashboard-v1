@@ -79,7 +79,8 @@
     "deleting": "در حال حذف...",
     "pattern": "الگو",
     "color": "رنگ",
-    "total": "کل"
+    "total": "کل",
+    "optional": "اختیاری"
   },
   "auth": {
     "login": "ورود",
@@ -1161,7 +1162,10 @@
         "updating": "در حال به‌روزرسانی...",
         "createButton": "ایجاد محصول",
         "updateButton": "به‌روزرسانی محصول",
-        "cancelButton": "لغو"
+        "cancelButton": "لغو",
+        "thumbnailOptional": "عکس اختیاری است",
+        "availablePatternsForType": "الگوهای مجاز برای این نوع",
+        "selectPattern": "انتخاب الگو"
       },
       "details": {
         "title": "جزئیات محصول",

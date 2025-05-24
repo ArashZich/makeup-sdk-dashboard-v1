@@ -1,8 +1,10 @@
+// src/features/admin/products/components/ProductFilters.tsx
 "use client";
 
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAdminUsers } from "@/api/hooks/useUsers";
+import { ProductType, getAllProductTypes } from "@/constants/product-patterns";
 import {
   Select,
   SelectContent,
@@ -15,14 +17,6 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { X, Filter } from "lucide-react";
-
-type ProductType =
-  | "lips"
-  | "eyeshadow"
-  | "eyepencil"
-  | "eyelashes"
-  | "blush"
-  | "eyeliner";
 
 interface ProductFiltersProps {
   onFiltersChange: (filters: {
@@ -49,14 +43,12 @@ export function ProductFilters({ onFiltersChange }: ProductFiltersProps) {
 
   const users = usersData?.results || [];
 
-  const productTypes: { value: ProductType; label: string }[] = [
-    { value: "lips", label: t("admin.products.types.lips") },
-    { value: "eyeshadow", label: t("admin.products.types.eyeshadow") },
-    { value: "eyepencil", label: t("admin.products.types.eyepencil") },
-    { value: "eyelashes", label: t("admin.products.types.eyelashes") },
-    { value: "blush", label: t("admin.products.types.blush") },
-    { value: "eyeliner", label: t("admin.products.types.eyeliner") },
-  ];
+  // ✅ استفاده از constants برای انواع محصولات
+  const productTypes: { value: ProductType; label: string }[] =
+    getAllProductTypes().map((type) => ({
+      value: type,
+      label: t(`admin.products.types.${type}`),
+    }));
 
   const handleFilterChange = (
     key: string,

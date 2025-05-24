@@ -68,8 +68,19 @@ export const productsService = {
     data: UpdateProductRequest
   ): Promise<Product> => {
     // ✅ حذف فیلدهای غیرمجاز قبل از ارسال
-    const { _id, __v, createdAt, updatedAt, userId, uid, ...cleanData } =
-      data as any;
+    const {
+      _id,
+      __v,
+      createdAt,
+      updatedAt,
+      userId,
+      uid,
+      type, // ✅ type هم نباید در update باشه
+      code, // ✅ code هم نباید در update باشه
+      ...cleanData
+    } = data as any;
+
+    console.log("🔧 Sending clean data to server:", cleanData);
 
     const response = await axios.put(`/products/${productId}`, cleanData);
     return response.data;
@@ -123,7 +134,7 @@ export const productsService = {
     productId: string,
     data: UpdateProductRequest
   ): Promise<Product> => {
-    // ✅ حذف فیلدهای غیرمجاز قبل از ارسال
+    // ✅ حذف همه فیلدهای غیرمجاز قبل از ارسال
     const {
       _id,
       __v,
@@ -131,8 +142,12 @@ export const productsService = {
       updatedAt,
       userId: userIdField,
       uid,
+      type, // ✅ type نباید در update باشه
+      code, // ✅ code نباید در update باشه
       ...cleanData
     } = data as any;
+
+    console.log("🔧 Sending clean data to server for user product:", cleanData);
 
     const response = await axios.put(
       `/products/user/${userId}/${productId}`,

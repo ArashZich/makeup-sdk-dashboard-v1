@@ -64,7 +64,7 @@ export interface CreateProductRequest {
   active: boolean;
 }
 
-// مدل درخواست به‌روزرسانی محصول
+// مدل درخواست به‌روزرسانی محصول - فقط فیلدهای مجاز
 export interface UpdateProductRequest {
   name?: string;
   description?: string;
@@ -72,6 +72,11 @@ export interface UpdateProductRequest {
   patterns?: Pattern[];
   colors?: Color[];
   active?: boolean;
+  // ✅ فیلدهای زیر در update مجاز نیستند:
+  // - userId (نمی‌تونه تغییر کنه)
+  // - type (نمی‌تونه تغییر کنه)
+  // - code (نمی‌تونه تغییر کنه)
+  // - uid (خودکار تولید می‌شه)
 }
 
 // تایپ پاسخ صفحه‌بندی شده محصولات

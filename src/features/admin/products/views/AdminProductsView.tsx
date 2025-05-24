@@ -1,9 +1,11 @@
+// src/features/admin/products/views/AdminProductsView.tsx
 "use client";
 
 import { useState, useMemo } from "react";
 import { useAdminProducts } from "@/api/hooks/useProducts";
 import { useAdminUsers } from "@/api/hooks/useUsers";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { ProductType } from "@/constants/product-patterns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -19,17 +21,6 @@ import { Plus, RefreshCw, ArrowLeft, Users, Search } from "lucide-react";
 import { ProductTable } from "../components/ProductTable";
 import { ProductForm } from "../components/ProductForm";
 import { Product } from "@/api/types/products.types";
-
-type ProductType =
-  | "lips"
-  | "eyeshadow"
-  | "eyepencil"
-  | "eyelashes"
-  | "blush"
-  | "concealer"
-  | "foundation"
-  | "brows"
-  | "eyeliner";
 
 export function AdminProductsView() {
   const { t } = useLanguage();
@@ -131,7 +122,7 @@ export function AdminProductsView() {
   const handleFormSubmit = async (data: any) => {
     try {
       if (editingProduct) {
-        // Update existing product
+        // ✅ Update existing product - فقط فیلدهای مجاز
         await updateUserProduct({
           userId: selectedUserId,
           productId: editingProduct._id,
@@ -142,10 +133,11 @@ export function AdminProductsView() {
             patterns: data.patterns,
             colors: data.colors,
             active: data.active,
+            // ✅ userId رو ارسال نمی‌کنیم چون مجاز نیست
           },
         });
       } else {
-        // Create new product
+        // ✅ Create new product - همه فیلدها مجاز
         await createProductForUser({
           userId: data.userId,
           data: {
@@ -400,6 +392,16 @@ export function AdminProductsView() {
                         </SelectItem>
                         <SelectItem value="eyeliner">
                           {t("admin.products.types.eyeliner")}
+                        </SelectItem>
+                        {/* ✅ تایپ‌های جدید اضافه شده */}
+                        <SelectItem value="concealer">
+                          {t("admin.products.types.concealer")}
+                        </SelectItem>
+                        <SelectItem value="foundation">
+                          {t("admin.products.types.foundation")}
+                        </SelectItem>
+                        <SelectItem value="brows">
+                          {t("admin.products.types.brows")}
                         </SelectItem>
                       </SelectContent>
                     </Select>

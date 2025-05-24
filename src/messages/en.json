@@ -79,7 +79,8 @@
     "deleting": "Deleting...",
     "pattern": "Pattern",
     "color": "Color",
-    "total": "Total"
+    "total": "Total",
+    "optional": "Optional"
   },
   "auth": {
     "login": "Login",
@@ -1156,7 +1157,10 @@
         "updating": "Updating...",
         "createButton": "Create Product",
         "updateButton": "Update Product",
-        "cancelButton": "Cancel"
+        "cancelButton": "Cancel",
+        "thumbnailOptional": "Thumbnail image is optional",
+        "availablePatternsForType": "Available patterns for this type",
+        "selectPattern": "Select Pattern"
       },
       "details": {
         "title": "Product Details",
