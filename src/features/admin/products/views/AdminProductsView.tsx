@@ -26,6 +26,9 @@ type ProductType =
   | "eyepencil"
   | "eyelashes"
   | "blush"
+  | "concealer"
+  | "foundation"
+  | "brows"
   | "eyeliner";
 
 export function AdminProductsView() {
@@ -66,10 +69,10 @@ export function AdminProductsView() {
     error: productsError,
     refetch: refetchProducts,
   } = getUserProducts(
-    selectedUserId || "dummy",
+    selectedUserId, // مستقیم پاس بدیم
     {},
     {
-      enabled: Boolean(selectedUserId), // فقط وقتی کاربر انتخاب شده فعال باشه
+      enabled: Boolean(selectedUserId), // فقط وقتی selectedUserId وجود داره
     }
   );
 

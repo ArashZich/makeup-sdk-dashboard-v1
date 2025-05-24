@@ -17,11 +17,16 @@ export const useProducts = () => {
   const { t } = useLanguage();
 
   // دریافت محصولات کاربر جاری
-  const getUserProducts = (filters?: ProductFilters) => {
+  const getUserProducts = (
+    userId: string,
+    filters?: ProductFilters,
+    options?: { enabled?: boolean } // این خط رو اضافه کردیم
+  ) => {
     return useQuery({
-      queryKey: ["userProducts", filters],
-      queryFn: () => productsService.getCurrentUserProducts(filters),
+      queryKey: ["adminUserProducts", userId, filters],
+      queryFn: () => productsService.getUserProducts(userId, filters),
       staleTime: 5 * 60 * 1000, // 5 دقیقه
+      enabled: options?.enabled ?? true, // اگر enabled نداده بشه، true میشه
     });
   };
 
@@ -121,7 +126,11 @@ export const useAdminProducts = () => {
   const { t } = useLanguage();
 
   // دریافت محصولات کاربر
-  const getUserProducts = (userId: string, filters?: ProductFilters) => {
+  const getUserProducts = (
+    userId: string,
+    filters?: ProductFilters,
+    p0?: { enabled: boolean }
+  ) => {
     return useQuery({
       queryKey: ["adminUserProducts", userId, filters],
       queryFn: () => productsService.getUserProducts(userId, filters),
