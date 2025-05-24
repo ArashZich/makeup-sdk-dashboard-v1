@@ -2,10 +2,11 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Button } from "@/components/ui/button";
+import { useAdminNotifications } from "@/api/hooks/useNotifications";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
   Form,
   FormControl,
@@ -15,8 +16,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -24,125 +23,69 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { usePlans } from "@/api/hooks/usePlans";
-import {
-  SendNotificationRequest,
-  NotificationType,
-} from "@/api/types/notifications.types";
+import { Separator } from "@/components/ui/separator";
+import { UserPlanSelector } from "./UserPlanSelector";
 
-interface SendNotificationFormProps {
-  onSubmit: (data: SendNotificationRequest) => Promise<void>;
-  isLoading?: boolean;
-}
+// Schema validation
+const formSchema = z.object({
+  title: z.string().min(1, "titleRequired"),
+  message: z.string().min(1, "messageRequired"),
+  type: z.enum(["expiry", "payment", "system", "other"], {
+    required_error: "typeRequired",
+  }),
+  target: z.enum(["all", "plan", "users"], {
+    required_error: "targetRequired",
+  }),
+  planId: z.string().optional(),
+  userIds: z.array(z.string()).optional(),
+  sendSms: z.boolean(),
+});
 
-type NotificationTarget = "all" | "plan" | "users";
+type FormData = z.infer<typeof formSchema>;
 
-export function SendNotificationForm({
-  onSubmit,
-  isLoading = false,
-}: SendNotificationFormProps) {
+export function SendNotificationForm() {
   const { t } = useLanguage();
-  const [target, setTarget] = useState<NotificationTarget>("all");
+  const { sendNotification, isSendingNotification } = useAdminNotifications();
 
-  // دریافت لیست پلن‌ها
-  const { getAllPlans } = usePlans();
-  const { data: plansData } = getAllPlans();
-
-  // اسکیمای اعتبارسنجی - ساده‌تر
-  const createNotificationFormSchema = () => {
-    return z.object({
-      title: z
-        .string()
-        .min(1, t("admin.notifications.form.validation.titleRequired")),
-      message: z
-        .string()
-        .min(1, t("admin.notifications.form.validation.messageRequired")),
-      type: z.enum(["expiry", "payment", "system", "other"] as const, {
-        required_error: t("admin.notifications.form.validation.typeRequired"),
-      }),
-      target: z.enum(["all", "plan", "users"] as const, {
-        required_error: t("admin.notifications.form.validation.targetRequired"),
-      }),
-      planId: z.string().optional(),
-      userIds: z.string().optional(),
-      sendSms: z.boolean(),
-    });
-  };
-
-  type NotificationFormData = z.infer<
-    ReturnType<typeof createNotificationFormSchema>
-  >;
-
-  const form = useForm<NotificationFormData>({
-    resolver: zodResolver(createNotificationFormSchema()),
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
       message: "",
-      type: "system",
-      target: "all",
+      type: undefined,
+      target: undefined,
       planId: "",
-      userIds: "",
+      userIds: [],
       sendSms: false,
     },
   });
 
-  const handleSubmit = async (data: NotificationFormData) => {
+  const watchTarget = form.watch("target");
+
+  const onSubmit = async (data: FormData) => {
     try {
-      // اعتبارسنجی شرطی
-      if (data.target === "plan" && !data.planId) {
-        form.setError("planId", {
-          message: t("admin.notifications.form.validation.planRequired"),
-        });
-        return;
-      }
-
-      if (data.target === "users" && !data.userIds) {
-        form.setError("userIds", {
-          message: t("admin.notifications.form.validation.usersRequired"),
-        });
-        return;
-      }
-
-      const requestData: SendNotificationRequest = {
+      const payload = {
         title: data.title,
         message: data.message,
         type: data.type,
         sendSms: data.sendSms,
+        ...(data.target === "plan" && { planId: data.planId }),
+        ...(data.target === "users" && {
+          userId: data.userIds?.join(","), // تبدیل آرایه به string با کاما
+        }),
       };
 
-      // اضافه کردن فیلدهای شرطی بر اساس target
-      if (data.target === "plan" && data.planId) {
-        requestData.planId = data.planId;
-      } else if (data.target === "users" && data.userIds) {
-        // تبدیل رشته شناسه‌ها به آرایه
-        const userIdArray = data.userIds
-          .split(",")
-          .map((id) => id.trim())
-          .filter((id) => id.length > 0);
-
-        if (userIdArray.length > 0) {
-          requestData.userId = userIdArray[0]; // API فقط یک userId می‌پذیرد
-        }
-      }
-
-      await onSubmit(requestData);
+      await sendNotification(payload);
       form.reset();
-      setTarget("all");
     } catch (error) {
-      console.error("Error sending notification:", error);
+      // Error handled by hook
     }
   };
-
-  const notificationTypes: NotificationType[] = [
-    "expiry",
-    "payment",
-    "system",
-    "other",
-  ];
-  const targetOptions: NotificationTarget[] = ["all", "plan", "users"];
 
   return (
     <Card>
@@ -151,11 +94,8 @@ export function SendNotificationForm({
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSubmit)}
-            className="space-y-6"
-          >
-            {/* عنوان اطلاعیه */}
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {/* Title */}
             <FormField
               control={form.control}
               name="title"
@@ -177,7 +117,7 @@ export function SendNotificationForm({
               )}
             />
 
-            {/* متن اطلاعیه */}
+            {/* Message */}
             <FormField
               control={form.control}
               name="message"
@@ -200,84 +140,91 @@ export function SendNotificationForm({
               )}
             />
 
-            {/* نوع اطلاعیه */}
-            <FormField
-              control={form.control}
-              name="type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    {t("admin.notifications.form.typeLabel")}
-                  </FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue
-                          placeholder={t(
-                            "admin.notifications.form.typeSelectPlaceholder"
-                          )}
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {notificationTypes.map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {t(`admin.notifications.types.${type}`)}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Type */}
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t("admin.notifications.form.typeLabel")}
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue
+                            placeholder={t(
+                              "admin.notifications.form.typeSelectPlaceholder"
+                            )}
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="expiry">
+                          {t("admin.notifications.types.expiry")}
                         </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* مقصد ارسال */}
-            <FormField
-              control={form.control}
-              name="target"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    {t("admin.notifications.form.targetLabel")}
-                  </FormLabel>
-                  <Select
-                    onValueChange={(value: NotificationTarget) => {
-                      field.onChange(value);
-                      setTarget(value);
-                      // پاک کردن خطاهای قبلی
-                      form.clearErrors("planId");
-                      form.clearErrors("userIds");
-                    }}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue
-                          placeholder={t(
-                            "admin.notifications.form.targetSelectPlaceholder"
-                          )}
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {targetOptions.map((targetOption) => (
-                        <SelectItem key={targetOption} value={targetOption}>
-                          {t(`admin.notifications.targets.${targetOption}`)}
+                        <SelectItem value="payment">
+                          {t("admin.notifications.types.payment")}
                         </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                        <SelectItem value="system">
+                          {t("admin.notifications.types.system")}
+                        </SelectItem>
+                        <SelectItem value="other">
+                          {t("admin.notifications.types.other")}
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            {/* انتخاب پلن (فقط در صورت انتخاب target=plan) */}
-            {target === "plan" && (
+              {/* Target */}
+              <FormField
+                control={form.control}
+                name="target"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      {t("admin.notifications.form.targetLabel")}
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue
+                            placeholder={t(
+                              "admin.notifications.form.targetSelectPlaceholder"
+                            )}
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="all">
+                          {t("admin.notifications.targets.all")}
+                        </SelectItem>
+                        <SelectItem value="plan">
+                          {t("admin.notifications.targets.plan")}
+                        </SelectItem>
+                        <SelectItem value="users">
+                          {t("admin.notifications.targets.users")}
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Conditional fields based on target */}
+            {watchTarget === "plan" && (
               <FormField
                 control={form.control}
                 name="planId"
@@ -286,32 +233,23 @@ export function SendNotificationForm({
                     <FormLabel>
                       {t("admin.notifications.form.planLabel")}
                     </FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue
-                            placeholder={t(
-                              "admin.notifications.form.planSelectPlaceholder"
-                            )}
-                          />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {plansData?.map((plan) => (
-                          <SelectItem key={plan._id} value={plan._id}>
-                            {plan.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <FormControl>
+                      <UserPlanSelector
+                        mode="plan"
+                        selectedPlan={field.value}
+                        onPlanChange={field.onChange}
+                        placeholder={t(
+                          "admin.notifications.form.planSelectPlaceholder"
+                        )}
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             )}
 
-            {/* شناسه کاربران (فقط در صورت انتخاب target=users) */}
-            {target === "users" && (
+            {watchTarget === "users" && (
               <FormField
                 control={form.control}
                 name="userIds"
@@ -321,15 +259,18 @@ export function SendNotificationForm({
                       {t("admin.notifications.form.usersLabel")}
                     </FormLabel>
                     <FormControl>
-                      <Input
+                      <UserPlanSelector
+                        mode="users"
+                        selectedUsers={field.value || []}
+                        onUsersChange={field.onChange}
                         placeholder={t(
                           "admin.notifications.form.usersPlaceholder"
                         )}
-                        {...field}
+                        maxUsers={20}
                       />
                     </FormControl>
                     <FormDescription>
-                      شناسه کاربران را با کاما جدا کنید
+                      {t("admin.notifications.form.usersDescription")}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -337,7 +278,9 @@ export function SendNotificationForm({
               />
             )}
 
-            {/* ارسال پیامک */}
+            <Separator />
+
+            {/* SMS Option */}
             <FormField
               control={form.control}
               name="sendSms"
@@ -361,9 +304,13 @@ export function SendNotificationForm({
               )}
             />
 
-            {/* دکمه ارسال */}
-            <Button type="submit" disabled={isLoading} className="w-full">
-              {isLoading
+            {/* Submit */}
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isSendingNotification}
+            >
+              {isSendingNotification
                 ? t("admin.notifications.form.sending")
                 : t("admin.notifications.form.sendButton")}
             </Button>

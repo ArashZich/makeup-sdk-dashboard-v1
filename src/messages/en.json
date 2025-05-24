@@ -745,14 +745,11 @@
         "users": "Users"
       }
     },
-    "coupons": {
-      "title": "Coupons",
-      "description": "Manage discount coupons"
-    },
     "analytics": {
       "title": "Analytics",
       "description": "System analytics and statistics"
     },
+
     "notifications": {
       "title": "Notifications Management",
       "description": "Send and manage system notifications",
@@ -820,6 +817,7 @@
         "sentTo": "Sent To"
       }
     },
+
     "packages": {
       "title": "Packages Management",
       "description": "Manage and view user packages",

@@ -746,10 +746,7 @@
         "users": "کاربران"
       }
     },
-    "coupons": {
-      "title": "کدهای تخفیف",
-      "description": "مدیریت کدهای تخفیف"
-    },
+
     "analytics": {
       "title": "آنالیتیکس",
       "description": "آنالیتیکس و آمار سیستم"
@@ -876,19 +873,8 @@
       }
     },
     "notifications": {
-      "title": "مدیریت اطلاع‌رسانی‌ها",
-      "description": "ارسال و مدیریت اطلاعیه‌های سیستم",
-      "sendNotification": "ارسال اطلاعیه",
-      "allNotifications": "همه اطلاعیه‌ها",
-      "sendToAll": "ارسال به همه",
-      "sendToUsers": "ارسال به کاربران خاص",
-      "sendToPlan": "ارسال به کاربران پلن خاص",
-      "notificationSent": "اطلاعیه ارسال شد",
-      "searchPlaceholder": "جستجو در اطلاعیه‌ها...",
-      "noNotifications": "هیچ اطلاعیه‌ای یافت نشد",
       "form": {
         "title": "ارسال اطلاعیه جدید",
-        "usersDescription": "شناسه کاربران را با کاما جدا کنید",
         "titleLabel": "عنوان اطلاعیه",
         "titlePlaceholder": "عنوان اطلاعیه را وارد کنید",
         "messageLabel": "متن اطلاعیه",
@@ -901,6 +887,7 @@
         "planSelectPlaceholder": "پلن را انتخاب کنید",
         "usersLabel": "کاربران مقصد",
         "usersPlaceholder": "شناسه کاربران را وارد کنید",
+        "usersDescription": "شناسه کاربران را با کاما جدا کنید",
         "sendSmsLabel": "ارسال پیامک",
         "sendSmsDescription": "علاوه بر اطلاعیه داخلی، پیامک نیز ارسال شود",
         "sending": "در حال ارسال...",
@@ -925,11 +912,8 @@
         "system": "سیستم",
         "other": "سایر"
       },
-      "stats": {
-        "totalSent": "کل ارسالی",
-        "successCount": "موفق",
-        "recipients": "دریافت‌کننده"
-      },
+      "searchPlaceholder": "جستجو در اطلاعیه‌ها...",
+      "noNotifications": "هیچ اطلاعیه‌ای یافت نشد",
       "filters": {
         "allTypes": "همه انواع",
         "allTargets": "همه مقاصد",

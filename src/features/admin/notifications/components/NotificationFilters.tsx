@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
   Select,
   SelectContent,
@@ -10,131 +10,147 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { X } from "lucide-react";
 import { NotificationType } from "@/api/types/notifications.types";
-import { RefreshCw } from "lucide-react";
 
 interface NotificationFiltersProps {
-  onFilterChange: (filters: {
-    type?: NotificationType;
-    read?: boolean;
+  onFiltersChange: (filters: {
+    type?: NotificationType; // اصلاح شده
+    target?: string;
   }) => void;
-  isLoading?: boolean;
 }
 
 export function NotificationFilters({
-  onFilterChange,
-  isLoading = false,
+  onFiltersChange,
 }: NotificationFiltersProps) {
   const { t } = useLanguage();
-  const [selectedType, setSelectedType] = useState<NotificationType | "all">(
-    "all"
-  );
-  const [selectedRead, setSelectedRead] = useState<"all" | "read" | "unread">(
-    "all"
-  );
+  const [activeFilters, setActiveFilters] = useState<{
+    type?: NotificationType; // اصلاح شده
+    target?: string;
+  }>({});
 
-  const handleTypeChange = (type: string) => {
-    setSelectedType(type as NotificationType | "all");
-    applyFilters(type as NotificationType | "all", selectedRead);
+  const handleFilterChange = (key: string, value: string | undefined) => {
+    const newFilters = {
+      ...activeFilters,
+      [key]: value === "all" ? undefined : value,
+    };
+
+    setActiveFilters(newFilters);
+    onFiltersChange(newFilters);
   };
 
-  const handleReadChange = (read: string) => {
-    setSelectedRead(read as "all" | "read" | "unread");
-    applyFilters(selectedType, read as "all" | "read" | "unread");
+  const clearAllFilters = () => {
+    setActiveFilters({});
+    onFiltersChange({});
   };
 
-  const applyFilters = (
-    type: NotificationType | "all",
-    read: "all" | "read" | "unread"
-  ) => {
-    const filters: { type?: NotificationType; read?: boolean } = {};
-
-    if (type !== "all") {
-      filters.type = type;
-    }
-
-    if (read === "read") {
-      filters.read = true;
-    } else if (read === "unread") {
-      filters.read = false;
-    }
-
-    onFilterChange(filters);
-  };
-
-  const handleReset = () => {
-    setSelectedType("all");
-    setSelectedRead("all");
-    onFilterChange({});
-  };
-
-  const notificationTypes: NotificationType[] = [
-    "expiry",
-    "payment",
-    "system",
-    "other",
-  ];
+  const activeFilterCount = Object.values(activeFilters).filter(Boolean).length;
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{t("common.filter")}</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {/* فیلتر بر اساس نوع */}
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-4">
+        {/* Type Filter */}
         <div className="space-y-2">
           <label className="text-sm font-medium">
             {t("admin.notifications.filters.filterByType")}
           </label>
-          <Select value={selectedType} onValueChange={handleTypeChange}>
-            <SelectTrigger>
+          <Select
+            value={activeFilters.type || "all"}
+            onValueChange={(value) => handleFilterChange("type", value)}
+          >
+            <SelectTrigger className="w-[180px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">
                 {t("admin.notifications.filters.allTypes")}
               </SelectItem>
-              {notificationTypes.map((type) => (
-                <SelectItem key={type} value={type}>
-                  {t(`admin.notifications.types.${type}`)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* فیلتر بر اساس وضعیت خواندن */}
-        <div className="space-y-2">
-          <label className="text-sm font-medium">
-            {t("notifications.filterByReadStatus")}
-          </label>
-          <Select value={selectedRead} onValueChange={handleReadChange}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{t("common.all")}</SelectItem>
-              <SelectItem value="read">{t("notifications.read")}</SelectItem>
-              <SelectItem value="unread">
-                {t("notifications.unread")}
+              <SelectItem value="expiry">
+                {t("admin.notifications.types.expiry")}
+              </SelectItem>
+              <SelectItem value="payment">
+                {t("admin.notifications.types.payment")}
+              </SelectItem>
+              <SelectItem value="system">
+                {t("admin.notifications.types.system")}
+              </SelectItem>
+              <SelectItem value="other">
+                {t("admin.notifications.types.other")}
               </SelectItem>
             </SelectContent>
           </Select>
         </div>
 
-        {/* دکمه ریست */}
-        <Button
-          variant="outline"
-          onClick={handleReset}
-          disabled={isLoading}
-          className="w-full"
-        >
-          <RefreshCw className="mr-2 h-4 w-4" />
-          {t("common.reset")}
-        </Button>
-      </CardContent>
-    </Card>
+        {/* Target Filter */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium">
+            {t("admin.notifications.filters.filterByTarget")}
+          </label>
+          <Select
+            value={activeFilters.target || "all"}
+            onValueChange={(value) => handleFilterChange("target", value)}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">
+                {t("admin.notifications.filters.allTargets")}
+              </SelectItem>
+              <SelectItem value="all_users">
+                {t("admin.notifications.targets.all")}
+              </SelectItem>
+              <SelectItem value="plan">
+                {t("admin.notifications.targets.plan")}
+              </SelectItem>
+              <SelectItem value="users">
+                {t("admin.notifications.targets.users")}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Clear Filters */}
+        {activeFilterCount > 0 && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={clearAllFilters}
+            className="mt-6"
+          >
+            <X className="h-4 w-4 mr-2" />
+            {t("common.reset")} ({activeFilterCount})
+          </Button>
+        )}
+      </div>
+
+      {/* Active Filters Display */}
+      {activeFilterCount > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {activeFilters.type && (
+            <Badge variant="secondary" className="gap-1">
+              {t(`admin.notifications.types.${activeFilters.type}`)}
+              <X
+                className="h-3 w-3 cursor-pointer"
+                onClick={() => handleFilterChange("type", undefined)}
+              />
+            </Badge>
+          )}
+          {activeFilters.target && (
+            <Badge variant="secondary" className="gap-1">
+              {activeFilters.target === "all_users"
+                ? t("admin.notifications.targets.all")
+                : t(`admin.notifications.targets.${activeFilters.target}`)}
+              <X
+                className="h-3 w-3 cursor-pointer"
+                onClick={() => handleFilterChange("target", undefined)}
+              />
+            </Badge>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
