@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useBoolean } from "@/hooks/useBoolean"; // ✅ اضافه کردن useBoolean
 import { User } from "@/api/types/users.types";
 import { UpdateProfileRequest } from "@/api/types/users.types";
 import {
@@ -19,11 +20,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch"; // ✅ اضافه کردن Switch
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -38,6 +39,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Loader } from "@/components/common/Loader";
 import { formatDate } from "@/lib";
+import logger from "@/lib/logger"; // ✅ اضافه کردن logger
 import {
   CheckCircleIcon,
   PenIcon,
@@ -80,7 +82,11 @@ export function PersonalInfoCard({
   onUpdateProfile,
 }: PersonalInfoCardProps) {
   const { t, isRtl } = useLanguage();
-  const [isEditMode, setIsEditMode] = useState(false);
+
+  // ✅ استفاده از useBoolean به جای useState
+  const { getValue, toggle } = useBoolean({
+    isEditMode: false,
+  });
 
   // Profile form
   const profileForm = useForm<ProfileFormValues>({
@@ -98,10 +104,15 @@ export function PersonalInfoCard({
     },
   });
 
-  // Toggle edit mode
+  // ✅ Toggle edit mode با useBoolean
   const toggleEditMode = () => {
-    setIsEditMode(!isEditMode);
-    if (isEditMode) {
+    logger.api(
+      "Toggling edit mode:",
+      getValue("isEditMode") ? "exit" : "enter"
+    );
+
+    if (getValue("isEditMode")) {
+      // اگر در حال خروج از edit mode هستیم، فرم رو reset کن
       profileForm.reset({
         name: profile.name,
         email: profile.email || "",
@@ -114,22 +125,30 @@ export function PersonalInfoCard({
         },
       });
     }
+
+    toggle("isEditMode");
   };
 
   // Handle profile update
   const handleProfileSubmit = async (values: ProfileFormValues) => {
     try {
+      logger.api("Updating profile with data:", values);
+
       const updateData: UpdateProfileRequest = {
         ...values,
       };
 
       await onUpdateProfile(updateData);
+      logger.success("Profile updated successfully");
       showToast.success(t("profile.updateSuccess"));
-      setIsEditMode(false);
+      toggle("isEditMode"); // خروج از edit mode
     } catch (error) {
+      logger.fail("Error updating profile:", error);
       showToast.error(t("profile.updateError"));
     }
   };
+
+  const isEditMode = getValue("isEditMode");
 
   return (
     <Card>
@@ -428,74 +447,52 @@ export function PersonalInfoCard({
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* ✅ Email notifications با Switch shadcn */}
                   <FormField
                     control={profileForm.control}
                     name="notificationSettings.email"
                     render={({ field }) => (
-                      <FormItem className="space-y-0 border rounded-md p-3">
-                        <div className="flex items-center justify-between">
-                          <div className="space-y-0.5">
-                            <FormLabel className="text-base">
-                              {t("profile.emailNotifications")}
-                            </FormLabel>
-                            <FormDescription>
-                              {t("profile.emailNotificationsDescription")}
-                            </FormDescription>
-                          </div>
-                          <FormControl>
-                            <div
-                              data-state={field.value ? "checked" : "unchecked"}
-                              onClick={() => field.onChange(!field.value)}
-                              className={`h-6 w-11 rounded-full flex items-center p-1 cursor-pointer transition-colors ${
-                                field.value ? "bg-primary" : "bg-muted"
-                              }`}
-                            >
-                              <div
-                                className={`h-4 w-4 rounded-full bg-white transition-transform ${
-                                  field.value
-                                    ? "translate-x-5"
-                                    : "translate-x-0"
-                                }`}
-                              />
-                            </div>
-                          </FormControl>
+                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                        <div className="space-y-0.5">
+                          <FormLabel className="text-base">
+                            {t("profile.emailNotifications")}
+                          </FormLabel>
+                          <FormDescription>
+                            {t("profile.emailNotificationsDescription")}
+                          </FormDescription>
                         </div>
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            dir={isRtl ? "rtl" : "ltr"} // ✅ RTL support
+                          />
+                        </FormControl>
                       </FormItem>
                     )}
                   />
 
+                  {/* ✅ SMS notifications با Switch shadcn */}
                   <FormField
                     control={profileForm.control}
                     name="notificationSettings.sms"
                     render={({ field }) => (
-                      <FormItem className="space-y-0 border rounded-md p-3">
-                        <div className="flex items-center justify-between">
-                          <div className="space-y-0.5">
-                            <FormLabel className="text-base">
-                              {t("profile.smsNotifications")}
-                            </FormLabel>
-                            <FormDescription>
-                              {t("profile.smsNotificationsDescription")}
-                            </FormDescription>
-                          </div>
-                          <FormControl>
-                            <div
-                              data-state={field.value ? "checked" : "unchecked"}
-                              onClick={() => field.onChange(!field.value)}
-                              className={`h-6 w-11 rounded-full flex items-center p-1 cursor-pointer transition-colors ${
-                                field.value ? "bg-primary" : "bg-muted"
-                              }`}
-                            >
-                              <div
-                                className={`h-4 w-4 rounded-full bg-white transition-transform ${
-                                  field.value
-                                    ? "translate-x-5"
-                                    : "translate-x-0"
-                                }`}
-                              />
-                            </div>
-                          </FormControl>
+                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                        <div className="space-y-0.5">
+                          <FormLabel className="text-base">
+                            {t("profile.smsNotifications")}
+                          </FormLabel>
+                          <FormDescription>
+                            {t("profile.smsNotificationsDescription")}
+                          </FormDescription>
                         </div>
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            dir={isRtl ? "rtl" : "ltr"} // ✅ RTL support
+                          />
+                        </FormControl>
                       </FormItem>
                     )}
                   />

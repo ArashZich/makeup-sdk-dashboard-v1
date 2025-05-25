@@ -89,7 +89,7 @@ export function Header() {
             >
               <Avatar className="h-9 w-9">
                 <AvatarFallback className="bg-primary text-primary-foreground">
-                  {user ? getInitials(user.name) : "U"}
+                  <User size={20} />
                 </AvatarFallback>
               </Avatar>
             </Button>

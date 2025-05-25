@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { useProducts } from "@/api/hooks/useProducts";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useBoolean } from "@/hooks/useBoolean"; // ✅ اضافه کردن hook
 import { Product } from "@/api/types/products.types";
 import { ProductCard } from "../components/ProductCard";
 import { ProductForm } from "../components/ProductForm";
@@ -13,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { showToast } from "@/lib/toast";
+import logger from "@/lib/logger"; // ✅ اضافه کردن logger
 import {
   InfoIcon,
   PlusIcon,
@@ -25,11 +27,15 @@ import {
 export function ProductsListView() {
   const { t } = useLanguage();
 
-  // State for UI
+  // ✅ استفاده از useBoolean به جای state های جداگانه
+  const { getValue, setTrue, setFalse } = useBoolean({
+    isCreateFormOpen: false,
+    isEditFormOpen: false,
+    isDeleteDialogOpen: false,
+  });
+
+  // State for search and view mode
   const [searchTerm, setSearchTerm] = useState("");
-  const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
-  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
@@ -59,81 +65,118 @@ export function ProductsListView() {
       )
     : [];
 
-  // Open create form
+  // ✅ Create form handlers
   const handleOpenCreateForm = () => {
-    setIsCreateFormOpen(true);
+    logger.api("Opening create product form");
+    setSelectedProduct(null); // پاک کردن محصول انتخاب شده
+    setTrue("isCreateFormOpen");
   };
 
-  // Close create form
   const handleCloseCreateForm = () => {
-    setIsCreateFormOpen(false);
+    logger.api("Closing create product form");
+    setFalse("isCreateFormOpen");
+    setSelectedProduct(null);
   };
 
-  // Open edit form
+  // ✅ Edit form handlers
   const handleOpenEditForm = (product: Product) => {
+    logger.api("Opening edit product form for:", product.name);
     setSelectedProduct(product);
-    setIsEditFormOpen(true);
+    setTrue("isEditFormOpen");
   };
 
-  // Close edit form
   const handleCloseEditForm = () => {
+    logger.api("Closing edit product form");
+    setFalse("isEditFormOpen");
     setSelectedProduct(null);
-    setIsEditFormOpen(false);
   };
 
-  // Open delete dialog
+  // ✅ Delete dialog handlers
   const handleOpenDeleteDialog = (product: Product) => {
+    logger.api("Opening delete dialog for:", product.name);
     setSelectedProduct(product);
-    setIsDeleteDialogOpen(true);
+    setTrue("isDeleteDialogOpen");
   };
 
-  // Close delete dialog
   const handleCloseDeleteDialog = () => {
-    setIsDeleteDialogOpen(false);
+    logger.api("Closing delete dialog");
+    setFalse("isDeleteDialogOpen");
     setSelectedProduct(null);
   };
 
-  // Handle create product
+  // ✅ CRUD operations
   const handleCreateProduct = async (data: any) => {
     try {
+      logger.api("Creating product with data:", data);
       await createProduct(data);
+      logger.success("Product created successfully");
       showToast.success(t("products.createSuccess"));
       refetch();
       handleCloseCreateForm();
     } catch (error) {
+      logger.fail("Error creating product:", error);
       showToast.error(t("products.createError"));
     }
   };
 
-  // Handle update product
   const handleUpdateProduct = async (data: any) => {
-    if (!selectedProduct) return;
+    if (!selectedProduct) {
+      logger.warn("No product selected for update");
+      return;
+    }
 
     try {
+      logger.api("Updating product:", selectedProduct.name, "with data:", data);
       await updateProduct({
         productId: selectedProduct._id,
         data,
       });
+      logger.success("Product updated successfully");
       showToast.success(t("products.updateSuccess"));
       refetch();
       handleCloseEditForm();
     } catch (error) {
+      logger.fail("Error updating product:", error);
       showToast.error(t("products.updateError"));
     }
   };
 
-  // Handle delete product
   const handleDeleteProduct = async () => {
-    if (!selectedProduct) return;
+    if (!selectedProduct) {
+      logger.warn("No product selected for deletion");
+      return;
+    }
 
     try {
+      logger.api("Deleting product:", selectedProduct.name);
       await deleteProduct(selectedProduct._id);
+      logger.success("Product deleted successfully");
       showToast.success(t("products.deleteSuccess"));
       refetch();
       handleCloseDeleteDialog();
-      // src/features/products/views/ProductsListView.tsx (continued)
     } catch (error) {
+      logger.fail("Error deleting product:", error);
       showToast.error(t("products.deleteError"));
+    }
+  };
+
+  // ✅ View mode handlers
+  const handleSetGridView = () => {
+    logger.api("Switching to grid view");
+    setViewMode("grid");
+  };
+
+  const handleSetListView = () => {
+    logger.api("Switching to list view");
+    setViewMode("list");
+  };
+
+  // ✅ Search handler
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    if (value) {
+      logger.api("Searching products with term:", value);
     }
   };
 
@@ -148,6 +191,7 @@ export function ProductsListView() {
 
   // Error state
   if (error) {
+    logger.fail("Error loading products:", error);
     return (
       <Alert variant="destructive">
         <InfoIcon className="h-4 w-4" />
@@ -159,6 +203,7 @@ export function ProductsListView() {
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">
@@ -180,7 +225,7 @@ export function ProductsListView() {
           <Input
             placeholder={t("products.searchPlaceholder")}
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearchChange}
             className="pl-9"
           />
         </div>
@@ -189,16 +234,18 @@ export function ProductsListView() {
           <Button
             variant="outline"
             size="icon"
-            onClick={() => setViewMode("grid")}
+            onClick={handleSetGridView}
             className={viewMode === "grid" ? "bg-muted" : ""}
+            title={t("products.gridView")}
           >
             <LayoutGridIcon className="h-4 w-4" />
           </Button>
           <Button
             variant="outline"
             size="icon"
-            onClick={() => setViewMode("list")}
+            onClick={handleSetListView}
             className={viewMode === "list" ? "bg-muted" : ""}
+            title={t("products.listView")}
           >
             <TableIcon className="h-4 w-4" />
           </Button>
@@ -225,6 +272,7 @@ export function ProductsListView() {
           ))}
         </div>
       ) : (
+        // Empty state
         <div className="text-center py-12">
           <div className="inline-flex items-center justify-center p-4 bg-muted rounded-full mb-4">
             <PackageIcon className="h-8 w-8 text-muted-foreground" />
@@ -246,10 +294,12 @@ export function ProductsListView() {
         </div>
       )}
 
+      {/* ✅ Modals و Dialogs با استفاده از useBoolean */}
+
       {/* Create Product Form Modal */}
-      {isCreateFormOpen && (
+      {getValue("isCreateFormOpen") && (
         <ProductForm
-          isOpen={isCreateFormOpen}
+          isOpen={getValue("isCreateFormOpen")}
           onClose={handleCloseCreateForm}
           onSubmit={handleCreateProduct}
           isLoading={isCreatingProduct}
@@ -257,10 +307,10 @@ export function ProductsListView() {
       )}
 
       {/* Edit Product Form Modal */}
-      {isEditFormOpen && selectedProduct && (
+      {getValue("isEditFormOpen") && selectedProduct && (
         <ProductForm
           product={selectedProduct}
-          isOpen={isEditFormOpen}
+          isOpen={getValue("isEditFormOpen")}
           onClose={handleCloseEditForm}
           onSubmit={handleUpdateProduct}
           isLoading={isUpdatingProduct}
@@ -268,9 +318,9 @@ export function ProductsListView() {
       )}
 
       {/* Delete Product Confirmation Dialog */}
-      {isDeleteDialogOpen && selectedProduct && (
+      {getValue("isDeleteDialogOpen") && selectedProduct && (
         <DeleteProductDialog
-          isOpen={isDeleteDialogOpen}
+          isOpen={getValue("isDeleteDialogOpen")}
           onClose={handleCloseDeleteDialog}
           onConfirm={handleDeleteProduct}
           productName={selectedProduct.name}

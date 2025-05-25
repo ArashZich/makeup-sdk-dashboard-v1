@@ -20,6 +20,7 @@ import {
   CreditCard,
   ClipboardCopy,
   ArrowLeft,
+  ArrowRight,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useClipboard } from "@/hooks/useClipboard";
@@ -65,15 +66,16 @@ export function PaymentDetailsCard({
   return (
     <Card className="overflow-hidden">
       <CardHeader className="p-6">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleBackClick}
-          className="w-fit mb-4 gap-1"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          {t("common.back")}
-        </Button>
+        <div className="flex items-center gap-2 mb-4">
+          <Button variant="ghost" size="sm" onClick={handleBackClick}>
+            {isRtl ? (
+              <ArrowRight className="h-4 w-4 mr-2" />
+            ) : (
+              <ArrowLeft className="h-4 w-4 mr-2" />
+            )}
+            {t("common.back")}
+          </Button>
+        </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>

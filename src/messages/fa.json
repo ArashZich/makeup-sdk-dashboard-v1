@@ -622,7 +622,8 @@
     "success": {
       "paymentCanceled": "پرداخت با موفقیت لغو شد"
     },
-    "paidAt": "پرداخت شده در"
+    "paidAt": "پرداخت شده در",
+    "paymentInitFailed": "خطا در انجام پرداخت"
   },
   "settings": {
     "title": "تنظیمات",

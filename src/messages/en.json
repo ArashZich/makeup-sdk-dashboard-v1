@@ -620,7 +620,8 @@
     "success": {
       "paymentCanceled": "Payment successfully canceled"
     },
-    "paidAt": "Paid At"
+    "paidAt": "Paid At",
+    "paymentInitFailed": "Payment initialization failed"
   },
   "settings": {
     "title": "Settings",

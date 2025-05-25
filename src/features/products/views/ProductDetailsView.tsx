@@ -31,7 +31,6 @@ import {
   TrashIcon,
   SwatchBookIcon,
   PaletteIcon,
-  ExternalLinkIcon,
   CopyIcon,
   CheckIcon,
 } from "lucide-react";

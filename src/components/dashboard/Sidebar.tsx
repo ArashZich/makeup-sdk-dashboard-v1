@@ -11,7 +11,7 @@ import { useNotifications } from "@/api/hooks/useNotifications"; // اضافه �
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
 import { dashboardNavItems } from "@/config/dashboard-nav";
-import { X, ChevronRight, ChevronLeft } from "lucide-react";
+import { X, ChevronRight, ChevronLeft, User } from "lucide-react"; // ✅ اضافه کردن User icon
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -25,6 +25,14 @@ export function Sidebar() {
   const { isSidebarOpen, toggleSidebar, setSidebarOpen } = useUIStore();
   const isMobile = useMediaQuery("(max-width: 1024px)");
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
+
+  // ✅ اضافه کردن state برای client-side rendering
+  const [isMounted, setIsMounted] = useState(false);
+
+  // ✅ تنظیم mounted state
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // استفاده از hook نوتیفیکیشن برای دریافت تعداد خوانده نشده
   const { getUnreadCount } = useNotifications();
@@ -121,6 +129,11 @@ export function Sidebar() {
   };
 
   const visibleGroups = getVisibleGroups();
+
+  // ✅ اگر هنوز mount نشده، چیزی نمایش نده
+  if (!isMounted) {
+    return null;
+  }
 
   // اگر سایدبار بسته باشد و در حالت دسکتاپ باشیم، تنها نوار کناری باریک را نمایش می‌دهیم
   if (!isSidebarOpen && !isMobile) {
@@ -367,13 +380,16 @@ export function Sidebar() {
             {/* Footer ثابت در پایین */}
             <div className="p-4 border-t border-border">
               <div className="flex items-center gap-3">
+                {/* ✅ جایگزین کردن avatar با User icon */}
                 <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
-                  {user ? user.name.charAt(0).toUpperCase() : "U"}
+                  <User size={20} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium truncate">{user?.name}</p>
+                  <p className="font-medium truncate">
+                    {user?.name || "کاربر"}
+                  </p>
                   <p className="text-xs text-sidebar-foreground/60 truncate">
-                    {user?.email || user?.phone}
+                    {user?.email || user?.phone || ""}
                   </p>
                 </div>
               </div>
