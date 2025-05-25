@@ -107,7 +107,7 @@
     "logoutSuccess": "Successfully logged out"
   },
   "dashboard": {
-    "title": "Makeup SDK Dashboard",
+    "title": "ARMO",
     "welcome": "Welcome to the Makeup SDK Dashboard",
     "overview": "Overview",
     "welcomeMessage": "Welcome! Manage your SDK status here",

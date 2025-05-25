@@ -17,6 +17,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
+import { Logo } from "../common/Logo";
 
 export function Sidebar() {
   const { t, isRtl } = useLanguage();
@@ -143,9 +144,7 @@ export function Sidebar() {
           isRtl ? "start" : "end"
         } border-border bg-sidebar shrink-0 hidden lg:flex flex-col items-center py-6 gap-4`}
       >
-        <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-primary-foreground font-bold">
-          MS
-        </div>
+        <Logo />
 
         <Separator className="w-10" />
 
@@ -218,9 +217,7 @@ export function Sidebar() {
           >
             <div className="h-16 px-4 flex items-center justify-between border-b border-border">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-primary-foreground font-bold text-sm">
-                  MS
-                </div>
+                <Logo />
                 <h1 className="font-semibold">{t("dashboard.title")}</h1>
               </div>
 

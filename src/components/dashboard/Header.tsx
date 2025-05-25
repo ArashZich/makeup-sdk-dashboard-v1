@@ -66,10 +66,6 @@ export function Header() {
         >
           {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
         </Button>
-
-        <h1 className="text-lg font-medium hidden md:block">
-          {t("dashboard.title")}
-        </h1>
       </div>
 
       <div className="flex items-center gap-2">
