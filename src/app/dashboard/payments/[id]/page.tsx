@@ -2,17 +2,17 @@
 import { Metadata } from "next";
 import { PaymentDetailsView } from "@/features/payments/views/PaymentDetailsView";
 
-type Props = {
-  params: { id: string };
+export const metadata: Metadata = {
+  title: "Payment Details | Makeup SDK Dashboard",
+  description: "View detailed information about your payment",
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  return {
-    title: "Payment Details | Makeup SDK Dashboard",
-    description: "View detailed information about your payment",
-  };
-}
+export default async function PaymentDetailsPage({
+  params,
+}: {
+  params: Promise<{ id: string }>; // تغییر: Promise اضافه شد
+}) {
+  const { id } = await params; // تغییر: await اضافه شد
 
-export default function PaymentDetailsPage({ params }: Props) {
-  return <PaymentDetailsView paymentId={params.id} />;
+  return <PaymentDetailsView paymentId={id} />;
 }

@@ -19,14 +19,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { showToast } from "@/lib/toast";
 import {
   InfoIcon,
-  ArrowLeft,
-  ArrowRight,
   PenIcon,
   TrashIcon,
   SwatchBookIcon,
@@ -36,6 +33,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useClipboard } from "@/hooks/useClipboard";
+import { BackButtonIcon } from "@/components/common/BackButton";
 
 interface ProductDetailsViewProps {
   productId: string;
@@ -148,9 +146,7 @@ export function ProductDetailsView({ productId }: ProductDetailsViewProps) {
           {t("products.error.productNotFound")}
         </AlertDescription>
         <div className="mt-4">
-          <Button variant="outline" onClick={handleBack}>
-            {t("common.back")}
-          </Button>
+          <BackButtonIcon onClick={handleBack} />
         </div>
       </Alert>
     );
@@ -159,14 +155,7 @@ export function ProductDetailsView({ productId }: ProductDetailsViewProps) {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2 mb-4">
-        <Button variant="ghost" size="sm" onClick={handleBack}>
-          {isRtl ? (
-            <ArrowRight className="h-4 w-4 mr-2" />
-          ) : (
-            <ArrowLeft className="h-4 w-4 mr-2" />
-          )}
-          {t("common.back")}
-        </Button>
+        <BackButtonIcon onClick={handleBack} />
       </div>
 
       <div className="flex flex-col md:flex-row gap-6">

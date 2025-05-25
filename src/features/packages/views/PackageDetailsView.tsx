@@ -20,10 +20,7 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import {
   InfoIcon,
-  ArrowLeft,
-  ArrowRight,
   Calendar,
-  Clock,
   CheckCircle,
   AlertTriangle,
   XCircle,
@@ -33,6 +30,7 @@ import {
 import { formatDate, getDaysRemaining } from "@/lib";
 import { SdkFeaturesCard } from "@/features/sdk/components/SdkFeaturesCard";
 import { SdkTokenCard } from "@/features/sdk/components/SdkTokenCard";
+import { BackButtonIcon } from "@/components/common/BackButton";
 
 interface PackageDetailsViewProps {
   packageId: string;
@@ -44,6 +42,11 @@ export function PackageDetailsView({ packageId }: PackageDetailsViewProps) {
   const { getPackage } = useUserPackages();
 
   const { data: packageData, isLoading, error } = getPackage(packageId);
+
+  // ✅ Helper function برای نمایش مقادیر نامحدود
+  const formatLimitValue = (value: number) => {
+    return value === -1 ? t("common.unlimited") : value.toString();
+  };
 
   const handleBack = () => {
     router.back();
@@ -70,9 +73,7 @@ export function PackageDetailsView({ packageId }: PackageDetailsViewProps) {
           {t("packages.error.packageNotFound")}
         </AlertDescription>
         <div className="mt-4">
-          <Button variant="outline" onClick={handleBack}>
-            {t("common.back")}
-          </Button>
+          <BackButtonIcon onClick={handleBack} />
         </div>
       </Alert>
     );
@@ -84,8 +85,10 @@ export function PackageDetailsView({ packageId }: PackageDetailsViewProps) {
 
   const remainingDays = getDaysRemaining(packageData.endDate);
 
+  // ✅ محاسبه usagePercent با در نظر گیری unlimited
   const usagePercent =
-    packageData.requestLimit.monthly > 0
+    packageData.requestLimit.monthly > 0 &&
+    packageData.requestLimit.monthly !== -1
       ? Math.round(
           ((packageData.requestLimit.monthly -
             packageData.requestLimit.remaining) /
@@ -111,14 +114,7 @@ export function PackageDetailsView({ packageId }: PackageDetailsViewProps) {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2 mb-4">
-        <Button variant="ghost" size="sm" onClick={handleBack}>
-          {isRtl ? (
-            <ArrowRight className="h-4 w-4 mr-2" />
-          ) : (
-            <ArrowLeft className="h-4 w-4 mr-2" />
-          )}
-          {t("common.back")}
-        </Button>
+        <BackButtonIcon onClick={handleBack} />
       </div>
 
       <div className="flex flex-col md:flex-row gap-6">
@@ -214,7 +210,8 @@ export function PackageDetailsView({ packageId }: PackageDetailsViewProps) {
                       <div className="flex items-center gap-2">
                         <BarChart className="h-4 w-4 text-muted-foreground" />
                         <span className="font-medium">
-                          {packageData.requestLimit.monthly}
+                          {formatLimitValue(packageData.requestLimit.monthly)}{" "}
+                          {/* ✅ استفاده از helper function */}
                         </span>
                       </div>
                     </div>
@@ -225,21 +222,25 @@ export function PackageDetailsView({ packageId }: PackageDetailsViewProps) {
                       <div className="flex items-center gap-2">
                         <Cpu className="h-4 w-4 text-muted-foreground" />
                         <span className="font-medium">
-                          {packageData.requestLimit.remaining}
+                          {formatLimitValue(packageData.requestLimit.remaining)}{" "}
+                          {/* ✅ استفاده از helper function */}
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  <div>
-                    <div className="flex justify-between mb-2">
-                      <span className="text-sm text-muted-foreground">
-                        {t("packages.usageProgress")}
-                      </span>
-                      <span className="text-sm">{usagePercent}%</span>
+                  {/* ✅ Progress bar فقط برای محدود نمایش داده میشه */}
+                  {packageData.requestLimit.monthly !== -1 && (
+                    <div>
+                      <div className="flex justify-between mb-2">
+                        <span className="text-sm text-muted-foreground">
+                          {t("packages.usageProgress")}
+                        </span>
+                        <span className="text-sm">{usagePercent}%</span>
+                      </div>
+                      <Progress value={usagePercent} className="h-2" />
                     </div>
-                    <Progress value={usagePercent} className="h-2" />
-                  </div>
+                  )}
                 </div>
               </div>
             </CardContent>

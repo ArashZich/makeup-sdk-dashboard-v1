@@ -31,6 +31,7 @@ import {
 import { useAdminPlans } from "@/api/hooks/usePlans";
 import { logger } from "@/lib/logger";
 import { useBoolean } from "@/hooks/useBoolean";
+import { BackButtonIcon } from "@/components/common/BackButton";
 
 export function PlanDetailsView() {
   const { t, isRtl } = useLanguage();
@@ -76,14 +77,7 @@ export function PlanDetailsView() {
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>{t("common.error.title")}</AlertTitle>
         <AlertDescription>{t("common.error.fetchFailed")}</AlertDescription>
-        <Button
-          variant="outline"
-          onClick={() => router.push("/dashboard/admin/plans")}
-          className="mt-4"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          {t("common.back")}
-        </Button>
+        <BackButtonIcon href="/dashboard/admin/plans" />
       </Alert>
     );
   }

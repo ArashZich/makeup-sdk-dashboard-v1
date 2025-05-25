@@ -25,6 +25,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useClipboard } from "@/hooks/useClipboard";
 import { Badge } from "@/components/ui/badge";
+import { BackButtonIcon } from "@/components/common/BackButton";
 
 interface PaymentDetailsCardProps {
   payment: Payment;
@@ -67,14 +68,7 @@ export function PaymentDetailsCard({
     <Card className="overflow-hidden">
       <CardHeader className="p-6">
         <div className="flex items-center gap-2 mb-4">
-          <Button variant="ghost" size="sm" onClick={handleBackClick}>
-            {isRtl ? (
-              <ArrowRight className="h-4 w-4 mr-2" />
-            ) : (
-              <ArrowLeft className="h-4 w-4 mr-2" />
-            )}
-            {t("common.back")}
-          </Button>
+          <BackButtonIcon onClick={handleBackClick} />
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

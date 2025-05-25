@@ -2,20 +2,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAdminPackages } from "@/api/hooks/usePackages";
 import { PackageForm } from "../components/PackageForm";
-import { ArrowLeft } from "lucide-react";
 import { CreatePackageRequest } from "@/api/types/packages.types";
 import { logger } from "@/lib/logger";
+import { BackButtonIcon } from "@/components/common/BackButton";
 
 export function CreatePackageView() {
   const { t } = useLanguage();
@@ -40,9 +32,8 @@ export function CreatePackageView() {
     <div className="space-y-6">
       {/* هدر صفحه */}
       <div className="flex items-center space-x-4 space-x-reverse">
-        <Button variant="outline" size="icon" onClick={handleBack}>
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
+        <BackButtonIcon onClick={handleBack} />
+
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
             {t("admin.packages.createPackage")}

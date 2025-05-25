@@ -9,9 +9,8 @@ import {
   UpdateCouponRequest,
 } from "@/api/types/coupons.types";
 import { CouponForm } from "../components/CouponForm";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 import logger from "@/lib/logger";
+import { BackButtonIcon } from "@/components/common/BackButton";
 
 export function CreateCouponView() {
   const { t } = useLanguage();
@@ -42,10 +41,7 @@ export function CreateCouponView() {
   return (
     <div className="space-y-6">
       <div className="flex items-center">
-        <Button variant="ghost" onClick={() => router.back()} className="mr-4">
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          {t("common.back")}
-        </Button>
+        <BackButtonIcon onClick={() => router.back()} />
         <div>
           <h1 className="text-2xl font-bold tracking-tight">
             {t("admin.coupons.addCoupon")}

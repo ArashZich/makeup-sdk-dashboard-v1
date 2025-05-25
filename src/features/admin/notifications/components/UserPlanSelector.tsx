@@ -1,7 +1,6 @@
 // src/features/admin/notifications/components/UserPlanSelector.tsx
 "use client";
 
-import { useState } from "react";
 import { useAdminUsers } from "@/api/hooks/useUsers";
 import { usePlans } from "@/api/hooks/usePlans";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -17,7 +16,6 @@ import {
   CommandEmpty,
   CommandGroup,
   CommandItem,
-  CommandList,
 } from "@/components/ui/command";
 import {
   Popover,
@@ -29,6 +27,7 @@ import { Badge } from "@/components/ui/badge";
 import { Check, ChevronsUpDown, X, Users, Package } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useBoolean } from "@/hooks/useBoolean"; // ✅ اضافه کردن import
 
 interface UserPlanSelectorProps {
   mode: "users" | "plan";
@@ -50,7 +49,10 @@ export function UserPlanSelector({
   maxUsers = 20,
 }: UserPlanSelectorProps) {
   const { t } = useLanguage();
-  const [open, setOpen] = useState(false);
+
+  const { getValue, setValue } = useBoolean({
+    open: false,
+  });
 
   // Fetch all users
   const { getUsers } = useAdminUsers();
@@ -91,12 +93,15 @@ export function UserPlanSelector({
 
     return (
       <div className="space-y-3">
-        <Popover open={open} onOpenChange={setOpen}>
+        <Popover
+          open={getValue("open")}
+          onOpenChange={(open) => setValue("open", open)} // ✅ درست
+        >
           <PopoverTrigger asChild>
             <Button
               variant="outline"
               role="combobox"
-              aria-expanded={open}
+              aria-expanded={getValue("open")}
               className="w-full justify-between"
               disabled={selectedUsers.length >= maxUsers}
             >

@@ -20,17 +20,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Check,
-  Copy,
-  InfoIcon,
-  TagIcon,
-  X,
-} from "lucide-react";
+import { Check, InfoIcon, TagIcon, X } from "lucide-react";
 import { showToast } from "@/lib/toast";
-import { cn } from "@/lib/utils";
+import { BackButtonIcon } from "@/components/common/BackButton";
 
 interface PlanDetailsViewProps {
   planId: string;
@@ -125,19 +117,7 @@ export function PlanDetailsView({ planId }: PlanDetailsViewProps) {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => router.back()}
-          className="mb-4"
-        >
-          {isRtl ? (
-            <ArrowRight className="h-4 w-4 mr-2" />
-          ) : (
-            <ArrowLeft className="h-4 w-4 mr-2" />
-          )}
-          {t("common.back")}
-        </Button>
+        <BackButtonIcon onClick={() => router.back()} />
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">

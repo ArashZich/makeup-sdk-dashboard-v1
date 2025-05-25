@@ -81,7 +81,8 @@
     "pattern": "الگو",
     "color": "رنگ",
     "total": "کل",
-    "optional": "اختیاری"
+    "optional": "اختیاری",
+    "duration": "مدت"
   },
   "auth": {
     "login": "ورود",

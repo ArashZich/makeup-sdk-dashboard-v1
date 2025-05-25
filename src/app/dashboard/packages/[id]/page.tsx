@@ -7,10 +7,11 @@ export const metadata: Metadata = {
   description: "View package details for your Makeup SDK",
 };
 
-export default function PackageDetailsPage({
+export default async function PackageDetailsPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  return <PackageDetailsView packageId={params.id} />;
+  const { id } = await params;
+  return <PackageDetailsView packageId={id} />;
 }

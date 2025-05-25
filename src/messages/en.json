@@ -81,7 +81,8 @@
     "pattern": "Pattern",
     "color": "Color",
     "total": "Total",
-    "optional": "Optional"
+    "optional": "Optional",
+    "duration": "Duration"
   },
   "auth": {
     "login": "Login",

@@ -8,12 +8,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { Plus, RefreshCw, ArrowLeft } from "lucide-react"; // 🔄 اضافه شده
+import { Plus, RefreshCw } from "lucide-react"; // 🔄 اضافه شده
 import { SendNotificationForm } from "../components/SendNotificationForm";
 import { NotificationTable } from "../components/NotificationTable";
 import { NotificationFilters } from "../components/NotificationFilters";
 import { NotificationStatsCard } from "../components/NotificationStatsCard";
 import { NotificationType } from "@/api/types/notifications.types";
+import { BackButtonIcon } from "@/components/common/BackButton";
 
 export function AdminNotificationsView() {
   const { t } = useLanguage();
@@ -180,10 +181,7 @@ export function AdminNotificationsView() {
         <TabsContent value="send" className="space-y-6">
           {/* 🔄 اضافه شده: دکمه بازگشت */}
           <div className="flex items-center gap-2 mb-4">
-            <Button variant="outline" onClick={handleBackToOverview} size="sm">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              {t("common.back")}
-            </Button>
+            <BackButtonIcon onClick={handleBackToOverview} />
             <div>
               <h2 className="text-xl font-semibold">
                 {t("admin.notifications.sendNotification")}
@@ -200,10 +198,7 @@ export function AdminNotificationsView() {
         <TabsContent value="all" className="space-y-6">
           {/* 🔄 اضافه شده: دکمه بازگشت */}
           <div className="flex items-center gap-2 mb-4">
-            <Button variant="outline" onClick={handleBackToOverview} size="sm">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              {t("common.back")}
-            </Button>
+            <BackButtonIcon onClick={handleBackToOverview} />
             <div>
               <h2 className="text-xl font-semibold">
                 {t("admin.notifications.allNotifications")}

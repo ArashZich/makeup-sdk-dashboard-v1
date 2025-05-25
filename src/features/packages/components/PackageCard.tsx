@@ -74,6 +74,11 @@ export function PackageCard({ package: pkg, onView }: PackageCardProps) {
     }
   };
 
+  // ✅ Helper function برای نمایش مقادیر نامحدود
+  const formatLimitValue = (value: number) => {
+    return value === -1 ? t("common.unlimited") : value.toString();
+  };
+
   const statusDetails = getStatusDetails(pkg.status);
   const planName =
     pkg.planId && typeof pkg.planId !== "string"
@@ -147,7 +152,8 @@ export function PackageCard({ package: pkg, onView }: PackageCardProps) {
               {t("packages.requestLimit.monthly")}
             </span>
             <span className="text-sm font-medium">
-              {pkg.requestLimit.monthly}
+              {formatLimitValue(pkg.requestLimit.monthly)}{" "}
+              {/* ✅ استفاده از helper function */}
             </span>
           </div>
           <div className="flex justify-between">
@@ -155,7 +161,8 @@ export function PackageCard({ package: pkg, onView }: PackageCardProps) {
               {t("packages.requestLimit.remaining")}
             </span>
             <span className="text-sm font-medium">
-              {pkg.requestLimit.remaining}
+              {formatLimitValue(pkg.requestLimit.remaining)}{" "}
+              {/* ✅ استفاده از helper function */}
             </span>
           </div>
         </div>

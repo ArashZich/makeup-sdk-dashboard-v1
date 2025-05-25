@@ -17,11 +17,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, RefreshCw, ArrowLeft, Users, Search } from "lucide-react";
+import { Plus, RefreshCw, Users, Search } from "lucide-react";
 import { ProductTable } from "../components/ProductTable";
 import { ProductForm } from "../components/ProductForm";
 import { Product } from "@/api/types/products.types";
 import { logger } from "@/lib/logger";
+import { BackButtonIcon } from "@/components/common/BackButton";
 
 export function AdminProductsView() {
   const { t } = useLanguage();
@@ -528,10 +529,7 @@ export function AdminProductsView() {
         {/* Form Tab */}
         <TabsContent value="form" className="space-y-6">
           <div className="flex items-center gap-2 mb-4">
-            <Button variant="outline" onClick={handleBackToOverview} size="sm">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              {t("common.back")}
-            </Button>
+            <BackButtonIcon onClick={handleBackToOverview} />
             <div>
               <h2 className="text-xl font-semibold">
                 {editingProduct

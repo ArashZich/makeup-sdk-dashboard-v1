@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAdminPackages } from "@/api/hooks/usePackages";
+import { useBoolean } from "@/hooks/useBoolean"; // ✅ اضافه کردن import
 import { PackageTable } from "../components/PackageTable";
 import { ExtendPackageDialog } from "../components/ExtendPackageDialog";
 import { SuspendPackageDialog } from "../components/SuspendPackageDialog";
@@ -24,10 +25,14 @@ export function PackagesView() {
   const { t } = useLanguage();
   const router = useRouter();
 
-  // State مدیریت دیالوگ‌ها
+  // ✅ استفاده از useBoolean برای تمام state های boolean
+  const { getValue, setTrue, setFalse, setValue } = useBoolean({
+    showExtendDialog: false,
+    showSuspendDialog: false,
+  });
+
+  // State برای ID بسته انتخاب شده و نوع عملیات
   const [selectedPackageId, setSelectedPackageId] = useState<string>("");
-  const [showExtendDialog, setShowExtendDialog] = useState(false);
-  const [showSuspendDialog, setShowSuspendDialog] = useState(false);
   const [suspendAction, setSuspendAction] = useState<"suspend" | "reactivate">(
     "suspend"
   );
@@ -54,13 +59,13 @@ export function PackagesView() {
   // مدیریت تمدید بسته
   const handleExtend = (packageId: string) => {
     setSelectedPackageId(packageId);
-    setShowExtendDialog(true);
+    setTrue("showExtendDialog"); // ✅ استفاده از setTrue
   };
 
   const handleExtendConfirm = async (data: ExtendPackageRequest) => {
     try {
       await extendPackage({ packageId: selectedPackageId, data });
-      setShowExtendDialog(false);
+      setFalse("showExtendDialog"); // ✅ استفاده از setFalse
       setSelectedPackageId("");
     } catch (error) {
       logger.error("Error extending package:", error);
@@ -71,14 +76,14 @@ export function PackagesView() {
   const handleSuspend = (packageId: string) => {
     setSelectedPackageId(packageId);
     setSuspendAction("suspend");
-    setShowSuspendDialog(true);
+    setTrue("showSuspendDialog"); // ✅ استفاده از setTrue
   };
 
   // مدیریت فعال‌سازی مجدد بسته
   const handleReactivate = (packageId: string) => {
     setSelectedPackageId(packageId);
     setSuspendAction("reactivate");
-    setShowSuspendDialog(true);
+    setTrue("showSuspendDialog"); // ✅ استفاده از setTrue
   };
 
   const handleSuspendConfirm = async () => {
@@ -88,7 +93,7 @@ export function PackagesView() {
       } else {
         await reactivatePackage(selectedPackageId);
       }
-      setShowSuspendDialog(false);
+      setFalse("showSuspendDialog"); // ✅ استفاده از setFalse
       setSelectedPackageId("");
     } catch (error) {
       logger.error("Error updating package status:", error);
@@ -135,8 +140,8 @@ export function PackagesView() {
 
       {/* دیالوگ تمدید بسته */}
       <ExtendPackageDialog
-        open={showExtendDialog}
-        onOpenChange={setShowExtendDialog}
+        open={getValue("showExtendDialog")} // ✅ استفاده از getValue
+        onOpenChange={(open) => setValue("showExtendDialog", open)} // ✅ استفاده از setValue برای مدیریت وضعیت
         onConfirm={handleExtendConfirm}
         isLoading={isExtendingPackage}
         packageId={selectedPackageId}
@@ -144,8 +149,8 @@ export function PackagesView() {
 
       {/* دیالوگ تعلیق/فعال‌سازی بسته */}
       <SuspendPackageDialog
-        open={showSuspendDialog}
-        onOpenChange={setShowSuspendDialog}
+        open={getValue("showSuspendDialog")} // ✅ استفاده از getValue
+        onOpenChange={(open) => setValue("showSuspendDialog", open)} // ✅ استفاده از setValue برای مدیریت وضعیت
         onConfirm={handleSuspendConfirm}
         isLoading={isSuspendingPackage || isReactivatingPackage}
         action={suspendAction}

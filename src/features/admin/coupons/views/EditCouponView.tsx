@@ -1,16 +1,14 @@
 // src/features/admin/coupons/views/EditCouponView.tsx
 "use client";
 
-import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useAdminCoupons } from "@/api/hooks/useCoupons";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { UpdateCouponRequest } from "@/api/types/coupons.types";
 import { CouponForm } from "../components/CouponForm";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 import { Loader } from "@/components/common/Loader";
 import { logger } from "@/lib/logger";
+import { BackButtonIcon } from "@/components/common/BackButton";
 
 export function EditCouponView() {
   const { t } = useLanguage();
@@ -45,7 +43,7 @@ export function EditCouponView() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
         <p className="text-destructive mb-4">{t("common.error.general")}</p>
-        <Button onClick={() => router.back()}>{t("common.back")}</Button>
+        <BackButtonIcon onClick={() => router.back()} />
       </div>
     );
   }
@@ -53,10 +51,7 @@ export function EditCouponView() {
   return (
     <div className="space-y-6">
       <div className="flex items-center">
-        <Button variant="ghost" onClick={() => router.back()} className="mr-4">
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          {t("common.back")}
-        </Button>
+        <BackButtonIcon onClick={() => router.back()} />
         <div>
           <h1 className="text-2xl font-bold tracking-tight">
             {t("admin.coupons.editCoupon")}

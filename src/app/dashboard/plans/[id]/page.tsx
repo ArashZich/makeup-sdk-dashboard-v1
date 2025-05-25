@@ -7,10 +7,12 @@ export const metadata: Metadata = {
   description: "View and purchase plan details for your Makeup SDK",
 };
 
-export default function PlanDetailsPage({
+export default async function PlanDetailsPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  return <PlanDetailsView planId={params.id} />;
+  const { id } = await params; // تغییر: await اضافه شد
+
+  return <PlanDetailsView planId={id} />;
 }

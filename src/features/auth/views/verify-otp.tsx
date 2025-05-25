@@ -8,10 +8,9 @@ import { useAuthActions } from "@/api/hooks/useAuth"; // تغییر
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { OtpVerificationForm } from "../components/OtpVerificationForm";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import { showToast } from "@/lib/toast";
 import { logger } from "@/lib/logger";
+import { BackButton } from "@/components/common/BackButton";
 
 export default function VerifyOtpView() {
   const { t, isRtl } = useLanguage();
@@ -81,23 +80,7 @@ export default function VerifyOtpView() {
       </Card>
 
       <div className="text-center">
-        <Button
-          variant="ghost"
-          onClick={() => router.push("/auth/login")}
-          className="text-sm text-muted-foreground hover:text-foreground"
-        >
-          {isRtl ? (
-            <>
-              {t("common.back")}
-              <ArrowRight className="mr-2 h-4 w-4" />
-            </>
-          ) : (
-            <>
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              {t("common.back")}
-            </>
-          )}
-        </Button>
+        <BackButton label={t("common.back")} href="/auth/login" />
       </div>
     </div>
   );
