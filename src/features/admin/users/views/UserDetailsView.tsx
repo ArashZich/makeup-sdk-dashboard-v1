@@ -1,16 +1,16 @@
 // src/features/admin/users/views/UserDetailsView.tsx
 "use client";
 
-import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAdminUsers } from "@/api/hooks/useUsers";
-import { User } from "@/api/types/users.types";
+
 import { DeleteUserDialog } from "../components/DeleteUserDialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Loader } from "@/components/common/Loader";
+import { BackButtonIcon } from "@/components/common/BackButton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Card,
@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/card";
 import { formatDate } from "@/lib";
 import {
-  ArrowLeft,
   Edit,
   Trash,
   User as UserIcon,
@@ -36,6 +35,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { logger } from "@/lib/logger";
+import { useBoolean } from "@/hooks/useBoolean";
 
 export function UserDetailsView() {
   const { t, isRtl } = useLanguage();
@@ -43,11 +43,13 @@ export function UserDetailsView() {
   const { id } = useParams();
   const userId = Array.isArray(id) ? id[0] : id;
 
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const { getValue, toggle } = useBoolean({
+    showDeleteDialog: false,
+  });
 
   const { getUser, deleteUser, isDeletingUser } = useAdminUsers();
 
-  const { data: user, isLoading, error, refetch } = getUser(userId || "");
+  const { data: user, isLoading, error } = getUser(userId || "");
 
   const handleDelete = async () => {
     if (!user) return;
@@ -74,14 +76,7 @@ export function UserDetailsView() {
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>{t("common.error.title")}</AlertTitle>
         <AlertDescription>{t("common.error.fetchFailed")}</AlertDescription>
-        <Button
-          variant="outline"
-          onClick={() => router.push("/dashboard/admin/users")}
-          className="mt-4"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          {t("common.back")}
-        </Button>
+        <BackButtonIcon href="/dashboard/admin/users" />
       </Alert>
     );
   }
@@ -91,14 +86,7 @@ export function UserDetailsView() {
       {/* هدر */}
       <div className="flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
         <div className="flex items-center">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => router.push("/dashboard/admin/users")}
-            className="mr-2"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
+          <BackButtonIcon href="/dashboard/admin/users" />
           <div>
             <h1 className="text-2xl font-bold tracking-tight">{user.name}</h1>
             <p className="text-muted-foreground flex items-center">
@@ -132,7 +120,7 @@ export function UserDetailsView() {
           </Button>
           <Button
             variant="destructive"
-            onClick={() => setShowDeleteDialog(true)}
+            onClick={() => toggle("showDeleteDialog")}
           >
             <Trash className="mr-2 h-4 w-4" />
             {t("common.delete")}
@@ -278,10 +266,10 @@ export function UserDetailsView() {
       {/* دیالوگ حذف کاربر */}
       <DeleteUserDialog
         user={user}
-        isOpen={showDeleteDialog}
+        isOpen={getValue("showDeleteDialog")}
         isDeleting={isDeletingUser}
         onConfirm={handleDelete}
-        onCancel={() => setShowDeleteDialog(false)}
+        onCancel={() => toggle("showDeleteDialog")}
       />
     </div>
   );

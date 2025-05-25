@@ -33,7 +33,8 @@
     "closeSidebar": "Close Menu",
     "error": {
       "general": "An error occurred. Please try again.",
-      "title": "Error"
+      "title": "Error",
+      "fetchFailed": "Failed to fetch data. Please try again."
     },
     "success": {
       "update": "Updated successfully"
@@ -762,7 +763,8 @@
         "all": "All",
         "admins": "Admins",
         "users": "Users"
-      }
+      },
+      "editUserDescription": "Edit user details"
     },
     "analytics": {
       "title": "Analytics & Statistics",

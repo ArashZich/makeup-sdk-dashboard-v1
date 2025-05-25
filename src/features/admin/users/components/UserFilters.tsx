@@ -1,7 +1,6 @@
 // src/features/admin/users/components/UserFilters.tsx
 "use client";
 
-import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";

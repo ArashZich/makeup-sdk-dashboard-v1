@@ -4,7 +4,6 @@
 import { useRouter, useParams } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePlans } from "@/api/hooks/usePlans"; // از usePlans استفاده می‌کنیم
-import { Plan } from "@/api/types/plans.types";
 import { DeletePlanDialog } from "../components/DeletePlanDialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -29,9 +28,9 @@ import {
   Check,
   AlertCircle,
 } from "lucide-react";
-import { useState } from "react";
 import { useAdminPlans } from "@/api/hooks/usePlans";
 import { logger } from "@/lib/logger";
+import { useBoolean } from "@/hooks/useBoolean";
 
 export function PlanDetailsView() {
   const { t, isRtl } = useLanguage();
@@ -39,7 +38,9 @@ export function PlanDetailsView() {
   const { id } = useParams();
   const planId = typeof id === "string" ? id : Array.isArray(id) ? id[0] : "";
 
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const { getValue, toggle } = useBoolean({
+    showDeleteDialog: false,
+  });
 
   // استفاده از usePlans برای دریافت اطلاعات پلن
   const { getAllPlans } = usePlans();
@@ -141,7 +142,7 @@ export function PlanDetailsView() {
           </Button>
           <Button
             variant="destructive"
-            onClick={() => setShowDeleteDialog(true)}
+            onClick={() => toggle("showDeleteDialog")}
           >
             <Trash className="mr-2 h-4 w-4" />
             {t("common.delete")}
@@ -368,10 +369,10 @@ export function PlanDetailsView() {
       {/* دیالوگ حذف */}
       <DeletePlanDialog
         plan={plan}
-        isOpen={showDeleteDialog}
+        isOpen={getValue("showDeleteDialog")}
         isDeleting={isDeletingPlan}
         onConfirm={handleDelete}
-        onCancel={() => setShowDeleteDialog(false)}
+        onCancel={() => toggle("showDeleteDialog")}
       />
     </div>
   );
