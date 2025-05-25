@@ -37,6 +37,7 @@ import { Badge } from "@/components/ui/badge";
 import { DateTime } from "luxon";
 import { CalendarIcon, Plus, X } from "lucide-react";
 import { toJalali } from "@/lib/date";
+import logger from "@/lib/logger";
 
 // اسکیما برای اعتبارسنجی فرم
 const couponSchema = z
@@ -68,10 +69,11 @@ const couponSchema = z
 
 type CouponFormValues = z.infer<typeof couponSchema>;
 
+// ✅ اصلاح interface برای پشتیبانی از هر دو حالت
 interface CouponFormProps {
   coupon?: Coupon;
   isSubmitting: boolean;
-  onSubmit: (data: CreateCouponRequest | UpdateCouponRequest) => void;
+  onSubmit: (data: CreateCouponRequest | UpdateCouponRequest) => Promise<void>; // ✅ اضافه کردن Promise<void>
 }
 
 export function CouponForm({
@@ -162,13 +164,40 @@ export function CouponForm({
     }
   };
 
-  const handleSubmit = (values: CouponFormValues) => {
-    const formattedValues: CreateCouponRequest | UpdateCouponRequest = {
-      ...values,
-      startDate: DateTime.fromJSDate(values.startDate).toISO()!,
-      endDate: DateTime.fromJSDate(values.endDate).toISO()!,
-    };
-    onSubmit(formattedValues);
+  // ✅ اصلاح handleSubmit برای پشتیبانی از هر دو حالت
+  const handleSubmit = async (values: CouponFormValues) => {
+    logger.api("Coupon form submitting with data:", values);
+
+    try {
+      const baseData = {
+        description: values.description,
+        percent: values.percent,
+        maxAmount: values.maxAmount,
+        maxUsage: values.maxUsage,
+        startDate: DateTime.fromJSDate(values.startDate).toISO()!,
+        endDate: DateTime.fromJSDate(values.endDate).toISO()!,
+        forPlans: values.forPlans,
+        forUsers: values.forUsers,
+        active: values.active,
+      };
+
+      if (coupon) {
+        // ✅ حالت update - بدون code
+        const updateData: UpdateCouponRequest = baseData;
+        logger.data("Update coupon data:", updateData);
+        await onSubmit(updateData);
+      } else {
+        // ✅ حالت create - با code
+        const createData: CreateCouponRequest = {
+          ...baseData,
+          code: values.code,
+        };
+        logger.data("Create coupon data:", createData);
+        await onSubmit(createData);
+      }
+    } catch (error) {
+      logger.fail("Coupon form submission failed:", error);
+    }
   };
 
   return (

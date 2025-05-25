@@ -9,6 +9,7 @@ import { Loader } from "@/components/common/Loader";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { showToast } from "@/lib/toast";
 import { User } from "@/api/types/auth.types";
+import { logger } from "@/lib/logger";
 
 export function DivarRedirectView() {
   const { t } = useLanguage();
@@ -99,7 +100,7 @@ export function DivarRedirectView() {
         router.push(redirectPath);
       }, 2000);
     } catch (err) {
-      console.error("Error in Divar redirect page:", err);
+      logger.error("Error in Divar redirect page:", err);
       setError(t("divar.error.general"));
     } finally {
       setIsProcessing(false);

@@ -80,8 +80,6 @@ export const productsService = {
       ...cleanData
     } = data as any;
 
-    console.log("🔧 Sending clean data to server:", cleanData);
-
     const response = await axios.put(`/products/${productId}`, cleanData);
     return response.data;
   },
@@ -124,7 +122,7 @@ export const productsService = {
   },
 
   /**
-   * ✅ به‌روزرسانی محصول کاربر (ادمین) - فیکس شده
+   * ✅ به‌روزرسانی محصول کاربر (ادمین) - فیکس کامل شده
    * @param userId شناسه کاربر
    * @param productId شناسه محصول
    * @param data اطلاعات جدید محصول
@@ -134,20 +132,24 @@ export const productsService = {
     productId: string,
     data: UpdateProductRequest
   ): Promise<Product> => {
-    // ✅ حذف همه فیلدهای غیرمجاز قبل از ارسال
-    const {
-      _id,
-      __v,
-      createdAt,
-      updatedAt,
-      userId: userIdField,
-      uid,
-      type, // ✅ type نباید در update باشه
-      code, // ✅ code نباید در update باشه
-      ...cleanData
-    } = data as any;
+    // ✅ فیلتر کامل فیلدهای غیرمجاز
+    const allowedFields = [
+      "name",
+      "description",
+      "thumbnail",
+      "patterns",
+      "colors",
+      "active",
+    ];
 
-    console.log("🔧 Sending clean data to server for user product:", cleanData);
+    const cleanData: any = {};
+
+    // ✅ فقط فیلدهای مجاز کپی کن
+    for (const key of allowedFields) {
+      if (key in data && (data as any)[key] !== undefined) {
+        cleanData[key] = (data as any)[key];
+      }
+    }
 
     const response = await axios.put(
       `/products/user/${userId}/${productId}`,

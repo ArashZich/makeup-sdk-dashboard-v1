@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Download, FileSpreadsheet, FileText, ChevronDown } from "lucide-react";
 import { RevenueStatsResponse } from "@/api/types/revenue-stats.types";
-import { formatCurrency } from "@/lib/utils";
+import { logger } from "@/lib/logger";
 
 interface RevenueExportButtonProps {
   data: RevenueStatsResponse | null;
@@ -130,7 +130,7 @@ export function RevenueExportButton({
         downloadFile(jsonData, `${baseFilename}.json`, "application/json");
       }
     } catch (error) {
-      console.error("Export error:", error);
+      logger.error("Export error:", error);
     } finally {
       setIsExporting(false);
     }

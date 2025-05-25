@@ -2,6 +2,7 @@
 "use client";
 
 import React, { Component, ErrorInfo, ReactNode } from "react";
+import { logger } from "@/lib/logger";
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -34,7 +35,7 @@ export class ErrorBoundaryProvider extends Component<
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     // اینجا می‌توانید خطا را به سرویس گزارش خطا مانند Sentry ارسال کنید
-    console.error("Error caught by ErrorBoundary:", error, errorInfo);
+    logger.error("Error caught by ErrorBoundary:", error, errorInfo);
   }
 
   render() {

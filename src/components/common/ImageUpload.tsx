@@ -6,15 +6,10 @@ import { ImageType } from "@/api/types/upload.types";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useLanguage } from "@/contexts/LanguageContext";
-import {
-  Upload,
-  X,
-  Image as ImageIcon,
-  CheckCircle,
-  AlertCircle,
-} from "lucide-react";
+import { Upload, X, AlertCircle } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { logger } from "@/lib/logger";
 
 interface ImageUploadProps {
   value?: string;
@@ -76,7 +71,7 @@ export function ImageUpload({
         onChange(imageUrl);
       }
     } catch (error) {
-      console.error("Upload failed:", error);
+      logger.error("Upload failed:", error);
     }
   };
 

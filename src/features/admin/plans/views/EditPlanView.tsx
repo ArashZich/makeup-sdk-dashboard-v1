@@ -10,6 +10,7 @@ import { Loader } from "@/components/common/Loader";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ArrowLeft, AlertCircle } from "lucide-react";
 import { showToast } from "@/lib/toast";
+import { logger } from "@/lib/logger";
 
 export function EditPlanView() {
   const { t } = useLanguage();
@@ -37,7 +38,7 @@ export function EditPlanView() {
       showToast.success(t("plans.updateSuccess"));
       router.push(`/dashboard/admin/plans`);
     } catch (error) {
-      console.error("Error updating plan:", error);
+      logger.error("Error updating plan:", error);
     }
   };
 

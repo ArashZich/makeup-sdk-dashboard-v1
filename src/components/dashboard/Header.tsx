@@ -21,6 +21,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
 import { useNotifications } from "@/api/hooks/useNotifications";
+import { logger } from "@/lib/logger";
 
 export function Header() {
   const { t, isRtl } = useLanguage();
@@ -37,7 +38,7 @@ export function Header() {
     try {
       await logout();
     } catch (error) {
-      console.error("Error logging out:", error);
+      logger.error("Error logging out:", error);
     }
   };
 

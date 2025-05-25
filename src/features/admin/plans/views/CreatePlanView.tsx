@@ -8,6 +8,7 @@ import { PlanForm } from "../components/PlanForm";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { showToast } from "@/lib/toast";
+import { logger } from "@/lib/logger";
 
 export function CreatePlanView() {
   const { t } = useLanguage();
@@ -20,7 +21,7 @@ export function CreatePlanView() {
       showToast.success(t("plans.createSuccess"));
       router.push("/dashboard/admin/plans");
     } catch (error) {
-      console.error("Error creating plan:", error);
+      logger.error("Error creating plan:", error);
     }
   };
 

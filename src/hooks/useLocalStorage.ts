@@ -1,5 +1,6 @@
 // src/hooks/useLocalStorage.ts
 import { useState, useEffect } from "react";
+import logger from "@/lib/logger";
 
 export function useLocalStorage<T>(
   key: string,
@@ -16,7 +17,7 @@ export function useLocalStorage<T>(
       const item = window.localStorage.getItem(key);
       return item ? (JSON.parse(item) as T) : initialValue;
     } catch (error) {
-      console.warn(`Error reading localStorage key "${key}":`, error);
+      logger.warn(`Error reading localStorage key "${key}":`, error);
       return initialValue;
     }
   };
@@ -40,7 +41,7 @@ export function useLocalStorage<T>(
     try {
       window.localStorage.setItem(key, JSON.stringify(storedValue));
     } catch (error) {
-      console.warn(`Error setting localStorage key "${key}":`, error);
+      logger.warn(`Error setting localStorage key "${key}":`, error);
     }
   }, [key, storedValue]);
 

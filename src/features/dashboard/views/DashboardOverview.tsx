@@ -41,9 +41,6 @@ export function DashboardOverview() {
   // تغییر: استفاده از results به جای فرض کردن که آرایه است
   const activePackages = packagesData?.results || [];
 
-  console.log(packagesData, "packagesData");
-  console.log(activePackages, "activePackages");
-
   useEffect(() => {
     if (activePackages && activePackages.length > 0) {
       // فرض می‌کنیم اولین بسته فعال، بسته فعلی کاربر است

@@ -28,6 +28,7 @@ import {
   InfoIcon,
 } from "lucide-react";
 import confetti from "canvas-confetti";
+import { logger } from "@/lib/logger";
 
 export function NewTokenView() {
   const { t, isRtl } = useLanguage();
@@ -91,7 +92,7 @@ export function NewTokenView() {
           setError(t("payments.paymentFailed"));
         }
       } catch (error) {
-        console.error("Error fetching package:", error);
+        logger.error("Error fetching package:", error);
         setError(t("sdk.error.fetchFailed"));
       } finally {
         setIsLoading(false);

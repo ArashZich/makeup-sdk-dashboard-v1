@@ -15,6 +15,7 @@ import { Loader } from "@/components/common/Loader";
 import { useRouter } from "next/navigation";
 import { useNotifications } from "@/api/hooks/useNotifications";
 import { formatRelativeTime } from "@/lib/date";
+import { logger } from "@/lib/logger";
 
 interface NotificationsDropdownProps {
   hasUnread?: boolean;
@@ -50,7 +51,7 @@ export function NotificationsDropdown({
       await markAsRead(id);
       refetch();
     } catch (error) {
-      console.error("Error marking notification as read:", error);
+      logger.error("Error marking notification as read:", error);
     }
   };
 
@@ -60,7 +61,7 @@ export function NotificationsDropdown({
       await markAllAsRead();
       refetch();
     } catch (error) {
-      console.error("Error marking all notifications as read:", error);
+      logger.error("Error marking all notifications as read:", error);
     }
   };
 

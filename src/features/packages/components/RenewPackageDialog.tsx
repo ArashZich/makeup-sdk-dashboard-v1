@@ -39,6 +39,7 @@ import {
   CalendarIcon,
   PackageIcon,
 } from "lucide-react";
+import { logger } from "@/lib/logger";
 
 // Schema for renew form
 const renewFormSchema = z.object({
@@ -122,7 +123,7 @@ export function RenewPackageDialog({
         setFinalPrice(plan?.price || null);
       }
     } catch (error) {
-      console.error("Error validating coupon:", error);
+      logger.error("Error validating coupon:", error);
     }
   };
 
@@ -137,7 +138,7 @@ export function RenewPackageDialog({
       });
       // The useUserPayments hook will handle redirection
     } catch (error) {
-      console.error("Error creating payment:", error);
+      logger.error("Error creating payment:", error);
     }
   };
 

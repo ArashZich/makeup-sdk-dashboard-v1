@@ -8,6 +8,7 @@ import {
   CreateProductRequest,
   UpdateProductRequest,
 } from "@/api/types/products.types";
+import { logger } from "@/lib/logger";
 
 /**
  * هوک برای استفاده از API محصولات برای کاربر عادی
@@ -151,7 +152,13 @@ export const useAdminProducts = () => {
     }: {
       userId: string;
       data: CreateProductRequest;
-    }) => productsService.createProductForUser(userId, data),
+    }) => {
+      logger.api("🎯 Hook - createProductForUser called with:", {
+        userId,
+        data,
+      });
+      return productsService.createProductForUser(userId, data);
+    },
     onSuccess: (data, { userId }) => {
       // باطل کردن کش محصولات کاربر
       queryClient.invalidateQueries({
@@ -160,13 +167,14 @@ export const useAdminProducts = () => {
       showToast.success(t("common.success.create"));
     },
     onError: (error: any) => {
+      logger.fail("🔴 Hook - createProductForUser error:", error);
       showToast.error(
         error.response?.data?.message || t("common.error.general")
       );
     },
   });
 
-  // به‌روزرسانی محصول کاربر
+  // ✅ به‌روزرسانی محصول کاربر - اصلاح شده
   const updateUserProductMutation = useMutation({
     mutationFn: ({
       userId,
@@ -176,7 +184,27 @@ export const useAdminProducts = () => {
       userId: string;
       productId: string;
       data: UpdateProductRequest;
-    }) => productsService.updateUserProduct(userId, productId, data),
+    }) => {
+      logger.api("🎯 Hook - updateUserProduct called with:", {
+        userId,
+        productId,
+        data,
+      });
+
+      // ✅ اطمینان از اینکه فقط فیلدهای مجاز ارسال شن
+      const cleanData = {
+        name: data.name,
+        description: data.description,
+        thumbnail: data.thumbnail,
+        patterns: data.patterns,
+        colors: data.colors,
+        active: data.active,
+      };
+
+      logger.api("🟢 Hook - Clean data being sent:", cleanData);
+
+      return productsService.updateUserProduct(userId, productId, cleanData);
+    },
     onSuccess: (data, { userId }) => {
       // به‌روزرسانی کش
       queryClient.setQueryData(["product", data._id], data);
@@ -188,6 +216,8 @@ export const useAdminProducts = () => {
       showToast.success(t("common.success.update"));
     },
     onError: (error: any) => {
+      logger.fail("🔴 Hook - updateUserProduct error:", error);
+      logger.fail("🔴 Hook - Error response:", error.response?.data);
       showToast.error(
         error.response?.data?.message || t("common.error.general")
       );
@@ -202,7 +232,13 @@ export const useAdminProducts = () => {
     }: {
       userId: string;
       productId: string;
-    }) => productsService.deleteUserProduct(userId, productId),
+    }) => {
+      logger.api("🎯 Hook - deleteUserProduct called with:", {
+        userId,
+        productId,
+      });
+      return productsService.deleteUserProduct(userId, productId);
+    },
     onSuccess: (_, { userId, productId }) => {
       // حذف از کش
       queryClient.removeQueries({ queryKey: ["product", productId] });
@@ -213,6 +249,7 @@ export const useAdminProducts = () => {
       showToast.success(t("common.success.delete"));
     },
     onError: (error: any) => {
+      logger.fail("🔴 Hook - deleteUserProduct error:", error);
       showToast.error(
         error.response?.data?.message || t("common.error.general")
       );

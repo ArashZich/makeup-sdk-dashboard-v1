@@ -15,6 +15,7 @@ import { useAdminPackages } from "@/api/hooks/usePackages";
 import { PackageForm } from "../components/PackageForm";
 import { ArrowLeft } from "lucide-react";
 import { CreatePackageRequest } from "@/api/types/packages.types";
+import { logger } from "@/lib/logger";
 
 export function CreatePackageView() {
   const { t } = useLanguage();
@@ -27,7 +28,7 @@ export function CreatePackageView() {
       await createPackage(data);
       router.push("/dashboard/admin/packages");
     } catch (error) {
-      console.error("Error creating package:", error);
+      logger.error("Error creating package:", error);
     }
   };
 

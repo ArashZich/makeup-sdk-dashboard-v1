@@ -8,6 +8,7 @@ import { UserForm } from "../components/UserForm";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { showToast } from "@/lib/toast";
+import { logger } from "@/lib/logger";
 
 export function CreateUserView() {
   const { t } = useLanguage();
@@ -20,7 +21,7 @@ export function CreateUserView() {
       showToast.success(t("admin.users.createSuccess"));
       router.push("/dashboard/admin/users");
     } catch (error) {
-      console.error("Error creating user:", error);
+      logger.error("Error creating user:", error);
     }
   };
 

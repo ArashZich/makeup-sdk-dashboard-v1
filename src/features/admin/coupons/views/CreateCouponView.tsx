@@ -4,23 +4,38 @@
 import { useRouter } from "next/navigation";
 import { useAdminCoupons } from "@/api/hooks/useCoupons";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { CreateCouponRequest } from "@/api/types/coupons.types";
+import {
+  CreateCouponRequest,
+  UpdateCouponRequest,
+} from "@/api/types/coupons.types";
 import { CouponForm } from "../components/CouponForm";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import logger from "@/lib/logger";
 
 export function CreateCouponView() {
   const { t } = useLanguage();
   const router = useRouter();
   const { createCoupon, isCreatingCoupon } = useAdminCoupons();
 
-  // مدیریت ارسال فرم ایجاد کوپن
-  const handleSubmit = async (data: CreateCouponRequest) => {
+  // ✅ اصلاح handleSubmit برای پشتیبانی از هر دو تایپ
+  const handleSubmit = async (
+    data: CreateCouponRequest | UpdateCouponRequest
+  ) => {
     try {
-      await createCoupon(data);
-      router.push("/dashboard/admin/coupons");
+      logger.api("Creating coupon with data:", data);
+
+      // ✅ اطمینان از اینکه در حالت create، code موجود باشه
+      if ("code" in data) {
+        await createCoupon(data as CreateCouponRequest);
+        logger.success("Coupon created successfully");
+        router.push("/dashboard/admin/coupons");
+      } else {
+        logger.fail("Code is required for creating coupon");
+        throw new Error("Code is required for creating coupon");
+      }
     } catch (error) {
-      console.error("Error creating coupon:", error);
+      logger.fail("Error creating coupon:", error);
     }
   };
 

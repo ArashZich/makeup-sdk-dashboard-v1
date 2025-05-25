@@ -17,8 +17,8 @@ import { PackageTable } from "../components/PackageTable";
 import { ExtendPackageDialog } from "../components/ExtendPackageDialog";
 import { SuspendPackageDialog } from "../components/SuspendPackageDialog";
 import { Plus } from "lucide-react";
-import { showToast } from "@/lib/toast";
 import { ExtendPackageRequest } from "@/api/types/packages.types";
+import { logger } from "@/lib/logger";
 
 export function PackagesView() {
   const { t } = useLanguage();
@@ -63,7 +63,7 @@ export function PackagesView() {
       setShowExtendDialog(false);
       setSelectedPackageId("");
     } catch (error) {
-      console.error("Error extending package:", error);
+      logger.error("Error extending package:", error);
     }
   };
 
@@ -91,7 +91,7 @@ export function PackagesView() {
       setShowSuspendDialog(false);
       setSelectedPackageId("");
     } catch (error) {
-      console.error("Error updating package status:", error);
+      logger.error("Error updating package status:", error);
     }
   };
 

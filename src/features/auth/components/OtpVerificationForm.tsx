@@ -25,6 +25,7 @@ import {
   convertPersianToEnglishNumbers,
   convertEnglishToPersianNumbers,
 } from "@/lib/numberConverter";
+import { logger } from "@/lib/logger";
 
 // اسکیمای اعتبارسنجی فرم
 const otpVerificationSchema = z.object({
@@ -95,7 +96,7 @@ export function OtpVerificationForm({
       await verifyOtp({ phone: values.phone, code: values.code });
       // navigation خودکار توسط context انجام میشه
     } catch (error) {
-      console.error("خطا در تأیید کد:", error);
+      logger.error("خطا در تأیید کد:", error);
     }
   };
 

@@ -1165,7 +1165,10 @@
         "cancelButton": "لغو",
         "thumbnailOptional": "عکس اختیاری است",
         "availablePatternsForType": "الگوهای مجاز برای این نوع",
-        "selectPattern": "انتخاب الگو"
+        "selectPattern": "انتخاب الگو",
+        "typeCannotChange": "نوع نمی تواند تغییر کند",
+        "codeCannotChange": "کد نمی تواند تغییر کند",
+        "userCannotChange": "کاربر نمی تواند تغییر کند"
       },
       "details": {
         "title": "جزئیات محصول",

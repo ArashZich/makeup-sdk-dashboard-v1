@@ -24,6 +24,7 @@ import {
   validateIranianPhoneNumber,
   convertPersianToEnglishNumbers,
 } from "@/lib/numberConverter";
+import { logger } from "@/lib/logger";
 
 // اسکیمای اعتبارسنجی فرم
 const phoneLoginSchema = z.object({
@@ -59,7 +60,7 @@ export function PhoneLoginForm() {
         `/auth/verify-otp?phone=${values.phone}&userId=${result.userId}`
       );
     } catch (error) {
-      console.error("خطا در ارسال کد تأیید:", error);
+      logger.error("خطا در ارسال کد تأیید:", error);
     }
   };
 

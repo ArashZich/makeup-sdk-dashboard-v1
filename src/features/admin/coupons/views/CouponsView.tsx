@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader } from "@/components/common/Loader";
 import { PlusIcon } from "lucide-react";
+import { logger } from "@/lib/logger";
 
 export function CouponsView() {
   const { t } = useLanguage();
@@ -34,7 +35,7 @@ export function CouponsView() {
       setCouponToDelete(null);
       refetch(); // به‌روزرسانی لیست کوپن‌ها پس از حذف
     } catch (error) {
-      console.error("Error deactivating coupon:", error);
+      logger.error("Error deactivating coupon:", error);
     }
   };
 

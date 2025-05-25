@@ -30,7 +30,8 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useState } from "react";
-import { useAdminPlans } from "@/api/hooks/usePlans"; // برای حذف پلن
+import { useAdminPlans } from "@/api/hooks/usePlans";
+import { logger } from "@/lib/logger";
 
 export function PlanDetailsView() {
   const { t, isRtl } = useLanguage();
@@ -56,7 +57,7 @@ export function PlanDetailsView() {
       await deletePlan(plan._id);
       router.push("/dashboard/admin/plans");
     } catch (error) {
-      console.error("Error deleting plan:", error);
+      logger.error("Error deleting plan:", error);
     }
   };
 

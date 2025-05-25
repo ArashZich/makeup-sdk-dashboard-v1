@@ -11,6 +11,7 @@ import { PaymentStatsCards } from "../components/PaymentStatsCards";
 import { PaymentTable } from "../components/PaymentTable";
 import { PaymentFilters } from "../components/PaymentFilters";
 import { PaymentStatus } from "@/api/types/payments.types";
+import { logger } from "@/lib/logger";
 
 export function AdminPaymentsView() {
   const { t } = useLanguage();
@@ -76,7 +77,7 @@ export function AdminPaymentsView() {
 
   const handleExportPayments = () => {
     // TODO: Export payments functionality
-    console.log("Export payments:", filteredPayments);
+    logger.api("Export payments:", filteredPayments);
   };
 
   if (error) {

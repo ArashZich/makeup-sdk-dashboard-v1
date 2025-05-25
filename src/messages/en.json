@@ -1160,7 +1160,10 @@
         "cancelButton": "Cancel",
         "thumbnailOptional": "Thumbnail image is optional",
         "availablePatternsForType": "Available patterns for this type",
-        "selectPattern": "Select Pattern"
+        "selectPattern": "Select Pattern",
+        "typeCannotChange": "Type cannot be changed",
+        "codeCannotChange": "Code cannot be changed",
+        "userCannotChange": "User cannot be changed"
       },
       "details": {
         "title": "Product Details",

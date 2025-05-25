@@ -31,6 +31,7 @@ import {
   CreatePackageRequest,
   PurchasePlatform,
 } from "@/api/types/packages.types";
+import { logger } from "@/lib/logger";
 
 interface PackageFormProps {
   onSubmit: (data: CreatePackageRequest) => Promise<void>;
@@ -85,7 +86,7 @@ export function PackageForm({ onSubmit, isLoading = false }: PackageFormProps) {
       await onSubmit(packageData);
       form.reset();
     } catch (error) {
-      console.error("Error creating package:", error);
+      logger.error("Error creating package:", error);
     }
   };
 

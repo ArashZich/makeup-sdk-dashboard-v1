@@ -35,6 +35,7 @@ import {
   X,
   AlertCircle,
 } from "lucide-react";
+import { logger } from "@/lib/logger";
 
 export function UserDetailsView() {
   const { t, isRtl } = useLanguage();
@@ -55,7 +56,7 @@ export function UserDetailsView() {
       await deleteUser(user._id);
       router.push("/dashboard/admin/users");
     } catch (error) {
-      console.error("Error deleting user:", error);
+      logger.error("Error deleting user:", error);
     }
   };
 

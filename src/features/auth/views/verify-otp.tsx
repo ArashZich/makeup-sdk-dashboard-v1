@@ -11,6 +11,7 @@ import { OtpVerificationForm } from "../components/OtpVerificationForm";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { showToast } from "@/lib/toast";
+import { logger } from "@/lib/logger";
 
 export default function VerifyOtpView() {
   const { t, isRtl } = useLanguage();
@@ -44,7 +45,7 @@ export default function VerifyOtpView() {
       await sendOtp({ phone });
       showToast.success(t("auth.otpResent"));
     } catch (error) {
-      console.error("خطا در ارسال مجدد کد:", error);
+      logger.error("خطا در ارسال مجدد کد:", error);
     } finally {
       setIsResending(false);
     }

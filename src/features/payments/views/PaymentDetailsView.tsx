@@ -8,6 +8,7 @@ import { CancelPaymentDialog } from "../components/CancelPaymentDialog";
 import { Loader } from "@/components/common/Loader";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { InfoIcon } from "lucide-react";
+import { logger } from "@/lib/logger";
 
 interface PaymentDetailsViewProps {
   paymentId: string;
@@ -37,7 +38,7 @@ export function PaymentDetailsView({ paymentId }: PaymentDetailsViewProps) {
       setShowCancelDialog(false);
       refetch();
     } catch (error) {
-      console.error("Error canceling payment:", error);
+      logger.error("Error canceling payment:", error);
     }
   };
 

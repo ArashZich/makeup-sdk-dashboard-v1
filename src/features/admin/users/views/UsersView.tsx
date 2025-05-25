@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/common/Loader";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { PlusCircle, Users, AlertCircle } from "lucide-react";
+import { logger } from "@/lib/logger";
 
 export function UsersView() {
   const { t } = useLanguage();
@@ -23,8 +24,6 @@ export function UsersView() {
   const { getUsers, deleteUser, isDeletingUser } = useAdminUsers();
 
   const { data, isLoading, error, refetch } = getUsers(filters);
-
-  console.log(data, "LLLL");
 
   // رفرش داده‌ها هنگام تغییر فیلترها
   useEffect(() => {
@@ -43,7 +42,7 @@ export function UsersView() {
       setUserToDelete(null);
       refetch();
     } catch (error) {
-      console.error("Error deleting user:", error);
+      logger.error("Error deleting user:", error);
     }
   };
 

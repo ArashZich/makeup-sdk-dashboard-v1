@@ -21,8 +21,8 @@ import {
   Globe,
   Monitor,
   Smartphone,
-  BarChart,
 } from "lucide-react";
+import { logger } from "@/lib/logger";
 
 // تعریف رابط ChartSeries برای رفع مشکل تایپ
 interface ChartSeries {
@@ -74,7 +74,7 @@ export function AnalyticsView() {
     try {
       await downloadAnalytics({});
     } catch (error) {
-      console.error("Error downloading analytics:", error);
+      logger.error("Error downloading analytics:", error);
     }
   };
 

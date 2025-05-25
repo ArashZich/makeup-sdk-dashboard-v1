@@ -8,7 +8,6 @@ import * as z from "zod";
 import { useAdminUsers } from "@/api/hooks/useUsers";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
-  ProductType,
   getAllProductTypes,
   getAllowedPatternsForType,
 } from "@/constants/product-patterns";
@@ -37,26 +36,27 @@ import { Separator } from "@/components/ui/separator";
 import { Plus, Trash2, Image } from "lucide-react";
 import { Product } from "@/api/types/products.types";
 import { Label } from "@/components/ui/label";
+import { logger } from "@/lib/logger";
 
 // Schema validation - ساده‌سازی شده
 const patternSchema = z.object({
-  name: z.string().min(1, "patternNameRequired"), // همان code
-  code: z.string().min(1, "patternCodeRequired"), // همان name
-  imageUrl: z.string().optional(), // اختیاری شده
+  name: z.string().min(1, "patternNameRequired"),
+  code: z.string().min(1, "patternCodeRequired"),
+  imageUrl: z.string().optional(),
 });
 
 const colorSchema = z.object({
   name: z.string().min(1, "colorNameRequired"),
   hexCode: z.string().regex(/^#[0-9A-Fa-f]{6}$/, "invalidHexCode"),
-  imageUrl: z.string().optional(), // اختیاری شده
+  imageUrl: z.string().optional(),
 });
 
-// Schema validation - برای create و update جداگانه
-const baseSchema = {
+// ✅ Schema یکپارچه برای create و update
+const productSchema = z.object({
   name: z.string().min(1, "nameRequired"),
   description: z.string().min(1, "descriptionRequired"),
-  type: z.enum(
-    [
+  type: z
+    .enum([
       "lips",
       "eyeshadow",
       "eyepencil",
@@ -66,42 +66,21 @@ const baseSchema = {
       "concealer",
       "foundation",
       "brows",
-    ],
-    {
-      required_error: "typeRequired",
-    }
-  ),
-  code: z.string().min(1, "codeRequired"),
+    ])
+    .optional(), // در edit اختیاری میشه
+  code: z.string().min(1, "codeRequired").optional(), // در edit اختیاری میشه
   thumbnail: z.string().optional(),
   active: z.boolean(),
   patterns: z.array(patternSchema).min(1, "patternsRequired"),
   colors: z.array(colorSchema).min(1, "colorsRequired"),
-};
-
-// Schema برای ایجاد محصول (شامل userId)
-const createSchema = z.object({
-  ...baseSchema,
-  userId: z.string().min(1, "userRequired"),
+  userId: z.string().optional(), // فقط در create لازمه
 });
 
-// Schema برای به‌روزرسانی محصول (بدون userId)
-const updateSchema = z.object({
-  name: z.string().min(1, "nameRequired"),
-  description: z.string().min(1, "descriptionRequired"),
-  thumbnail: z.string().optional(),
-  active: z.boolean(),
-  patterns: z.array(patternSchema).min(1, "patternsRequired"),
-  colors: z.array(colorSchema).min(1, "colorsRequired"),
-});
-
-type CreateFormData = z.infer<typeof createSchema>;
-type UpdateFormData = z.infer<typeof updateSchema>;
-type CreateProductData = CreateFormData;
-type UpdateProductData = UpdateFormData;
+type ProductFormData = z.infer<typeof productSchema>;
 
 interface ProductFormProps {
   product?: Product | null;
-  onSubmit: (data: CreateProductData | UpdateProductData) => void;
+  onSubmit: (data: any) => void;
   onCancel: () => void;
   isSubmitting: boolean;
 }
@@ -123,28 +102,20 @@ export function ProductForm({
 
   const users = usersData?.results || [];
 
-  const form = useForm<CreateFormData | UpdateFormData>({
-    resolver: zodResolver(isEditMode ? updateSchema : createSchema),
-    defaultValues: isEditMode
-      ? {
-          name: "",
-          description: "",
-          thumbnail: "",
-          active: true,
-          patterns: [{ name: "", code: "", imageUrl: "" }],
-          colors: [{ name: "", hexCode: "#000000", imageUrl: "" }],
-        }
-      : {
-          name: "",
-          description: "",
-          type: undefined,
-          code: "",
-          thumbnail: "",
-          userId: "",
-          active: true,
-          patterns: [{ name: "", code: "", imageUrl: "" }],
-          colors: [{ name: "", hexCode: "#000000", imageUrl: "" }],
-        },
+  // ✅ Form با validation بهتر
+  const form = useForm<ProductFormData>({
+    resolver: zodResolver(productSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      type: undefined,
+      code: "",
+      thumbnail: "",
+      userId: "",
+      active: true,
+      patterns: [{ name: "", code: "", imageUrl: "" }],
+      colors: [{ name: "", hexCode: "#000000", imageUrl: "" }],
+    },
   });
 
   const {
@@ -171,12 +142,16 @@ export function ProductForm({
     ? getAllowedPatternsForType(selectedType)
     : [];
 
-  // Load product data for editing
+  // ✅ Load product data for editing - اصلاح شده
   useEffect(() => {
     if (product && isEditMode) {
+      logger.data("🔄 Loading product data for edit:", product);
+
       form.reset({
         name: product.name,
         description: product.description,
+        type: product.type, // ✅ اضافه شد
+        code: product.code, // ✅ اضافه شد
         thumbnail: product.thumbnail || "",
         active: product.active,
         patterns:
@@ -218,9 +193,40 @@ export function ProductForm({
     label: t(`admin.products.types.${type}`),
   }));
 
-  const handleSubmit = (data: CreateFormData | UpdateFormData) => {
-    console.log("🎯 Form submitting with data:", data);
-    onSubmit(data);
+  // ✅ Submit handler اصلاح شده
+  const handleSubmit = (data: ProductFormData) => {
+    logger.data("🎯 Form submitting with data:", data);
+
+    if (isEditMode) {
+      // ✅ در حالت edit، فقط فیلدهای مجاز ارسال میشن
+      const updateData = {
+        name: data.name,
+        description: data.description,
+        thumbnail: data.thumbnail,
+        patterns: data.patterns,
+        colors: data.colors,
+        active: data.active,
+        // ✅ type، code، userId ارسال نمیشن
+      };
+      logger.data("🟢 Update data:", updateData);
+      onSubmit(updateData);
+    } else {
+      // ✅ در حالت create، همه فیلدها ارسال میشن
+      logger.data("🟢 Create data:", data);
+      onSubmit(data);
+    }
+  };
+
+  // ✅ تابع helper برای نمایش اطلاعات کاربر
+  const getUserDisplayInfo = () => {
+    if (!product) return null;
+
+    if (typeof product.userId === "string") {
+      return product.userId;
+    } else {
+      const user = product.userId as any;
+      return `${user.name} (${user.phone})`;
+    }
   };
 
   return (
@@ -274,27 +280,42 @@ export function ProductForm({
                       <FormLabel>
                         {t("admin.products.form.typeLabel")}
                       </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue
-                              placeholder={t(
-                                "admin.products.form.typeSelectPlaceholder"
-                              )}
-                            />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {productTypes.map((type) => (
-                            <SelectItem key={type.value} value={type.value}>
-                              {type.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      {isEditMode ? (
+                        // ✅ در حالت edit، فقط نمایش
+                        <div className="p-3 bg-muted rounded-md">
+                          <span className="text-sm">
+                            {field.value
+                              ? t(`admin.products.types.${field.value}`)
+                              : "-"}
+                          </span>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {t("admin.products.form.typeCannotChange")}
+                          </p>
+                        </div>
+                      ) : (
+                        // ✅ در حالت create، قابل انتخاب
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue
+                                placeholder={t(
+                                  "admin.products.form.typeSelectPlaceholder"
+                                )}
+                              />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {productTypes.map((type) => (
+                              <SelectItem key={type.value} value={type.value}>
+                                {type.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
                       <FormMessage />
                     </FormItem>
                   )}
@@ -334,19 +355,34 @@ export function ProductForm({
                       <FormLabel>
                         {t("admin.products.form.codeLabel")}
                       </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder={t("admin.products.form.codePlaceholder")}
-                          {...field}
-                        />
-                      </FormControl>
+                      {isEditMode ? (
+                        // ✅ در حالت edit، فقط نمایش
+                        <div className="p-3 bg-muted rounded-md">
+                          <span className="text-sm font-mono">
+                            {field.value}
+                          </span>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {t("admin.products.form.codeCannotChange")}
+                          </p>
+                        </div>
+                      ) : (
+                        // ✅ در حالت create، قابل ویرایش
+                        <FormControl>
+                          <Input
+                            placeholder={t(
+                              "admin.products.form.codePlaceholder"
+                            )}
+                            {...field}
+                          />
+                        </FormControl>
+                      )}
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
                 {/* User Selection - فقط در حالت ایجاد نمایش داده بشه */}
-                {!isEditMode && (
+                {!isEditMode ? (
                   <FormField
                     control={form.control}
                     name="userId"
@@ -385,20 +421,12 @@ export function ProductForm({
                       </FormItem>
                     )}
                   />
-                )}
-
-                {/* نمایش اطلاعات کاربر در حالت ویرایش */}
-                {isEditMode && product && (
+                ) : (
+                  // ✅ نمایش اطلاعات کاربر در حالت ویرایش
                   <div className="space-y-2">
                     <Label>{t("admin.products.form.userLabel")}</Label>
                     <div className="p-3 bg-muted rounded-md">
-                      <p className="text-sm">
-                        {typeof product.userId === "string"
-                          ? product.userId
-                          : `${(product.userId as any).name} (${
-                              (product.userId as any).phone
-                            })`}
-                      </p>
+                      <p className="text-sm">{getUserDisplayInfo()}</p>
                       <p className="text-xs text-muted-foreground">
                         {t("admin.products.form.userCannotChange")}
                       </p>
@@ -461,7 +489,7 @@ export function ProductForm({
 
             <Separator />
 
-            {/* Patterns Section - ساده‌سازی شده */}
+            {/* Patterns Section */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-medium">
@@ -479,11 +507,13 @@ export function ProductForm({
                   {t("admin.products.form.addPattern")}
                 </Button>
               </div>
+
+              {/* ✅ نمایش patterns مجاز بر اساس type موجود */}
               <FormDescription>
-                {selectedType && (
+                {(selectedType || (isEditMode && product?.type)) && (
                   <span>
                     {t("admin.products.form.availablePatternsForType")}:{" "}
-                    {availablePatterns
+                    {getAllowedPatternsForType(selectedType || product?.type!)
                       .map((p) => t(`patterns.${p}`))
                       .join(", ")}
                   </span>
@@ -538,7 +568,9 @@ export function ProductForm({
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                {availablePatterns.map((pattern) => (
+                                {getAllowedPatternsForType(
+                                  selectedType || product?.type || "lips"
+                                ).map((pattern) => (
                                   <SelectItem key={pattern} value={pattern}>
                                     {t(`patterns.${pattern}`)}
                                   </SelectItem>

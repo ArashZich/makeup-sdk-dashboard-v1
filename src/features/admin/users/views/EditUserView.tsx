@@ -10,6 +10,7 @@ import { Loader } from "@/components/common/Loader";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ArrowLeft, AlertCircle } from "lucide-react";
 import { showToast } from "@/lib/toast";
+import { logger } from "@/lib/logger";
 
 export function EditUserView() {
   const { t } = useLanguage();
@@ -29,14 +30,12 @@ export function EditUserView() {
   const { data: user, isLoading, error } = getUser(userId); // حالا userId قطعاً یک رشته است
 
   const handleSubmit = async (data: any) => {
-    console.log(data, "LLL");
-
     try {
       await updateUser({ userId, data }); // حالا userId قطعاً یک رشته است
       showToast.success(t("admin.users.updateSuccess"));
       router.push(`/dashboard/admin/users/${userId}`);
     } catch (error) {
-      console.error("Error updating user:", error);
+      logger.error("Error updating user:", error);
     }
   };
 

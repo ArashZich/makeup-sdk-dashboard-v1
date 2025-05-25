@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { showToast } from "@/lib/toast";
 import { AlertCircle, Bell, Mail, MessageSquare } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { logger } from "@/lib/logger";
 
 export function NotificationSettings() {
   const { t } = useLanguage();
@@ -61,7 +62,7 @@ export function NotificationSettings() {
       setIsDirty(false);
       showToast.success(t("settings.notifications.saveSuccess"));
     } catch (error) {
-      console.error("Error saving notification settings:", error);
+      logger.error("Error saving notification settings:", error);
       showToast.error(t("settings.notifications.saveError"));
     }
   };

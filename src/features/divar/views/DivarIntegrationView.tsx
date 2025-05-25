@@ -11,6 +11,7 @@ import { DivarPostsList } from "../components/DivarPostsList";
 import { DivarConnectCard } from "../components/DivarConnectCard";
 import { ProductSelectorCard } from "../components/ProductSelectorCard";
 import { showToast } from "@/lib/toast";
+import { logger } from "@/lib/logger";
 
 export function DivarIntegrationView() {
   const { t } = useLanguage();
@@ -94,7 +95,7 @@ export function DivarIntegrationView() {
       });
       refetchPosts();
     } catch (error) {
-      console.error("Error adding addon:", error);
+      logger.error("Error adding addon:", error);
     } finally {
       setProcessingAddonToken(null);
     }

@@ -34,6 +34,7 @@ import { ProductTypeSelect } from "./ProductTypeSelect";
 import { PatternSelect } from "./PatternSelect";
 import { ColorPicker } from "./ColorPicker";
 import { PlusIcon, TrashIcon } from "lucide-react";
+import { logger } from "@/lib/logger";
 
 // Schema for product form
 const productFormSchema = z.object({
@@ -155,9 +156,9 @@ export function ProductForm({
 
   // ✅ Submit the form - ساده‌سازی patterns
   const handleFormSubmit = (values: ProductFormValues) => {
-    console.log("🔵 Form Values:", values);
-    console.log("🔵 Selected Patterns:", selectedPatterns);
-    console.log("🔵 Colors:", colors);
+    logger.data("🔵 Form Values:", values);
+    logger.data("🔵 Selected Patterns:", selectedPatterns);
+    logger.data("🔵 Colors:", colors);
 
     // ✅ تبدیل patterns به فرمت ساده (فقط کد pattern)
     const patterns: Pattern[] = selectedPatterns.map((patternCode) => ({
@@ -192,7 +193,7 @@ export function ProductForm({
       })
     );
 
-    console.log("🟢 Final Data to Submit:", finalData);
+    logger.data("🟢 Final Data to Submit:", finalData);
 
     onSubmit(finalData);
   };

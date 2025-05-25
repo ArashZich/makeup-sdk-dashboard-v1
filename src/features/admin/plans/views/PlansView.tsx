@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/common/Loader";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { PlusCircle, Package, AlertCircle } from "lucide-react";
+import { logger } from "@/lib/logger";
 
 export function PlansView() {
   const { t } = useLanguage();
@@ -41,7 +42,7 @@ export function PlansView() {
       setPlanToDelete(null);
       refetch();
     } catch (error) {
-      console.error("Error deleting plan:", error);
+      logger.error("Error deleting plan:", error);
     }
   };
 

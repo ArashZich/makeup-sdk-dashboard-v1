@@ -21,6 +21,7 @@ import { Plus, RefreshCw, ArrowLeft, Users, Search } from "lucide-react";
 import { ProductTable } from "../components/ProductTable";
 import { ProductForm } from "../components/ProductForm";
 import { Product } from "@/api/types/products.types";
+import { logger } from "@/lib/logger";
 
 export function AdminProductsView() {
   const { t } = useLanguage();
@@ -115,41 +116,51 @@ export function AdminProductsView() {
       // Refresh products after delete
       refetchProducts();
     } catch (error) {
-      console.error("Delete error:", error);
+      logger.error("Delete error:", error);
     }
   };
 
+  // ✅ اصلاح کامل handleFormSubmit
   const handleFormSubmit = async (data: any) => {
     try {
+      logger.data("🎯 AdminProductsView - Raw form data:", data);
+
       if (editingProduct) {
-        // ✅ Update existing product - فقط فیلدهای مجاز
+        // ✅ Update existing product - فقط فیلدهای مجاز برای update
+        const updateData = {
+          name: data.name,
+          description: data.description,
+          thumbnail: data.thumbnail,
+          patterns: data.patterns,
+          colors: data.colors,
+          active: data.active,
+        };
+
+        logger.data("🟢 AdminProductsView - Update data to send:", updateData);
+
         await updateUserProduct({
           userId: selectedUserId,
           productId: editingProduct._id,
-          data: {
-            name: data.name,
-            description: data.description,
-            thumbnail: data.thumbnail,
-            patterns: data.patterns,
-            colors: data.colors,
-            active: data.active,
-            // ✅ userId رو ارسال نمی‌کنیم چون مجاز نیست
-          },
+          data: updateData, // ✅ فقط فیلدهای مجاز
         });
       } else {
         // ✅ Create new product - همه فیلدها مجاز
+        const createData = {
+          name: data.name,
+          description: data.description,
+          type: data.type,
+          code: data.code,
+          thumbnail: data.thumbnail,
+          patterns: data.patterns,
+          colors: data.colors,
+          active: data.active,
+        };
+
+        logger.data("🟢 AdminProductsView - Create data to send:", createData);
+
         await createProductForUser({
           userId: data.userId,
-          data: {
-            name: data.name,
-            description: data.description,
-            type: data.type,
-            code: data.code,
-            thumbnail: data.thumbnail,
-            patterns: data.patterns,
-            colors: data.colors,
-            active: data.active,
-          },
+          data: createData,
         });
       }
 
@@ -161,7 +172,7 @@ export function AdminProductsView() {
       setActiveTab("overview");
       setEditingProduct(null);
     } catch (error) {
-      console.error("Form submit error:", error);
+      logger.error("Form submit error:", error);
     }
   };
 

@@ -26,6 +26,7 @@ import {
   Smartphone,
   AlertCircle,
 } from "lucide-react";
+import { logger } from "@/lib/logger";
 
 // Dynamic import برای ApexCharts
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
@@ -62,7 +63,7 @@ export function ProductAnalytics({
     try {
       await downloadProductAnalytics(product._id);
     } catch (error) {
-      console.error("Error downloading analytics:", error);
+      logger.error("Error downloading analytics:", error);
     }
   };
 

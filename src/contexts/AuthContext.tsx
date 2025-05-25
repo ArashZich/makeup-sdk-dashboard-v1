@@ -14,8 +14,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useCookies } from "@/lib/cookies";
 import { User } from "@/api/types/auth.types";
 import { useAuthStore } from "@/store/auth.store";
-import { authService } from "@/api/services/auth-service";
 import axios from "@/lib/axios";
+import { logger } from "@/lib/logger";
 
 interface AuthContextType {
   user: User | null;
@@ -94,7 +94,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       setUser(response.data);
       setAuthStore(response.data, token, getCookie("refresh_token") || "");
     } catch (error) {
-      console.error("Error refreshing user data:", error);
+      logger.error("Error refreshing user data:", error);
     }
   };
 

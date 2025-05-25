@@ -17,7 +17,6 @@ export const divarService = {
     filters?: DivarPostFilters
   ): Promise<PaginatedDivarPosts> => {
     const response = await axios.get("/divar/posts", { params: filters });
-    console.log(response.data.posts, "OOOO");
 
     // تبدیل ساختار پاسخ به PaginatedDivarPosts
     // اگر API مستقیماً PaginatedDivarPosts برنمی‌گرداند، این تبدیل را انجام می‌دهیم

@@ -21,6 +21,7 @@ import { ArrowLeft, Calendar, Pause, Play } from "lucide-react";
 import { formatDate } from "@/lib/date";
 import { formatCurrency } from "@/lib/utils";
 import { ExtendPackageRequest } from "@/api/types/packages.types";
+import { logger } from "@/lib/logger";
 
 export function PackageDetailsView() {
   const { t } = useLanguage();
@@ -60,7 +61,7 @@ export function PackageDetailsView() {
       await extendPackage({ packageId, data });
       setShowExtendDialog(false);
     } catch (error) {
-      console.error("Error extending package:", error);
+      logger.error("Error extending package:", error);
     }
   };
 
@@ -84,7 +85,7 @@ export function PackageDetailsView() {
       }
       setShowSuspendDialog(false);
     } catch (error) {
-      console.error("Error updating package status:", error);
+      logger.error("Error updating package status:", error);
     }
   };
 

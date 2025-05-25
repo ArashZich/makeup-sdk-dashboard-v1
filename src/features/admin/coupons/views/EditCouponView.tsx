@@ -10,6 +10,7 @@ import { CouponForm } from "../components/CouponForm";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Loader } from "@/components/common/Loader";
+import { logger } from "@/lib/logger";
 
 export function EditCouponView() {
   const { t } = useLanguage();
@@ -26,7 +27,7 @@ export function EditCouponView() {
       await updateCoupon({ couponId, data });
       router.push("/dashboard/admin/coupons");
     } catch (error) {
-      console.error("Error updating coupon:", error);
+      logger.error("Error updating coupon:", error);
     }
   };
 

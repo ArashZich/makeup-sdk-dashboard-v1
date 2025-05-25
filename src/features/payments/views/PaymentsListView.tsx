@@ -9,6 +9,7 @@ import { PaymentFilters } from "../components/PaymentFilters";
 import { PaymentList } from "../components/PaymentList";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { InfoIcon } from "lucide-react";
+import { logger } from "@/lib/logger";
 
 export function PaymentsListView() {
   const { t } = useLanguage();
@@ -61,7 +62,7 @@ export function PaymentsListView() {
       await cancelPayment(paymentId);
       refetch();
     } catch (error) {
-      console.error("Error canceling payment:", error);
+      logger.error("Error canceling payment:", error);
     }
   };
 
