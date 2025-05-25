@@ -8,16 +8,16 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useBoolean } from "@/hooks/useBoolean"; // ✅ اضافه کردن useBoolean
+import { useBoolean } from "@/hooks/useBoolean";
 import { useAdminPackages } from "@/api/hooks/usePackages";
 import { ExtendPackageDialog } from "../components/ExtendPackageDialog";
 import { SuspendPackageDialog } from "../components/SuspendPackageDialog";
-import { BackButtonIcon } from "@/components/common/BackButton"; // ✅ اضافه کردن BackButton
+import { BackButtonIcon } from "@/components/common/BackButton";
 import { Calendar, Pause, Play } from "lucide-react";
 import { formatDate } from "@/lib/date";
 import { formatCurrency } from "@/lib/utils";
 import { ExtendPackageRequest } from "@/api/types/packages.types";
-import logger from "@/lib/logger"; // ✅ اصلاح import logger
+import logger from "@/lib/logger";
 
 export function PackageDetailsView() {
   const { t } = useLanguage();
@@ -25,10 +25,15 @@ export function PackageDetailsView() {
   const packageId = params.id as string;
 
   // ✅ استفاده از useBoolean به جای state های جداگانه
-  const { getValue, setTrue, setFalse } = useBoolean({
+  const { getValue, setTrue, setFalse, setValue } = useBoolean({
     showExtendDialog: false,
     showSuspendDialog: false,
   });
+
+  // ✅ Helper function برای نمایش مقادیر نامحدود
+  const formatLimitValue = (value: number) => {
+    return value === -1 ? t("common.unlimited") : value.toLocaleString("fa-IR");
+  };
 
   // State برای نوع عملیات suspend/reactivate
   const [suspendAction, setSuspendAction] = useState<"suspend" | "reactivate">(
@@ -95,17 +100,6 @@ export function PackageDetailsView() {
     }
   };
 
-  // ✅ بستن دیالوگ‌ها
-  const handleCloseExtendDialog = () => {
-    logger.api("Closing extend dialog");
-    setFalse("showExtendDialog");
-  };
-
-  const handleCloseSuspendDialog = () => {
-    logger.api("Closing suspend dialog");
-    setFalse("showSuspendDialog");
-  };
-
   // ✅ باز کردن دیالوگ تمدید
   const handleOpenExtendDialog = () => {
     logger.api("Opening extend dialog for package:", packageId);
@@ -124,6 +118,18 @@ export function PackageDetailsView() {
     typeof packageData.userId === "object" ? packageData.userId : null;
   const plan =
     typeof packageData.planId === "object" ? packageData.planId : null;
+
+  // ✅ محاسبه درصد استفاده با در نظر گیری unlimited
+  const usagePercent =
+    packageData.requestLimit.monthly > 0 &&
+    packageData.requestLimit.monthly !== -1
+      ? Math.round(
+          ((packageData.requestLimit.monthly -
+            packageData.requestLimit.remaining) /
+            packageData.requestLimit.monthly) *
+            100
+        )
+      : 0;
 
   return (
     <div className="space-y-6">
@@ -238,7 +244,8 @@ export function PackageDetailsView() {
                 {t("admin.packages.monthlyLimit")}
               </span>
               <span>
-                {packageData.requestLimit.monthly.toLocaleString("fa-IR")}
+                {formatLimitValue(packageData.requestLimit.monthly)}{" "}
+                {/* ✅ استفاده از helper function */}
               </span>
             </div>
 
@@ -249,22 +256,19 @@ export function PackageDetailsView() {
                 {t("admin.packages.remainingRequests")}
               </span>
               <span>
-                {packageData.requestLimit.remaining.toLocaleString("fa-IR")}
+                {formatLimitValue(packageData.requestLimit.remaining)}{" "}
+                {/* ✅ استفاده از helper function */}
               </span>
             </div>
 
             <Separator />
 
-            <div className="text-sm text-muted-foreground">
-              {t("packages.usageProgress")}:{" "}
-              {Math.round(
-                ((packageData.requestLimit.monthly -
-                  packageData.requestLimit.remaining) /
-                  packageData.requestLimit.monthly) *
-                  100
-              )}
-              %
-            </div>
+            {/* ✅ نمایش درصد استفاده فقط برای محدود */}
+            {packageData.requestLimit.monthly !== -1 && (
+              <div className="text-sm text-muted-foreground">
+                {t("packages.usageProgress")}: {usagePercent}%
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -347,7 +351,7 @@ export function PackageDetailsView() {
       {/* ✅ دیالوگ تمدید بسته - با useBoolean */}
       <ExtendPackageDialog
         open={getValue("showExtendDialog")}
-        onOpenChange={handleCloseExtendDialog}
+        onOpenChange={(open) => setValue("showExtendDialog", open)}
         onConfirm={handleExtendConfirm}
         isLoading={isExtendingPackage}
         packageId={packageId}
@@ -356,7 +360,7 @@ export function PackageDetailsView() {
       {/* ✅ دیالوگ تعلیق/فعال‌سازی بسته - با useBoolean */}
       <SuspendPackageDialog
         open={getValue("showSuspendDialog")}
-        onOpenChange={handleCloseSuspendDialog}
+        onOpenChange={(open) => setValue("showSuspendDialog", open)}
         onConfirm={handleSuspendConfirm}
         isLoading={isSuspendingPackage || isReactivatingPackage}
         action={suspendAction}

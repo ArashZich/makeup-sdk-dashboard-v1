@@ -35,6 +35,11 @@ export function PackageTable({
 }: PackageTableProps) {
   const { t } = useLanguage();
 
+  // ✅ Helper function برای نمایش مقادیر نامحدود
+  const formatLimitValue = (value: number) => {
+    return value === -1 ? t("common.unlimited") : value.toLocaleString("fa-IR");
+  };
+
   const columns: ColumnDef<Package>[] = [
     {
       accessorKey: "userId",
@@ -103,11 +108,13 @@ export function PackageTable({
           <div className="text-sm">
             <div>
               {t("admin.packages.monthlyLimit")}:{" "}
-              {limit.monthly.toLocaleString("fa-IR")}
+              {formatLimitValue(limit.monthly)}{" "}
+              {/* ✅ استفاده از helper function */}
             </div>
             <div className="text-muted-foreground">
               {t("admin.packages.remainingRequests")}:{" "}
-              {limit.remaining.toLocaleString("fa-IR")}
+              {formatLimitValue(limit.remaining)}{" "}
+              {/* ✅ استفاده از helper function */}
             </div>
           </div>
         );

@@ -162,9 +162,9 @@ export const useAdminNotifications = () => {
       }
 
       showToast.success(
-        t("notifications.admin.sendNotification") +
+        t("notifications.sendNotification") +
           ": " +
-          t("common.success.create")
+          t("notifications.success.create")
       );
     },
     onError: (error: any) => {

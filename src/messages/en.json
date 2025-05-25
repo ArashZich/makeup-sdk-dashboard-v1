@@ -82,7 +82,9 @@
     "color": "Color",
     "total": "Total",
     "optional": "Optional",
-    "duration": "Duration"
+    "duration": "Duration",
+    "generalInfo": "General Information",
+    "selected": "Selected"
   },
   "auth": {
     "login": "Login",
@@ -454,6 +456,8 @@
       "system": "System",
       "other": "Other"
     },
+    "sendNotification": "Send Notification",
+    "success": { "create": "Notification sent" },
     "error": {
       "title": "Error Fetching Notifications",
       "fetchFailed": "Failed to fetch notifications. Please try again."
@@ -844,6 +848,7 @@
         "sendSmsDescription": "Also send SMS in addition to internal notification",
         "sending": "Sending...",
         "sendButton": "Send Notification",
+        "maxUsersWarning": "⚠️ Max {{maxUsers}} users can be selected",
         "validation": {
           "titleRequired": "Notification title is required",
           "messageRequired": "Notification message is required",

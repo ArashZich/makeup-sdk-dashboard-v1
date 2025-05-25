@@ -11,23 +11,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, ChevronsUpDown, X, Users, Package } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { X, Users, Package } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useBoolean } from "@/hooks/useBoolean"; // ✅ اضافه کردن import
+import { useBoolean } from "@/hooks/useBoolean";
 
 interface UserPlanSelectorProps {
   mode: "users" | "plan";
@@ -66,9 +54,9 @@ export function UserPlanSelector({
     active: true,
   });
 
-  // 🔧 اصلاح: درست کردن استخراج داده‌ها
+  // ✅ درست کردن استخراج داده‌ها
   const users = Array.isArray(usersData?.results) ? usersData.results : [];
-  const plans = Array.isArray(plansData?.results) ? plansData.results : []; // اصلاح شده
+  const plans = Array.isArray(plansData?.results) ? plansData.results : [];
 
   // Users Mode
   if (mode === "users") {
@@ -93,71 +81,78 @@ export function UserPlanSelector({
 
     return (
       <div className="space-y-3">
-        <Popover
+        {/* ✅ استفاده از Select به جای Popover برای یکدستی */}
+        <Select
           open={getValue("open")}
-          onOpenChange={(open) => setValue("open", open)} // ✅ درست
+          onOpenChange={(open) => setValue("open", open)}
+          value="" // همیشه خالی چون multi-select هست
+          onValueChange={handleUserSelect}
         >
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              aria-expanded={getValue("open")}
-              className="w-full justify-between"
-              disabled={selectedUsers.length >= maxUsers}
-            >
-              <div className="flex items-center gap-2">
-                <Users className="h-4 w-4" />
-                {selectedUsers.length > 0
-                  ? `${selectedUsers.length} ${t("admin.users.title")} ${t(
-                      "common.select"
-                    )}`
-                  : placeholder ||
-                    t("admin.notifications.form.usersPlaceholder")}
+          <SelectTrigger
+            className="w-full"
+            disabled={selectedUsers.length >= maxUsers}
+          >
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              <SelectValue
+                placeholder={
+                  selectedUsers.length > 0
+                    ? `${selectedUsers.length} ${t("admin.users.title")} ${t(
+                        "common.select"
+                      )}`
+                    : placeholder ||
+                      t("admin.notifications.form.usersPlaceholder")
+                }
+              />
+            </div>
+          </SelectTrigger>
+          <SelectContent className="w-full">
+            {isLoadingUsers ? (
+              <div className="py-2 text-center text-sm text-muted-foreground">
+                {t("common.loading")}...
               </div>
-              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-full p-0">
-            <Command>
-              <CommandEmpty>
-                {isLoadingUsers
-                  ? t("common.loading")
-                  : t("admin.users.noUsers")}
-              </CommandEmpty>
-              <CommandGroup>
-                <ScrollArea className="h-[300px]">
-                  {users.map((user) => (
-                    <CommandItem
+            ) : users.length === 0 ? (
+              <div className="py-2 text-center text-sm text-muted-foreground">
+                {t("admin.users.noUsers")}
+              </div>
+            ) : (
+              <ScrollArea className="h-[300px]">
+                {users.map((user) => {
+                  const isSelected = selectedUsers.includes(user._id);
+                  const isDisabled =
+                    !isSelected && selectedUsers.length >= maxUsers;
+
+                  return (
+                    <SelectItem
                       key={user._id}
                       value={user._id}
-                      onSelect={() => handleUserSelect(user._id)}
-                      disabled={
-                        !selectedUsers.includes(user._id) &&
-                        selectedUsers.length >= maxUsers
-                      }
-                      className="cursor-pointer"
+                      disabled={isDisabled}
+                      className={`cursor-pointer ${
+                        isSelected ? "bg-accent" : ""
+                      }`}
                     >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          selectedUsers.includes(user._id)
-                            ? "opacity-100"
-                            : "opacity-0"
+                      <div className="flex items-center gap-2 w-full">
+                        <div className="flex-1">
+                          <div className="flex flex-col">
+                            <span className="font-medium">{user.name}</span>
+                            <span className="text-xs text-muted-foreground">
+                              {user.phone}
+                            </span>
+                          </div>
+                        </div>
+                        {isSelected && (
+                          <Badge variant="secondary" className="text-xs">
+                            {t("common.selected")}
+                          </Badge>
                         )}
-                      />
-                      <div className="flex flex-col">
-                        <span className="font-medium">{user.name}</span>
-                        <span className="text-xs text-muted-foreground">
-                          {user.phone}
-                        </span>
                       </div>
-                    </CommandItem>
-                  ))}
-                </ScrollArea>
-              </CommandGroup>
-            </Command>
-          </PopoverContent>
-        </Popover>
+                    </SelectItem>
+                  );
+                })}
+              </ScrollArea>
+            )}
+          </SelectContent>
+        </Select>
 
         {/* Selected Users Display */}
         {selectedUsers.length > 0 && (
@@ -186,7 +181,7 @@ export function UserPlanSelector({
 
         {selectedUsers.length >= maxUsers && (
           <p className="text-xs text-orange-600">
-            ⚠️ حداکثر {maxUsers} کاربر قابل انتخاب است
+            {t("admin.notifications.form.maxUsersWarning", { maxUsers })}
           </p>
         )}
       </div>
@@ -195,7 +190,6 @@ export function UserPlanSelector({
 
   // Plan Mode
   if (mode === "plan") {
-    // 🔧 اصلاح: اول بررسی کن که plans array هست یا نه
     const selectedPlanData =
       plans.length > 0 ? plans.find((plan) => plan._id === selectedPlan) : null;
 
@@ -230,7 +224,8 @@ export function UserPlanSelector({
                   <div className="flex flex-col py-1">
                     <span className="font-medium">{plan.name}</span>
                     <span className="text-xs text-muted-foreground">
-                      {plan.price.toLocaleString()} تومان • {plan.duration} روز
+                      {plan.price.toLocaleString()} {t("common.currency.toman")}{" "}
+                      • {plan.duration} {t("common.days")}
                     </span>
                   </div>
                 </SelectItem>

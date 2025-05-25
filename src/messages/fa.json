@@ -82,7 +82,9 @@
     "color": "رنگ",
     "total": "کل",
     "optional": "اختیاری",
-    "duration": "مدت"
+    "duration": "مدت",
+    "generalInfo": "اطلاعات عمومی",
+    "selected": "انتخاب شده"
   },
   "auth": {
     "login": "ورود",
@@ -455,6 +457,8 @@
       "system": "سیستم",
       "other": "سایر"
     },
+    "sendNotification": "ارسال اطلاعیه",
+    "success": { "create": "اطلاعیه ارسال شد" },
     "error": {
       "title": "خطا در دریافت اطلاعیه‌ها",
       "fetchFailed": "خطا در دریافت اطلاعیه‌ها. لطفا دوباره تلاش کنید."
@@ -968,6 +972,7 @@
         "sendSmsDescription": "علاوه بر اطلاعیه داخلی، پیامک نیز ارسال شود",
         "sending": "در حال ارسال...",
         "sendButton": "ارسال اطلاعیه",
+        "maxUsersWarning": "⚠️ حداکثر {{maxUsers}} کاربر قابل انتخاب است",
         "validation": {
           "titleRequired": "عنوان اطلاعیه الزامی است",
           "messageRequired": "متن اطلاعیه الزامی است",
