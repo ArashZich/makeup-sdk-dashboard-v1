@@ -6,6 +6,7 @@ import {
   CreatePackageRequest,
   UpdateSdkFeaturesRequest,
   ExtendPackageRequest,
+  UpdatePackageLimitsRequest,
   PaginatedPackages,
 } from "@/api/types/packages.types";
 
@@ -78,6 +79,19 @@ export const packagesService = {
     data: ExtendPackageRequest
   ): Promise<{ message: string; package: Package }> => {
     const response = await axios.post(`/packages/${packageId}/extend`, data);
+    return response.data;
+  },
+
+  /**
+   * به‌روزرسانی محدودیت‌های بسته (ادمین) - جدید
+   * @param packageId شناسه بسته
+   * @param data درخواست‌ها و روزهای اضافی
+   */
+  updatePackageLimits: async (
+    packageId: string,
+    data: UpdatePackageLimitsRequest
+  ): Promise<{ message: string; package: Package }> => {
+    const response = await axios.put(`/packages/${packageId}/limits`, data);
     return response.data;
   },
 

@@ -22,10 +22,10 @@ export interface SdkFeatures {
   };
 }
 
-// مدل محدودیت درخواست
+// مدل محدودیت درخواست - تغییر کرده
 export interface RequestLimit {
-  monthly: number;
-  remaining: number;
+  total: number; // کل درخواست‌ها برای تمام مدت بسته (-1 برای نامحدود)
+  remaining: number; // درخواست‌های باقیمانده (-1 برای نامحدود)
 }
 
 // مدل بسته - آپدیت شده با purchasePlatform
@@ -80,6 +80,12 @@ export interface UpdateSdkFeaturesRequest {
 // مدل درخواست تمدید بسته
 export interface ExtendPackageRequest {
   days: number;
+}
+
+// مدل درخواست به‌روزرسانی محدودیت‌های بسته - جدید
+export interface UpdatePackageLimitsRequest {
+  addRequests?: number; // تعداد درخواست اضافه (اختیاری)
+  addDays?: number; // تعداد روز اضافه (اختیاری)
 }
 
 // تایپ پاسخ صفحه‌بندی شده بسته‌ها

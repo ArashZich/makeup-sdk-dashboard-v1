@@ -17,8 +17,7 @@ export interface DefaultSdkFeatures {
 
 // مدل محدودیت درخواست
 export interface RequestLimit {
-  monthly: number;
-  total: number;
+  total: number; // تغییر: حذف monthly، فقط total باقی مانده
 }
 
 // مدل پلن - آپدیت شده با targetPlatforms

@@ -1,4 +1,4 @@
-// src/api/types/revenue-stats.types.ts
+// src/api/types/revenue-stats.types.ts - آپدیت شده
 // تایپ‌های مربوط به آمار درآمد بر اساس پلتفرم
 
 // انواع پلتفرم‌ها برای آمار درآمد

@@ -8,6 +8,7 @@ import {
   CreatePackageRequest,
   UpdateSdkFeaturesRequest,
   ExtendPackageRequest,
+  UpdatePackageLimitsRequest,
   PackageStatus,
   PurchasePlatform,
   Package,
@@ -197,6 +198,32 @@ export const useAdminPackages = () => {
     },
   });
 
+  // به‌روزرسانی محدودیت‌های بسته - جدید
+  const updatePackageLimitsMutation = useMutation({
+    mutationFn: ({
+      packageId,
+      data,
+    }: {
+      packageId: string;
+      data: UpdatePackageLimitsRequest;
+    }) => packagesService.updatePackageLimits(packageId, data),
+    onSuccess: (data) => {
+      // به‌روزرسانی کش
+      queryClient.setQueryData(["package", data.package._id], data.package);
+      // باطل کردن کش بسته‌ها
+      queryClient.invalidateQueries({ queryKey: ["packages"] });
+      queryClient.invalidateQueries({
+        queryKey: ["userPackages", data.package.userId],
+      });
+      showToast.success(t("common.success.update"));
+    },
+    onError: (error: any) => {
+      showToast.error(
+        error.response?.data?.message || t("common.error.general")
+      );
+    },
+  });
+
   // تعلیق بسته
   const suspendPackageMutation = useMutation({
     mutationFn: (packageId: string) =>
@@ -307,7 +334,7 @@ export const useAdminPackages = () => {
         analytics[platform].total++;
         analytics[platform][pkg.status]++;
 
-        // اگر اطلاعات قیمت موجود باشد
+        // اگر اطلاعات قیمت در دسترس باشد
         if (typeof pkg.planId === "object" && "price" in pkg.planId) {
           analytics[platform].revenue += pkg.planId.price;
         }
@@ -322,11 +349,13 @@ export const useAdminPackages = () => {
     createPackage: createPackageMutation.mutateAsync,
     updateSdkFeatures: updateSdkFeaturesMutation.mutateAsync,
     extendPackage: extendPackageMutation.mutateAsync,
+    updatePackageLimits: updatePackageLimitsMutation.mutateAsync, // جدید
     suspendPackage: suspendPackageMutation.mutateAsync,
     reactivatePackage: reactivatePackageMutation.mutateAsync,
     isCreatingPackage: createPackageMutation.isPending,
     isUpdatingSdkFeatures: updateSdkFeaturesMutation.isPending,
     isExtendingPackage: extendPackageMutation.isPending,
+    isUpdatingPackageLimits: updatePackageLimitsMutation.isPending, // جدید
     isSuspendingPackage: suspendPackageMutation.isPending,
     isReactivatingPackage: reactivatePackageMutation.isPending,
 
