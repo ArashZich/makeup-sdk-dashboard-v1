@@ -58,17 +58,19 @@ export function BrowserStatsCard({
   }
 
   const isDarkTheme = theme === "dark";
+
+  // بهبود رنگ‌های نمودار برای تمام تم‌ها
   const colors = [
-    "#3B82F6", // blue
-    "#10B981", // green
-    "#F59E0B", // yellow
-    "#EF4444", // red
-    "#8B5CF6", // purple
-    "#EC4899", // pink
-    "#6366F1", // indigo
-    "#14B8A6", // teal
-    "#F97316", // orange
-    "#84CC16", // lime
+    "#3B82F6", // blue - آبی روشن
+    "#10B981", // emerald - سبز زمردی
+    "#F59E0B", // amber - نارنجی طلایی
+    "#EF4444", // red - قرمز
+    "#8B5CF6", // violet - بنفش
+    "#EC4899", // pink - صورتی
+    "#06B6D4", // cyan - فیروزه‌ای
+    "#84CC16", // lime - سبز لیمویی
+    "#F97316", // orange - نارنجی
+    "#6366F1", // indigo - نیلی
   ];
 
   // Chart options
@@ -85,8 +87,12 @@ export function BrowserStatsCard({
       position: "bottom",
       horizontalAlign: "center",
       labels: {
-        colors: isDarkTheme ? "#f8fafc" : "#0f172a",
+        // استفاده از رنگ‌های بهتر برای contrast
+        colors: isDarkTheme ? "#E2E8F0" : "#334155", // slate-200 برای dark و slate-700 برای light
+        useSeriesColors: false, // از رنگ‌های سری استفاده نکن
       },
+      fontSize: "14px",
+      fontWeight: 500,
     },
     dataLabels: {
       enabled: true,
@@ -95,11 +101,29 @@ export function BrowserStatsCard({
         return typeof val === "number" ? val.toFixed(1) + "%" : "0%";
       },
       style: {
-        colors: ["#fff"],
+        colors: ["#ffffff"], // همیشه سفید برای روی رنگ‌های تیره
+        fontSize: "12px",
+        fontWeight: "bold",
+      },
+      dropShadow: {
+        enabled: true,
+        top: 1,
+        left: 1,
+        blur: 1,
+        color: "#000",
+        opacity: 0.45,
       },
     },
     tooltip: {
       theme: isDarkTheme ? "dark" : "light",
+      style: {
+        fontSize: "14px",
+      },
+      y: {
+        formatter: function (val: number) {
+          return val.toFixed(1) + "%";
+        },
+      },
     },
     plotOptions: {
       pie: {
@@ -109,9 +133,15 @@ export function BrowserStatsCard({
             show: true,
             name: {
               show: true,
+              fontSize: "16px",
+              fontWeight: 600,
+              color: isDarkTheme ? "#F1F5F9" : "#1E293B", // slate-100 برای dark و slate-800 برای light
             },
             value: {
               show: true,
+              fontSize: "20px",
+              fontWeight: "bold",
+              color: isDarkTheme ? "#F1F5F9" : "#1E293B", // slate-100 برای dark و slate-800 برای light
               formatter: function (val: any) {
                 // اطمینان از اینکه val یک عدد است
                 return typeof val === "number" ? val.toFixed(1) + "%" : "0%";
@@ -120,12 +150,12 @@ export function BrowserStatsCard({
             total: {
               show: true,
               showAlways: false,
+              label: "Total",
+              fontSize: "16px",
+              fontWeight: 600,
+              color: isDarkTheme ? "#CBD5E1" : "#475569", // slate-300 برای dark و slate-600 برای light
               formatter: function (w: any) {
-                return (
-                  w.globals.seriesTotals
-                    .reduce((a: number, b: number) => a + b, 0)
-                    .toFixed(1) + "%"
-                );
+                return "100%";
               },
             },
           },
@@ -141,12 +171,23 @@ export function BrowserStatsCard({
           },
           legend: {
             position: "bottom",
+            fontSize: "12px",
+          },
+          dataLabels: {
+            style: {
+              fontSize: "10px",
+            },
           },
         },
       },
     ],
     theme: {
       mode: isDarkTheme ? "dark" : "light",
+    },
+    stroke: {
+      show: true,
+      width: 2,
+      colors: isDarkTheme ? ["#1E293B"] : ["#ffffff"], // border بین قسمت‌ها
     },
   };
 

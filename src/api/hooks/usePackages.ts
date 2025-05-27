@@ -187,9 +187,7 @@ export const useAdminPackages = () => {
       queryClient.invalidateQueries({
         queryKey: ["userPackages", data.package.userId],
       });
-      showToast.success(
-        t("packages.admin.extendPackage") + ": " + t("common.success.update")
-      );
+      showToast.success(t("common.success.update"));
     },
     onError: (error: any) => {
       showToast.error(

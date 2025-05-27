@@ -183,7 +183,7 @@ export function EditPlanView() {
               <div className="flex justify-between">
                 <span className="text-muted-foreground flex items-center gap-1">
                   <Calendar className="h-3 w-3" />
-                  {t("plans.duration")}:
+                  {t("common.duration")}:
                 </span>
                 <span className="font-medium">
                   {plan.duration} {t("common.days")}
