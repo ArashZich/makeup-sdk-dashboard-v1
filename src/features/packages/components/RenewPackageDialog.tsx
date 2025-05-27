@@ -16,9 +16,11 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { Loader } from "@/components/common/Loader";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import { getPackagePlatformConfig } from "@/constants/platform-configs";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -38,6 +40,7 @@ import {
   RefreshCwIcon,
   CalendarIcon,
   PackageIcon,
+  Zap,
 } from "lucide-react";
 import { logger } from "@/lib/logger";
 
@@ -142,6 +145,28 @@ export function RenewPackageDialog({
     }
   };
 
+  // ✅ تابع نمایش پلتفرم با آیکون و رنگ
+  const renderPlatform = () => {
+    const platformConfig = getPackagePlatformConfig(
+      packageData.purchasePlatform,
+      t
+    );
+
+    return (
+      <Badge variant="outline" className={`gap-1 ${platformConfig?.color}`}>
+        {platformConfig?.icon}
+        {platformConfig?.label}
+      </Badge>
+    );
+  };
+
+  // ✅ Helper function برای نمایش مقادیر نامحدود
+  const formatLimitValue = (value: number) => {
+    return value === -1
+      ? t("common.unlimited")
+      : value.toLocaleString(isRtl ? "fa-IR" : "en-US");
+  };
+
   // Loading state
   if (isLoadingPublicPlans || !plan) {
     return (
@@ -185,7 +210,7 @@ export function RenewPackageDialog({
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-6 mt-4"
           >
-            {/* Package Info */}
+            {/* Package Info - آپدیت شده */}
             <div className="bg-accent/5 p-4 rounded-lg">
               <h3 className="text-sm font-medium mb-3">
                 {t("packages.currentPackage")}
@@ -205,6 +230,26 @@ export function RenewPackageDialog({
                   </span>{" "}
                   <span className="font-medium">
                     {formatDate(packageData.endDate, isRtl ? "fa-IR" : "en-US")}
+                  </span>
+                </div>
+
+                {/* ✅ نمایش پلتفرم خرید */}
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground">
+                    {t("admin.packages.purchasePlatform")}:
+                  </span>
+                  {renderPlatform()}
+                </div>
+
+                {/* ✅ نمایش درخواست‌های باقیمانده */}
+                <div className="flex items-center gap-2">
+                  <Zap className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">
+                    {t("packages.remainingRequests")}:
+                  </span>
+                  <span className="font-medium">
+                    {formatLimitValue(packageData.requestLimit.remaining)} /{" "}
+                    {formatLimitValue(packageData.requestLimit.total)}
                   </span>
                 </div>
               </div>

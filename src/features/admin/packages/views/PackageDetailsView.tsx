@@ -13,14 +13,15 @@ import { useAdminPackages } from "@/api/hooks/usePackages";
 import { ExtendPackageDialog } from "../components/ExtendPackageDialog";
 import { SuspendPackageDialog } from "../components/SuspendPackageDialog";
 import { BackButtonIcon } from "@/components/common/BackButton";
-import { Calendar, Pause, Play } from "lucide-react";
+import { Calendar, Pause, Play, Zap, ExternalLink } from "lucide-react";
 import { formatDate } from "@/lib/date";
 import { formatCurrency } from "@/lib/utils";
 import { ExtendPackageRequest } from "@/api/types/packages.types";
+import { getPackagePlatformConfig } from "@/constants/platform-configs";
 import logger from "@/lib/logger";
 
 export function PackageDetailsView() {
-  const { t } = useLanguage();
+  const { t, isRtl } = useLanguage();
   const params = useParams();
   const packageId = params.id as string;
 
@@ -32,7 +33,9 @@ export function PackageDetailsView() {
 
   // ✅ Helper function برای نمایش مقادیر نامحدود
   const formatLimitValue = (value: number) => {
-    return value === -1 ? t("common.unlimited") : value.toLocaleString("fa-IR");
+    return value === -1
+      ? t("common.unlimited")
+      : value.toLocaleString(isRtl ? "fa-IR" : "en-US");
   };
 
   // State برای نوع عملیات suspend/reactivate
@@ -106,6 +109,23 @@ export function PackageDetailsView() {
     setTrue("showExtendDialog");
   };
 
+  // ✅ تابع نمایش پلتفرم با آیکون و رنگ
+  const renderPlatform = () => {
+    if (!packageData) return null;
+
+    const platformConfig = getPackagePlatformConfig(
+      packageData.purchasePlatform,
+      t
+    );
+
+    return (
+      <Badge variant="outline" className={`gap-1 ${platformConfig?.color}`}>
+        {platformConfig?.icon}
+        {platformConfig?.label}
+      </Badge>
+    );
+  };
+
   if (!packageData) {
     return (
       <div className="text-center py-8">
@@ -121,12 +141,11 @@ export function PackageDetailsView() {
 
   // ✅ محاسبه درصد استفاده با در نظر گیری unlimited
   const usagePercent =
-    packageData.requestLimit.monthly > 0 &&
-    packageData.requestLimit.monthly !== -1
+    packageData.requestLimit.total > 0 && packageData.requestLimit.total !== -1
       ? Math.round(
-          ((packageData.requestLimit.monthly -
+          ((packageData.requestLimit.total -
             packageData.requestLimit.remaining) /
-            packageData.requestLimit.monthly) *
+            packageData.requestLimit.total) *
             100
         )
       : 0;
@@ -195,15 +214,12 @@ export function PackageDetailsView() {
 
             <Separator />
 
+            {/* ✅ نمایش پلتفرم خرید با آیکون و رنگ */}
             <div className="flex justify-between">
               <span className="text-muted-foreground">
                 {t("admin.packages.purchasePlatform")}
               </span>
-              <Badge variant="outline">
-                {t(
-                  `admin.packages.platformLabels.${packageData.purchasePlatform}`
-                )}
-              </Badge>
+              {renderPlatform()}
             </div>
 
             <Separator />
@@ -233,19 +249,21 @@ export function PackageDetailsView() {
           </CardContent>
         </Card>
 
-        {/* محدودیت درخواست‌ها */}
+        {/* ✅ محدودیت درخواست‌ها - آپدیت شده با total/remaining */}
         <Card>
           <CardHeader>
-            <CardTitle>{t("packages.requestLimits")}</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Zap className="h-5 w-5" />
+              {t("packages.requestLimits")}
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex justify-between">
               <span className="text-muted-foreground">
-                {t("admin.packages.monthlyLimit")}
+                {t("admin.packages.totalLimit")}
               </span>
-              <span>
-                {formatLimitValue(packageData.requestLimit.monthly)}{" "}
-                {/* ✅ استفاده از helper function */}
+              <span className="font-medium">
+                {formatLimitValue(packageData.requestLimit.total)}
               </span>
             </div>
 
@@ -255,19 +273,26 @@ export function PackageDetailsView() {
               <span className="text-muted-foreground">
                 {t("admin.packages.remainingRequests")}
               </span>
-              <span>
-                {formatLimitValue(packageData.requestLimit.remaining)}{" "}
-                {/* ✅ استفاده از helper function */}
+              <span className="font-medium">
+                {formatLimitValue(packageData.requestLimit.remaining)}
               </span>
             </div>
 
             <Separator />
 
             {/* ✅ نمایش درصد استفاده فقط برای محدود */}
-            {packageData.requestLimit.monthly !== -1 && (
-              <div className="text-sm text-muted-foreground">
-                {t("packages.usageProgress")}: {usagePercent}%
-              </div>
+            {packageData.requestLimit.total !== -1 && (
+              <>
+                <div className="text-sm text-muted-foreground">
+                  {t("packages.usageProgress")}: {usagePercent}%
+                </div>
+                <div className="w-full bg-secondary rounded-full h-2">
+                  <div
+                    className="bg-primary h-2 rounded-full transition-all"
+                    style={{ width: `${usagePercent}%` }}
+                  />
+                </div>
+              </>
             )}
           </CardContent>
         </Card>
@@ -330,7 +355,9 @@ export function PackageDetailsView() {
                 <span className="text-muted-foreground">
                   {t("plans.price")}
                 </span>
-                <span>{formatCurrency(plan.price)}</span>
+                <span>
+                  {formatCurrency(plan.price, isRtl ? "fa-IR" : "en-US")}
+                </span>
               </div>
 
               <Separator />
@@ -342,6 +369,39 @@ export function PackageDetailsView() {
                 <span>
                   {plan.duration} {t("common.days")}
                 </span>
+              </div>
+
+              {/* ✅ نمایش پلتفرم‌های پشتیبانی شده پلن */}
+              <Separator />
+
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">
+                  {t("plans.targetPlatforms")}
+                </span>
+                <div className="flex flex-wrap gap-1">
+                  {plan.targetPlatforms.includes("all") ? (
+                    <Badge variant="secondary" className="gap-1">
+                      <ExternalLink className="h-3 w-3" />
+                      {t("plans.allPlatforms")}
+                    </Badge>
+                  ) : (
+                    plan.targetPlatforms.slice(0, 2).map((platform) => (
+                      <Badge
+                        key={platform}
+                        variant="outline"
+                        className="text-xs"
+                      >
+                        {t(`plans.platforms.${platform}`)}
+                      </Badge>
+                    ))
+                  )}
+                  {plan.targetPlatforms.length > 2 &&
+                    !plan.targetPlatforms.includes("all") && (
+                      <Badge variant="outline" className="text-xs">
+                        +{plan.targetPlatforms.length - 2}
+                      </Badge>
+                    )}
+                </div>
               </div>
             </CardContent>
           </Card>

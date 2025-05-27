@@ -31,6 +31,7 @@ import {
   CreatePackageRequest,
   PurchasePlatform,
 } from "@/api/types/packages.types";
+import { getPackagePlatformConfigs } from "@/constants/platform-configs";
 import { logger } from "@/lib/logger";
 
 interface PackageFormProps {
@@ -62,6 +63,9 @@ export function PackageForm({ onSubmit, isLoading = false }: PackageFormProps) {
   const { getAllPlans } = usePlans();
   const { data: plansData } = getAllPlans();
 
+  // دریافت تنظیمات پلتفرم‌ها
+  const platformConfigs = getPackagePlatformConfigs(t);
+
   // تنظیم فرم
   const form = useForm<PackageFormData>({
     resolver: zodResolver(packageFormSchema),
@@ -89,14 +93,6 @@ export function PackageForm({ onSubmit, isLoading = false }: PackageFormProps) {
       logger.error("Error creating package:", error);
     }
   };
-
-  // کلیدهای پلتفرم برای دیکشنری
-  const platformKeys: PurchasePlatform[] = [
-    "normal",
-    "divar",
-    "torob",
-    "basalam",
-  ];
 
   return (
     <Card>
@@ -171,7 +167,7 @@ export function PackageForm({ onSubmit, isLoading = false }: PackageFormProps) {
               )}
             />
 
-            {/* پلتفرم خرید */}
+            {/* پلتفرم خرید - آپدیت شده با آیکون */}
             <FormField
               control={form.control}
               name="purchasePlatform"
@@ -192,9 +188,12 @@ export function PackageForm({ onSubmit, isLoading = false }: PackageFormProps) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {platformKeys.map((platform) => (
-                        <SelectItem key={platform} value={platform}>
-                          {t(`admin.packages.platformLabels.${platform}`)}
+                      {platformConfigs.map((platform) => (
+                        <SelectItem key={platform.value} value={platform.value}>
+                          <div className="flex items-center gap-2">
+                            {platform.icon}
+                            {platform.label}
+                          </div>
                         </SelectItem>
                       ))}
                     </SelectContent>
