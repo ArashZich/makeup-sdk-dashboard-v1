@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { formatDate, getDaysRemaining } from "@/lib";
 import {
   Calendar,
@@ -22,7 +23,9 @@ import {
   AlertTriangle,
   XCircle,
   RefreshCw,
+  BarChart3,
 } from "lucide-react";
+import { getPlatformDetails } from "@/constants/platform-configs";
 import { RenewPackageDialog } from "./RenewPackageDialog";
 
 interface PackageCardProps {
@@ -34,7 +37,7 @@ export function PackageCard({ package: pkg, onView }: PackageCardProps) {
   const { t, isRtl } = useLanguage();
   const [showRenewDialog, setShowRenewDialog] = useState(false);
 
-  // status icon base on package status
+  // Status icon based on package status
   const getStatusIcon = (status: PackageStatus) => {
     switch (status) {
       case "active":
@@ -48,7 +51,7 @@ export function PackageCard({ package: pkg, onView }: PackageCardProps) {
     }
   };
 
-  // status color and text based on package status
+  // Status color and text based on package status
   const getStatusDetails = (status: PackageStatus) => {
     switch (status) {
       case "active":
@@ -74,12 +77,24 @@ export function PackageCard({ package: pkg, onView }: PackageCardProps) {
     }
   };
 
-  // ✅ Helper function برای نمایش مقادیر نامحدود
+  // Helper function برای نمایش مقادیر نامحدود
   const formatLimitValue = (value: number) => {
-    return value === -1 ? t("common.unlimited") : value.toString();
+    if (value === -1) return t("common.unlimited");
+    return value.toLocaleString(isRtl ? "fa-IR" : "en-US");
+  };
+
+  // محاسبه درصد استفاده
+  const getUsagePercentage = () => {
+    if (pkg.requestLimit.total === -1) return 0; // unlimited
+    if (pkg.requestLimit.total === 0) return 100;
+
+    const used = pkg.requestLimit.total - pkg.requestLimit.remaining;
+    return Math.round((used / pkg.requestLimit.total) * 100);
   };
 
   const statusDetails = getStatusDetails(pkg.status);
+  const platformDetails = getPlatformDetails(pkg.purchasePlatform, t);
+
   const planName =
     pkg.planId && typeof pkg.planId !== "string"
       ? pkg.planId.name
@@ -89,6 +104,7 @@ export function PackageCard({ package: pkg, onView }: PackageCardProps) {
   const isActive = pkg.status === "active";
   const needsRenewal = isActive && remainingDays <= 7; // پیشنهاد تمدید برای کمتر از 7 روز مانده به انقضا
   const isExpired = pkg.status === "expired"; // بسته منقضی شده
+  const usagePercent = getUsagePercentage();
 
   // وقتی بسته منقضی شده یا نزدیک به انقضاست، امکان تمدید نمایش داده می‌شود
   const showRenewOption = isExpired || needsRenewal;
@@ -100,15 +116,19 @@ export function PackageCard({ package: pkg, onView }: PackageCardProps) {
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
           <CardTitle className="text-lg">{planName}</CardTitle>
-          <Badge className={statusDetails.color + " border-none"}>
-            <span className="flex items-center gap-1">
-              {getStatusIcon(pkg.status)}
-              {statusDetails.text}
-            </span>
-          </Badge>
+          <div className="flex flex-col gap-1">
+            <Badge className={statusDetails.color + " border-none"}>
+              <span className="flex items-center gap-1">
+                {getStatusIcon(pkg.status)}
+                {statusDetails.text}
+              </span>
+            </Badge>
+          </div>
         </div>
       </CardHeader>
+
       <CardContent className="pb-0 space-y-4">
+        {/* اطلاعات پایه */}
         <div className="flex justify-between flex-wrap gap-2">
           <div className="flex items-center gap-1.5">
             <PackageIcon className="h-4 w-4 text-muted-foreground" />
@@ -124,6 +144,18 @@ export function PackageCard({ package: pkg, onView }: PackageCardProps) {
           </div>
         </div>
 
+        {/* پلتفرم خرید */}
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">
+            {t("packages.purchasePlatform")}:
+          </span>
+          <Badge variant="outline" className={`gap-1 ${platformDetails.color}`}>
+            {platformDetails.icon}
+            {platformDetails.text}
+          </Badge>
+        </div>
+
+        {/* زمان باقی‌مانده */}
         {isActive && (
           <div className="flex items-center gap-2">
             <Clock className="h-4 w-4 text-muted-foreground" />
@@ -145,28 +177,57 @@ export function PackageCard({ package: pkg, onView }: PackageCardProps) {
           </div>
         )}
 
-        <div className="space-y-2">
-          {/* Request limit display */}
-          <div className="flex justify-between">
-            <span className="text-sm">
-              {t("packages.requestLimit.monthly")}
-            </span>
+        {/* Request limits */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <BarChart3 className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm font-medium">
-              {formatLimitValue(pkg.requestLimit.monthly)}{" "}
-              {/* ✅ استفاده از helper function */}
+              {t("packages.requestLimits")}
             </span>
           </div>
-          <div className="flex justify-between">
-            <span className="text-sm">
-              {t("packages.requestLimit.remaining")}
-            </span>
-            <span className="text-sm font-medium">
-              {formatLimitValue(pkg.requestLimit.remaining)}{" "}
-              {/* ✅ استفاده از helper function */}
-            </span>
+
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">
+                {t("packages.requestLimit.total")}
+              </span>
+              <span className="font-medium">
+                {formatLimitValue(pkg.requestLimit.total)}
+              </span>
+            </div>
+
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">
+                {t("packages.requestLimit.remaining")}
+              </span>
+              <span className="font-medium">
+                {formatLimitValue(pkg.requestLimit.remaining)}
+              </span>
+            </div>
+
+            {/* Progress bar فقط برای محدود نمایش داده می‌شود */}
+            {pkg.requestLimit.total !== -1 && (
+              <div className="space-y-1">
+                <div className="flex justify-between text-xs">
+                  <span className="text-muted-foreground">
+                    {t("packages.usageProgress")}
+                  </span>
+                  <span>{usagePercent}%</span>
+                </div>
+                <Progress value={usagePercent} className="h-2" />
+              </div>
+            )}
+
+            {/* نمایش وضعیت unlimited */}
+            {pkg.requestLimit.total === -1 && (
+              <div className="bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-400 p-2 rounded-md text-sm text-center">
+                {t("packages.unlimitedRequests")}
+              </div>
+            )}
           </div>
         </div>
       </CardContent>
+
       <CardFooter className="pt-4 flex gap-2 flex-wrap">
         <Button
           className={showRenewOption ? "flex-1" : "w-full"}

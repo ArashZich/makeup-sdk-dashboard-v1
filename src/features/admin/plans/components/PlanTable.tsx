@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { formatCurrency } from "@/lib/utils";
+import { getPlanPlatformConfigs } from "@/constants/platform-configs";
 import {
   MoreHorizontal,
   Edit,
@@ -26,6 +27,9 @@ import {
   CheckCircle,
   XCircle,
   ExternalLink,
+  Globe,
+  Smartphone,
+  Zap,
 } from "lucide-react";
 
 interface PlanTableProps {
@@ -36,6 +40,50 @@ interface PlanTableProps {
 export function PlanTable({ plans, onDeletePlan }: PlanTableProps) {
   const { t, isRtl } = useLanguage();
   const router = useRouter();
+
+  // دریافت تنظیمات پلتفرم‌ها
+  const platformConfigs = getPlanPlatformConfigs(t);
+
+  // تابع فرمت کردن requestLimit
+  const formatRequestLimit = (total: number) => {
+    if (total === -1) return t("common.unlimited");
+    return total.toLocaleString(isRtl ? "fa-IR" : "en-US");
+  };
+
+  // تابع نمایش پلتفرم‌ها
+  const renderTargetPlatforms = (targetPlatforms: string[]) => {
+    if (targetPlatforms.includes("all")) {
+      return (
+        <Badge variant="secondary" className="gap-1">
+          <Globe className="h-3 w-3" />
+          {t("plans.allPlatforms")}
+        </Badge>
+      );
+    }
+
+    // نمایش حداکثر 2 پلتفرم + شمارنده
+    const displayPlatforms = targetPlatforms.slice(0, 2);
+    const remainingCount = targetPlatforms.length - 2;
+
+    return (
+      <div className="flex flex-wrap gap-1">
+        {displayPlatforms.map((platform) => {
+          const config = platformConfigs.find((p) => p.value === platform);
+          return (
+            <Badge key={platform} variant="outline" className="gap-1 text-xs">
+              {config?.icon || <Smartphone className="h-3 w-3" />}
+              {config?.label || platform}
+            </Badge>
+          );
+        })}
+        {remainingCount > 0 && (
+          <Badge variant="outline" className="text-xs">
+            +{remainingCount}
+          </Badge>
+        )}
+      </div>
+    );
+  };
 
   const columns: ColumnDef<Plan>[] = [
     {
@@ -66,17 +114,38 @@ export function PlanTable({ plans, onDeletePlan }: PlanTableProps) {
     },
     {
       accessorKey: "duration",
-      header: t("plans.duration", { duration: "" }),
+      header: t("plans.duration"),
       cell: ({ row }) =>
-        t("plans.duration", { duration: row.original.duration }),
+        t("plans.durationDays", { days: row.original.duration }),
     },
     {
-      accessorKey: "requestLimit.monthly",
-      header: t("plans.requestLimit"),
-      cell: ({ row }) =>
-        row.original.requestLimit.monthly.toLocaleString(
-          isRtl ? "fa-IR" : "en-US"
-        ),
+      accessorKey: "requestLimit.total",
+      header: () => (
+        <div className="flex items-center gap-1">
+          <Zap className="h-4 w-4" />
+          {t("plans.totalRequests")}
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className="flex items-center gap-1">
+          <span className="font-medium">
+            {formatRequestLimit(row.original.requestLimit.total)}
+          </span>
+          {row.original.requestLimit.total === -1 && (
+            <Badge
+              variant="secondary"
+              className="bg-green-100 text-green-800 text-xs"
+            >
+              {t("common.unlimited")}
+            </Badge>
+          )}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "targetPlatforms",
+      header: t("plans.targetPlatforms"),
+      cell: ({ row }) => renderTargetPlatforms(row.original.targetPlatforms),
     },
     {
       accessorKey: "active",

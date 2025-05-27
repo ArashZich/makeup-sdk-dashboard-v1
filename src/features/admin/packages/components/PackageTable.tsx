@@ -14,7 +14,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { formatDate } from "@/lib/date";
-import { MoreHorizontal, Eye, Pause, Play, Calendar } from "lucide-react";
+import { getPackagePlatformConfigs } from "@/constants/platform-configs";
+import { MoreHorizontal, Eye, Pause, Play, Calendar, Zap } from "lucide-react";
 
 interface PackageTableProps {
   packages: Package[];
@@ -33,11 +34,29 @@ export function PackageTable({
   onSuspend,
   onReactivate,
 }: PackageTableProps) {
-  const { t } = useLanguage();
+  const { t, isRtl } = useLanguage();
 
-  // ✅ Helper function برای نمایش مقادیر نامحدود
+  // دریافت تنظیمات پلتفرم‌ها
+  const platformConfigs = getPackagePlatformConfigs(t);
+
+  // Helper function برای نمایش مقادیر نامحدود
   const formatLimitValue = (value: number) => {
-    return value === -1 ? t("common.unlimited") : value.toLocaleString("fa-IR");
+    if (value === -1) return t("common.unlimited");
+    return value.toLocaleString(isRtl ? "fa-IR" : "en-US");
+  };
+
+  // تابع نمایش پلتفرم
+  const renderPlatform = (platform: string) => {
+    const config = platformConfigs.find((p) => p.value === platform);
+    if (config) {
+      return (
+        <Badge variant="outline" className={`gap-1 ${config.color}`}>
+          {config.icon}
+          {config.label}
+        </Badge>
+      );
+    }
+    return <Badge variant="outline">{platform}</Badge>;
   };
 
   const columns: ColumnDef<Package>[] = [
@@ -80,14 +99,7 @@ export function PackageTable({
     {
       accessorKey: "purchasePlatform",
       header: t("admin.packages.purchasePlatform"),
-      cell: ({ row }) => {
-        const platform = row.original.purchasePlatform;
-        return (
-          <Badge variant="outline">
-            {t(`admin.packages.platformLabels.${platform}`)}
-          </Badge>
-        );
-      },
+      cell: ({ row }) => renderPlatform(row.original.purchasePlatform),
     },
     {
       accessorKey: "startDate",
@@ -101,20 +113,31 @@ export function PackageTable({
     },
     {
       accessorKey: "requestLimit",
-      header: t("admin.packages.requestLimit"),
+      header: () => (
+        <div className="flex items-center gap-1">
+          <Zap className="h-4 w-4" />
+          {t("admin.packages.requestLimit")}
+        </div>
+      ),
       cell: ({ row }) => {
         const limit = row.original.requestLimit;
         return (
-          <div className="text-sm">
-            <div>
-              {t("admin.packages.monthlyLimit")}:{" "}
-              {formatLimitValue(limit.monthly)}{" "}
-              {/* ✅ استفاده از helper function */}
+          <div className="text-sm space-y-1">
+            <div className="flex items-center gap-1">
+              <span className="text-muted-foreground">
+                {t("admin.packages.total")}:
+              </span>
+              <span className="font-medium">
+                {formatLimitValue(limit.total)}
+              </span>
             </div>
-            <div className="text-muted-foreground">
-              {t("admin.packages.remainingRequests")}:{" "}
-              {formatLimitValue(limit.remaining)}{" "}
-              {/* ✅ استفاده از helper function */}
+            <div className="flex items-center gap-1">
+              <span className="text-muted-foreground">
+                {t("admin.packages.remaining")}:
+              </span>
+              <span className="font-medium">
+                {formatLimitValue(limit.remaining)}
+              </span>
             </div>
           </div>
         );

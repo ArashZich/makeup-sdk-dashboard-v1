@@ -3,7 +3,7 @@
 
 import { useRouter, useParams } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { usePlans } from "@/api/hooks/usePlans"; // از usePlans استفاده می‌کنیم
+import { usePlans, useAdminPlans } from "@/api/hooks/usePlans";
 import { DeletePlanDialog } from "../components/DeletePlanDialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,6 +17,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/utils";
+import { getPlanPlatformConfigs } from "@/constants/platform-configs";
 import {
   ArrowLeft,
   Edit,
@@ -27,8 +28,12 @@ import {
   Package,
   Check,
   AlertCircle,
+  Globe,
+  Smartphone,
+  ExternalLink,
+  Zap,
+  Settings,
 } from "lucide-react";
-import { useAdminPlans } from "@/api/hooks/usePlans";
 import { logger } from "@/lib/logger";
 import { useBoolean } from "@/hooks/useBoolean";
 import { BackButtonIcon } from "@/components/common/BackButton";
@@ -45,12 +50,51 @@ export function PlanDetailsView() {
 
   // استفاده از usePlans برای دریافت اطلاعات پلن
   const { getAllPlans } = usePlans();
-  const { deletePlan, isDeletingPlan } = useAdminPlans(); // فقط برای حذف پلن
+  const { deletePlan, isDeletingPlan } = useAdminPlans();
 
   const { data: plans, isLoading, error } = getAllPlans();
 
+  // دریافت تنظیمات پلتفرم‌ها
+  const platformConfigs = getPlanPlatformConfigs(t);
+
   // پیدا کردن پلن مورد نظر
   const plan = plans?.results.find((p) => p._id === planId);
+
+  // تابع فرمت کردن requestLimit
+  const formatRequestLimit = (total: number) => {
+    if (total === -1) return t("common.unlimited");
+    return total.toLocaleString(isRtl ? "fa-IR" : "en-US");
+  };
+
+  // تابع نمایش پلتفرم‌ها
+  const renderTargetPlatforms = () => {
+    if (!plan) return null;
+
+    if (plan.targetPlatforms.includes("all")) {
+      return (
+        <div className="flex flex-wrap gap-2">
+          <Badge variant="secondary" className="gap-2">
+            <Globe className="h-4 w-4" />
+            {t("plans.allPlatforms")}
+          </Badge>
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex flex-wrap gap-2">
+        {plan.targetPlatforms.map((platform) => {
+          const config = platformConfigs.find((p) => p.value === platform);
+          return (
+            <Badge key={platform} variant="outline" className="gap-2">
+              {config?.icon || <Smartphone className="h-4 w-4" />}
+              {config?.label || platform}
+            </Badge>
+          );
+        })}
+      </div>
+    );
+  };
 
   const handleDelete = async () => {
     if (!plan) return;
@@ -177,19 +221,22 @@ export function PlanDetailsView() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Package className="h-5 w-5 mr-2" />
-              {t("plans.requestLimit")}
+              <Zap className="h-5 w-5 mr-2" />
+              {t("plans.totalRequests")}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">
-              {plan.requestLimit.monthly.toLocaleString(
-                isRtl ? "fa-IR" : "en-US"
-              )}
+              {formatRequestLimit(plan.requestLimit.total)}
             </p>
-            <p className="text-sm text-muted-foreground">
-              {t("plans.monthlyRequests")}
-            </p>
+            {plan.requestLimit.total === -1 && (
+              <Badge
+                variant="secondary"
+                className="bg-green-100 text-green-800 mt-2"
+              >
+                {t("common.unlimited")}
+              </Badge>
+            )}
           </CardContent>
         </Card>
       </div>
@@ -227,6 +274,32 @@ export function PlanDetailsView() {
           </CardContent>
         </Card>
       </div>
+
+      {/* پلتفرم‌های پشتیبانی شده */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Settings className="h-5 w-5" />
+            {t("plans.targetPlatforms")}
+          </CardTitle>
+          <CardDescription>
+            {t("plans.targetPlatformsDescription")}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {renderTargetPlatforms()}
+
+          <div className="mt-4 text-sm text-muted-foreground">
+            <p>
+              {plan.targetPlatforms.includes("all")
+                ? t("plans.availableOnAllPlatforms")
+                : t("plans.availableOnSpecificPlatforms", {
+                    count: plan.targetPlatforms.length,
+                  })}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* ویژگی‌های SDK */}
       <Card>

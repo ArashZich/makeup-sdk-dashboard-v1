@@ -26,11 +26,15 @@ import {
   XCircle,
   BarChart,
   Cpu,
+  Clock,
+  Package as PackageIconLucide,
+  Zap,
 } from "lucide-react";
 import { formatDate, getDaysRemaining } from "@/lib";
 import { SdkFeaturesCard } from "@/features/sdk/components/SdkFeaturesCard";
 import { SdkTokenCard } from "@/features/sdk/components/SdkTokenCard";
 import { BackButtonIcon } from "@/components/common/BackButton";
+import { getPlatformDetails } from "@/constants/platform-configs";
 
 interface PackageDetailsViewProps {
   packageId: string;
@@ -43,9 +47,21 @@ export function PackageDetailsView({ packageId }: PackageDetailsViewProps) {
 
   const { data: packageData, isLoading, error } = getPackage(packageId);
 
-  // ✅ Helper function برای نمایش مقادیر نامحدود
+  // Helper function برای نمایش مقادیر نامحدود
   const formatLimitValue = (value: number) => {
-    return value === -1 ? t("common.unlimited") : value.toString();
+    if (value === -1) return t("common.unlimited");
+    return value.toLocaleString(isRtl ? "fa-IR" : "en-US");
+  };
+
+  // محاسبه usagePercent با در نظر گیری unlimited
+  const getUsagePercentage = () => {
+    if (!packageData) return 0;
+    if (packageData.requestLimit.total === -1) return 0; // unlimited
+    if (packageData.requestLimit.total === 0) return 100;
+
+    const used =
+      packageData.requestLimit.total - packageData.requestLimit.remaining;
+    return Math.round((used / packageData.requestLimit.total) * 100);
   };
 
   const handleBack = () => {
@@ -84,18 +100,8 @@ export function PackageDetailsView({ packageId }: PackageDetailsViewProps) {
   const isSuspended = packageData.status === "suspended";
 
   const remainingDays = getDaysRemaining(packageData.endDate);
-
-  // ✅ محاسبه usagePercent با در نظر گیری unlimited
-  const usagePercent =
-    packageData.requestLimit.monthly > 0 &&
-    packageData.requestLimit.monthly !== -1
-      ? Math.round(
-          ((packageData.requestLimit.monthly -
-            packageData.requestLimit.remaining) /
-            packageData.requestLimit.monthly) *
-            100
-        )
-      : 0;
+  const usagePercent = getUsagePercentage();
+  const platformDetails = getPlatformDetails(packageData.purchasePlatform, t);
 
   const planName =
     packageData.planId && typeof packageData.planId !== "string"
@@ -129,22 +135,57 @@ export function PackageDetailsView({ packageId }: PackageDetailsViewProps) {
                     {t("packages.packageDetails")}
                   </CardDescription>
                 </div>
-                <Badge
-                  className={`
-                    ${isActive ? "bg-green-500/10 text-green-500" : ""}
-                    ${isExpired ? "bg-red-500/10 text-red-500" : ""}
-                    ${isSuspended ? "bg-yellow-500/10 text-yellow-500" : ""}
-                    border-none
-                  `}
-                >
-                  <span className="flex items-center gap-1">
-                    {getStatusIcon()}
-                    {t(`packages.status.${packageData.status}`)}
-                  </span>
-                </Badge>
+                <div className="flex flex-col gap-2">
+                  <Badge
+                    className={`
+                      ${isActive ? "bg-green-500/10 text-green-500" : ""}
+                      ${isExpired ? "bg-red-500/10 text-red-500" : ""}
+                      ${isSuspended ? "bg-yellow-500/10 text-yellow-500" : ""}
+                      border-none
+                    `}
+                  >
+                    <span className="flex items-center gap-1">
+                      {getStatusIcon()}
+                      {t(`packages.status.${packageData.status}`)}
+                    </span>
+                  </Badge>
+                </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-6">
+              {/* Package Basic Info */}
+              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <div className="text-sm text-muted-foreground">
+                    {t("packages.packageId")}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <PackageIconLucide className="h-4 w-4 text-muted-foreground" />
+                    <span className="font-mono text-sm">{packageData._id}</span>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="text-sm text-muted-foreground">
+                    {t("packages.purchasePlatform")}
+                  </div>
+                  <Badge
+                    variant="outline"
+                    className={`gap-1 ${platformDetails.color}`}
+                  >
+                    {platformDetails.icon}
+                    {platformDetails.text}
+                  </Badge>
+                  {platformDetails.description && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {platformDetails.description}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <Separator />
+
               {/* Dates and Time Info */}
               <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
                 <div className="space-y-2">
@@ -180,15 +221,19 @@ export function PackageDetailsView({ packageId }: PackageDetailsViewProps) {
               {isActive && (
                 <div>
                   <div className="flex justify-between mb-2">
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-sm text-muted-foreground flex items-center gap-1">
+                      <Clock className="h-4 w-4" />
                       {t("packages.timeRemaining")}
                     </span>
-                    <span className="text-sm">
+                    <span className="text-sm font-medium">
                       {t("packages.remainingDays", { count: remainingDays })}
                     </span>
                   </div>
                   <Progress
-                    value={(remainingDays / 30) * 100}
+                    value={Math.max(
+                      0,
+                      Math.min(100, (remainingDays / 30) * 100)
+                    )}
                     className="h-2"
                   />
                 </div>
@@ -198,20 +243,20 @@ export function PackageDetailsView({ packageId }: PackageDetailsViewProps) {
 
               {/* Request Limits */}
               <div>
-                <h3 className="text-sm font-medium mb-4">
+                <h3 className="text-sm font-medium mb-4 flex items-center gap-2">
+                  <Zap className="h-4 w-4" />
                   {t("packages.requestLimits")}
                 </h3>
                 <div className="space-y-4">
                   <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
                     <div className="space-y-2">
                       <div className="text-sm text-muted-foreground">
-                        {t("packages.requestLimit.monthly")}
+                        {t("packages.requestLimit.total")}
                       </div>
                       <div className="flex items-center gap-2">
                         <BarChart className="h-4 w-4 text-muted-foreground" />
                         <span className="font-medium">
-                          {formatLimitValue(packageData.requestLimit.monthly)}{" "}
-                          {/* ✅ استفاده از helper function */}
+                          {formatLimitValue(packageData.requestLimit.total)}
                         </span>
                       </div>
                     </div>
@@ -222,23 +267,42 @@ export function PackageDetailsView({ packageId }: PackageDetailsViewProps) {
                       <div className="flex items-center gap-2">
                         <Cpu className="h-4 w-4 text-muted-foreground" />
                         <span className="font-medium">
-                          {formatLimitValue(packageData.requestLimit.remaining)}{" "}
-                          {/* ✅ استفاده از helper function */}
+                          {formatLimitValue(packageData.requestLimit.remaining)}
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  {/* ✅ Progress bar فقط برای محدود نمایش داده میشه */}
-                  {packageData.requestLimit.monthly !== -1 && (
+                  {/* Progress bar فقط برای محدود نمایش داده می‌شود */}
+                  {packageData.requestLimit.total !== -1 ? (
                     <div>
                       <div className="flex justify-between mb-2">
                         <span className="text-sm text-muted-foreground">
                           {t("packages.usageProgress")}
                         </span>
-                        <span className="text-sm">{usagePercent}%</span>
+                        <span className="text-sm font-medium">
+                          {usagePercent}%
+                        </span>
                       </div>
                       <Progress value={usagePercent} className="h-2" />
+                      <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                        <span>
+                          {t("packages.used")}:{" "}
+                          {(
+                            packageData.requestLimit.total -
+                            packageData.requestLimit.remaining
+                          ).toLocaleString()}
+                        </span>
+                        <span>
+                          {t("packages.total")}:{" "}
+                          {packageData.requestLimit.total.toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-400 p-3 rounded-md text-center">
+                      <Zap className="h-5 w-5 inline mr-2" />
+                      {t("packages.unlimitedRequests")}
                     </div>
                   )}
                 </div>

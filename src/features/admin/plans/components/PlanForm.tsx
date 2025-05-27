@@ -10,6 +10,7 @@ import {
   Plan,
   CreatePlanRequest,
   UpdatePlanRequest,
+  TargetPlatform,
 } from "@/api/types/plans.types";
 import {
   Form,
@@ -20,23 +21,25 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Loader } from "@/components/common/Loader";
-import { Plus, Minus, Check } from "lucide-react";
+import {
+  Plus,
+  Minus,
+  Check,
+  Globe,
+  Smartphone,
+  ExternalLink,
+} from "lucide-react";
+import { getPlanPlatformConfigs } from "@/constants/platform-configs";
 
-// اسکیما برای اعتبارسنجی فرم
+// اسکیما برای اعتبارسنجی فرم - آپدیت شده
 const planSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
   description: z
@@ -48,12 +51,9 @@ const planSchema = z.object({
     .min(1, { message: "Duration must be at least 1 day" }),
   features: z.array(z.string()),
   requestLimit: z.object({
-    monthly: z.coerce
-      .number()
-      .min(1, { message: "Monthly limit must be at least 1" }),
     total: z.coerce
       .number()
-      .min(1, { message: "Total limit must be at least 1" }),
+      .min(-1, { message: "Total limit must be at least -1 (unlimited)" }),
   }),
   defaultSdkFeatures: z.object({
     features: z.array(z.string()),
@@ -66,6 +66,9 @@ const planSchema = z.object({
       })
       .optional(),
   }),
+  targetPlatforms: z
+    .array(z.enum(["all", "normal", "divar", "torob", "basalam"]))
+    .min(1, { message: "At least one platform must be selected" }),
   active: z.boolean(),
   specialOffer: z.boolean(),
 });
@@ -88,7 +91,7 @@ export function PlanForm({ plan, isSubmitting, onSubmit }: PlanFormProps) {
   const [mediaViewInput, setMediaViewInput] = useState("");
   const [comparisonModeInput, setComparisonModeInput] = useState("");
 
-  // تنظیم مقادیر پیش‌فرض برای فرم
+  // تنظیم مقادیر پیش‌فرض برای فرم - آپدیت شده
   const defaultValues: PlanFormValues = {
     name: plan?.name || "",
     description: plan?.description || "",
@@ -96,8 +99,7 @@ export function PlanForm({ plan, isSubmitting, onSubmit }: PlanFormProps) {
     duration: plan?.duration || 30,
     features: plan?.features || [],
     requestLimit: {
-      monthly: plan?.requestLimit?.monthly || 1000,
-      total: plan?.requestLimit?.total || 30000,
+      total: plan?.requestLimit?.total || 1000,
     },
     defaultSdkFeatures: {
       features: plan?.defaultSdkFeatures?.features || [],
@@ -111,6 +113,7 @@ export function PlanForm({ plan, isSubmitting, onSubmit }: PlanFormProps) {
           plan?.defaultSdkFeatures?.mediaFeatures?.comparisonModes || [],
       },
     },
+    targetPlatforms: plan?.targetPlatforms || ["normal"],
     active: plan?.active !== undefined ? plan.active : true,
     specialOffer: plan?.specialOffer || false,
   };
@@ -119,6 +122,23 @@ export function PlanForm({ plan, isSubmitting, onSubmit }: PlanFormProps) {
     resolver: zodResolver(planSchema),
     defaultValues,
   });
+
+  // تابع نمایش آیکون پلتفرم
+  const getPlatformIcon = (platform: TargetPlatform) => {
+    switch (platform) {
+      case "all":
+        return <Globe className="h-4 w-4" />;
+      case "normal":
+        return <Smartphone className="h-4 w-4" />;
+      case "divar":
+        return <ExternalLink className="h-4 w-4" />;
+      case "torob":
+      case "basalam":
+        return <Smartphone className="h-4 w-4" />;
+      default:
+        return <Globe className="h-4 w-4" />;
+    }
+  };
 
   // منطق افزودن ویژگی عادی
   const handleFeatureAdd = () => {
@@ -338,6 +358,9 @@ export function PlanForm({ plan, isSubmitting, onSubmit }: PlanFormProps) {
         <Tabs defaultValue="general">
           <TabsList className="mb-4">
             <TabsTrigger value="general">{t("plans.form.general")}</TabsTrigger>
+            <TabsTrigger value="platforms">
+              {t("plans.form.platforms")}
+            </TabsTrigger>
             <TabsTrigger value="features">
               {t("plans.form.features")}
             </TabsTrigger>
@@ -410,43 +433,27 @@ export function PlanForm({ plan, isSubmitting, onSubmit }: PlanFormProps) {
                     )}
                   />
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="requestLimit.monthly"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t("plans.form.monthlyLimit")}</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              placeholder={t("plans.form.limitPlaceholder")}
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="requestLimit.total"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t("plans.form.totalLimit")}</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              placeholder={t("plans.form.limitPlaceholder")}
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+                  {/* آپدیت شده: فقط total limit */}
+                  <FormField
+                    control={form.control}
+                    name="requestLimit.total"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t("plans.form.totalLimit")}</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            placeholder={t("plans.form.limitPlaceholder")}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          {t("plans.form.totalLimitDescription")}
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
                   <FormField
                     control={form.control}
@@ -508,6 +515,100 @@ export function PlanForm({ plan, isSubmitting, onSubmit }: PlanFormProps) {
                     )}
                   />
                 </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* تنظیمات پلتفرم‌ها - جدید */}
+          <TabsContent value="platforms">
+            <Card>
+              <CardContent className="pt-6">
+                <FormField
+                  control={form.control}
+                  name="targetPlatforms"
+                  render={() => (
+                    <FormItem>
+                      <FormLabel>{t("plans.form.targetPlatforms")}</FormLabel>
+                      <FormDescription>
+                        {t("plans.form.targetPlatformsDescription")}
+                      </FormDescription>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        {getPlanPlatformConfigs(t).map((platform) => (
+                          <FormField
+                            key={platform.value}
+                            control={form.control}
+                            name="targetPlatforms"
+                            render={({ field }) => {
+                              return (
+                                <FormItem
+                                  key={platform.value}
+                                  className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 hover:bg-accent/50"
+                                >
+                                  <FormControl>
+                                    <input
+                                      type="checkbox"
+                                      checked={field.value?.includes(
+                                        platform.value
+                                      )}
+                                      onChange={(e) => {
+                                        const updatedValue = e.target.checked
+                                          ? [
+                                              ...(field.value || []),
+                                              platform.value,
+                                            ]
+                                          : field.value?.filter(
+                                              (value) =>
+                                                value !== platform.value
+                                            ) || [];
+                                        field.onChange(updatedValue);
+                                      }}
+                                      className="mt-1 h-4 w-4"
+                                    />
+                                  </FormControl>
+                                  <div className="space-y-1 leading-none flex-1">
+                                    <FormLabel className="flex items-center gap-2 cursor-pointer">
+                                      {platform.icon}
+                                      {platform.label}
+                                    </FormLabel>
+                                    <FormDescription className="text-xs">
+                                      {platform.description}
+                                    </FormDescription>
+                                  </div>
+                                </FormItem>
+                              );
+                            }}
+                          />
+                        ))}
+                      </div>
+                      <FormMessage />
+
+                      {/* نمایش پلتفرم‌های انتخاب شده */}
+                      <div className="mt-6">
+                        <h4 className="text-sm font-medium mb-3">
+                          {t("plans.form.selectedPlatforms")}
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                          {form.watch("targetPlatforms")?.length ? (
+                            form.watch("targetPlatforms")?.map((platform) => (
+                              <Badge
+                                key={platform}
+                                variant="secondary"
+                                className="gap-2"
+                              >
+                                {getPlatformIcon(platform)}
+                                {t(`plans.platforms.${platform}`)}
+                              </Badge>
+                            ))
+                          ) : (
+                            <p className="text-sm text-muted-foreground">
+                              {t("plans.form.noPlatformsSelected")}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </FormItem>
+                  )}
+                />
               </CardContent>
             </Card>
           </TabsContent>
