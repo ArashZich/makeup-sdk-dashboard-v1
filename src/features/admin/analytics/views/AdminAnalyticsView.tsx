@@ -1,37 +1,34 @@
 "use client";
 
 import { useState } from "react";
-import { useRevenueStats } from "@/api/hooks/useRevenueStats";
+import { usePaymentsStats } from "@/api/hooks/usePayments";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { RefreshCw } from "lucide-react";
+import { PaymentsTimeRange } from "@/api/types/payments.types";
 import { RevenueStatsCards } from "../components/RevenueStatsCards";
 import { PlatformRevenueChart } from "../components/PlatformRevenueChart";
 import { RevenueTimeRangeSelector } from "../components/RevenueTimeRangeSelector";
 import { RevenueExportButton } from "../components/RevenueExportButton";
 
-type TimeRange = "week" | "month" | "halfyear" | "year" | "all";
-
 export function AdminAnalyticsView() {
   const { t } = useLanguage();
   const [selectedTimeRange, setSelectedTimeRange] =
-    useState<TimeRange>("month");
+    useState<PaymentsTimeRange>("month");
 
   // استفاده از hook آمار درآمد
-  const { getAllPlatformsStats } = useRevenueStats();
+  const { useAllPlatformsStats } = usePaymentsStats();
 
   const {
     data: revenueData,
     isLoading,
     error,
     refetch,
-  } = getAllPlatformsStats();
+  } = useAllPlatformsStats(selectedTimeRange);
 
-  const handleTimeRangeChange = (range: TimeRange) => {
+  const handleTimeRangeChange = (range: PaymentsTimeRange) => {
     setSelectedTimeRange(range);
-    // TODO: اگر API از time range پشتیبانی کنه، اینجا refetch کنیم
-    // فعلاً فقط state رو تغییر میدیم
   };
 
   const handleRefresh = () => {
@@ -125,11 +122,13 @@ export function AdminAnalyticsView() {
                   {t("admin.analytics.revenue.platforms.normal")}
                 </h3>
                 <p className="text-2xl font-bold text-blue-600">
-                  {(
-                    (revenueData.normal.totalRevenue /
-                      revenueData.total.totalRevenue) *
-                    100
-                  ).toFixed(1)}
+                  {revenueData.summary.totalRevenue > 0
+                    ? (
+                        (revenueData.platforms.normal.totalRevenue /
+                          revenueData.summary.totalRevenue) *
+                        100
+                      ).toFixed(1)
+                    : "0"}
                   %
                 </p>
               </div>
@@ -138,11 +137,13 @@ export function AdminAnalyticsView() {
                   {t("admin.analytics.revenue.platforms.divar")}
                 </h3>
                 <p className="text-2xl font-bold text-green-600">
-                  {(
-                    (revenueData.divar.totalRevenue /
-                      revenueData.total.totalRevenue) *
-                    100
-                  ).toFixed(1)}
+                  {revenueData.summary.totalRevenue > 0
+                    ? (
+                        (revenueData.platforms.divar.totalRevenue /
+                          revenueData.summary.totalRevenue) *
+                        100
+                      ).toFixed(1)
+                    : "0"}
                   %
                 </p>
               </div>
@@ -151,7 +152,7 @@ export function AdminAnalyticsView() {
                   {t("admin.analytics.revenue.totalRevenue")}
                 </h3>
                 <p className="text-2xl font-bold">
-                  {revenueData.total.totalRevenue.toLocaleString()}{" "}
+                  {revenueData.summary.totalRevenue.toLocaleString()}{" "}
                   {t("common.currency.toman")}
                 </p>
               </div>

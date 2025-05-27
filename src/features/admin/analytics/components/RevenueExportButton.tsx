@@ -12,12 +12,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Download, FileSpreadsheet, FileText, ChevronDown } from "lucide-react";
-import { RevenueStatsResponse } from "@/api/types/revenue-stats.types";
+import {
+  PaymentsAllPlatformsStatsResponse,
+  PaymentsTimeRange,
+} from "@/api/types/payments.types";
 import { logger } from "@/lib/logger";
 
 interface RevenueExportButtonProps {
-  data: RevenueStatsResponse | null;
-  timeRange: string;
+  data: PaymentsAllPlatformsStatsResponse | null;
+  timeRange: PaymentsTimeRange;
   isLoading?: boolean;
 }
 
@@ -47,17 +50,16 @@ export function RevenueExportButton({
     ];
 
     const rows = platforms.map((platform) => {
-      const platformData = data[platform.key as keyof RevenueStatsResponse];
-      if (
-        !platformData ||
-        (typeof platformData === "object" && "totalRevenue" in platformData)
-      ) {
-        const stats = platformData as any;
+      const platformData =
+        data.platforms[platform.key as keyof typeof data.platforms];
+      if (platformData) {
         return [
           platform.label,
-          stats?.totalRevenue || 0,
-          stats?.totalOrders || 0,
-          stats?.totalOrders > 0 ? stats.totalRevenue / stats.totalOrders : 0,
+          platformData.totalRevenue || 0,
+          platformData.totalOrders || 0,
+          platformData.totalOrders > 0
+            ? platformData.totalRevenue / platformData.totalOrders
+            : 0,
         ];
       }
       return [platform.label, 0, 0, 0];
@@ -66,11 +68,9 @@ export function RevenueExportButton({
     // اضافه کردن سطر کل
     rows.push([
       t("admin.analytics.export.total"),
-      data.total.totalRevenue,
-      data.total.totalOrders,
-      data.total.totalOrders > 0
-        ? data.total.totalRevenue / data.total.totalOrders
-        : 0,
+      data.summary.totalRevenue,
+      data.summary.totalOrders,
+      data.summary.avgOrderValue,
     ]);
 
     const csvContent = [headers, ...rows]
@@ -88,13 +88,10 @@ export function RevenueExportButton({
       exportDate: new Date().toISOString(),
       data: data,
       summary: {
-        totalPlatforms: Object.keys(data).length - 1, // منهای total
-        totalRevenue: data.total.totalRevenue,
-        totalOrders: data.total.totalOrders,
-        avgOrderValue:
-          data.total.totalOrders > 0
-            ? data.total.totalRevenue / data.total.totalOrders
-            : 0,
+        totalPlatforms: Object.keys(data.platforms).length,
+        totalRevenue: data.summary.totalRevenue,
+        totalOrders: data.summary.totalOrders,
+        avgOrderValue: data.summary.avgOrderValue,
       },
     };
 

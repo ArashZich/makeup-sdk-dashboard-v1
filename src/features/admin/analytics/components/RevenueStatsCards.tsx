@@ -5,12 +5,15 @@ import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { formatCurrency } from "@/lib/utils";
 import { DollarSign, ShoppingCart, TrendingUp, Calculator } from "lucide-react";
-import { RevenueStatsResponse } from "@/api/types/revenue-stats.types";
+import {
+  PaymentsAllPlatformsStatsResponse,
+  PaymentsTimeRange,
+} from "@/api/types/payments.types";
 
 interface RevenueStatsCardsProps {
-  data: RevenueStatsResponse | null;
+  data: PaymentsAllPlatformsStatsResponse | null;
   isLoading: boolean;
-  timeRange?: string;
+  timeRange?: PaymentsTimeRange;
 }
 
 export function RevenueStatsCards({
@@ -55,32 +58,29 @@ export function RevenueStatsCards({
   const stats = [
     {
       title: t("admin.analytics.revenue.totalRevenue"),
-      value: formatCurrency(data.total.totalRevenue),
+      value: formatCurrency(data.summary.totalRevenue),
       icon: DollarSign,
       color: "text-blue-600",
       bgColor: "bg-blue-100",
+      growth: data.summary.growthRate,
     },
     {
       title: t("admin.analytics.revenue.totalOrders"),
-      value: data.total.totalOrders.toLocaleString(),
+      value: data.summary.totalOrders.toLocaleString(),
       icon: ShoppingCart,
       color: "text-green-600",
       bgColor: "bg-green-100",
     },
     {
       title: t("admin.analytics.revenue.avgOrderValue"),
-      value: formatCurrency(
-        data.total.totalOrders > 0
-          ? data.total.totalRevenue / data.total.totalOrders
-          : 0
-      ),
+      value: formatCurrency(data.summary.avgOrderValue),
       icon: Calculator,
       color: "text-purple-600",
       bgColor: "bg-purple-100",
     },
     {
       title: t("admin.analytics.revenue.platforms.comparison"),
-      value: `${Object.keys(data).length - 1}`, // تعداد پلتفرم‌ها (منهای total)
+      value: `${Object.keys(data.platforms).length}`,
       icon: TrendingUp,
       color: "text-orange-600",
       bgColor: "bg-orange-100",
@@ -104,6 +104,18 @@ export function RevenueStatsCards({
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stat.value}</div>
+              {stat.growth && (
+                <p
+                  className={`text-xs ${
+                    parseFloat(stat.growth) > 0
+                      ? "text-green-600"
+                      : "text-red-600"
+                  }`}
+                >
+                  {parseFloat(stat.growth) > 0 ? "+" : ""}
+                  {stat.growth}% {t("admin.analytics.revenue.lastPeriod")}
+                </p>
+              )}
               {stat.subtitle && (
                 <p className="text-xs text-muted-foreground">{stat.subtitle}</p>
               )}

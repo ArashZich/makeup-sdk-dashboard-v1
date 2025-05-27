@@ -11,12 +11,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CalendarDays, RefreshCw } from "lucide-react";
-
-type TimeRange = "week" | "month" | "halfyear" | "year" | "all";
+import { PaymentsTimeRange } from "@/api/types/payments.types";
 
 interface RevenueTimeRangeSelectorProps {
-  selectedRange: TimeRange;
-  onRangeChange: (range: TimeRange) => void;
+  selectedRange: PaymentsTimeRange;
+  onRangeChange: (range: PaymentsTimeRange) => void;
   onRefresh?: () => void;
   isLoading?: boolean;
 }
@@ -29,7 +28,7 @@ export function RevenueTimeRangeSelector({
 }: RevenueTimeRangeSelectorProps) {
   const { t } = useLanguage();
 
-  const timeRanges: { value: TimeRange; label: string }[] = [
+  const timeRanges: { value: PaymentsTimeRange; label: string }[] = [
     { value: "week", label: t("admin.analytics.timeRange.week") },
     { value: "month", label: t("admin.analytics.timeRange.month") },
     { value: "halfyear", label: t("admin.analytics.timeRange.halfyear") },
@@ -50,7 +49,7 @@ export function RevenueTimeRangeSelector({
           <div className="flex-1">
             <Select
               value={selectedRange}
-              onValueChange={(value: TimeRange) => onRangeChange(value)}
+              onValueChange={(value: PaymentsTimeRange) => onRangeChange(value)}
               disabled={isLoading}
             >
               <SelectTrigger className="w-full">

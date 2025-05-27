@@ -5,13 +5,13 @@ import dynamic from "next/dynamic";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { formatCurrency } from "@/lib/utils";
-import { RevenueStatsResponse } from "@/api/types/revenue-stats.types";
+import { PaymentsAllPlatformsStatsResponse } from "@/api/types/payments.types";
 
 // Dynamic import برای ApexCharts (برای SSR)
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 interface PlatformRevenueChartProps {
-  data: RevenueStatsResponse | null;
+  data: PaymentsAllPlatformsStatsResponse | null;
   isLoading: boolean;
 }
 
@@ -31,16 +31,18 @@ export function PlatformRevenueChart({
       { key: "basalam", label: t("admin.analytics.revenue.platforms.basalam") },
     ];
 
-    // 🔧 اصلاح: جدا کردن سری‌های درآمد و سفارش
-    const revenueSeries = platforms.map(
-      (platform) =>
-        data[platform.key as keyof RevenueStatsResponse]?.totalRevenue || 0
-    );
+    // جدا کردن سری‌های درآمد و سفارش
+    const revenueSeries = platforms.map((platform) => {
+      const platformData =
+        data.platforms[platform.key as keyof typeof data.platforms];
+      return platformData?.totalRevenue || 0;
+    });
 
-    const ordersSeries = platforms.map(
-      (platform) =>
-        data[platform.key as keyof RevenueStatsResponse]?.totalOrders || 0
-    );
+    const ordersSeries = platforms.map((platform) => {
+      const platformData =
+        data.platforms[platform.key as keyof typeof data.platforms];
+      return platformData?.totalOrders || 0;
+    });
 
     const platformLabels = platforms.map((p) => p.label);
 
@@ -69,7 +71,6 @@ export function PlatformRevenueChart({
           },
         },
         fontFamily: locale === "fa" ? "IranSans" : "Montserrat",
-        // 🔧 اصلاح: تنظیمات تم برای tooltip
         theme: {
           mode: "light" as const,
         },
@@ -146,14 +147,12 @@ export function PlatformRevenueChart({
       fill: {
         opacity: 1,
       },
-      // 🔧 اصلاح کامل tooltip
       tooltip: {
         theme: "light",
         style: {
           fontSize: "12px",
           fontFamily: locale === "fa" ? "IranSans" : "Montserrat",
         },
-        // 🎨 تنظیمات رنگ و استایل
         fillSeriesColor: false,
         marker: {
           show: true,
@@ -210,7 +209,6 @@ export function PlatformRevenueChart({
         fontSize: "12px",
       },
       colors: ["#3B82F6", "#10B981"],
-      // 🔧 اضافه: grid styling
       grid: {
         borderColor: "#F3F4F6",
         strokeDashArray: 3,
@@ -219,7 +217,6 @@ export function PlatformRevenueChart({
     [chartData, t, locale]
   );
 
-  // 🔧 اصلاح: series data
   const series = useMemo(
     () => [
       {
