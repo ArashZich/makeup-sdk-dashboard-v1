@@ -1,75 +1,140 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { DayPicker } from "react-day-picker"
+import * as React from "react";
+import DatePicker from "react-datepicker";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
+import "react-datepicker/dist/react-datepicker.css";
 
-import { cn } from "@/lib/utils"
-import { buttonVariants } from "@/components/ui/button"
+export interface CalendarProps {
+  className?: string;
+  classNames?: Record<string, string>;
+  showOutsideDays?: boolean;
+  mode?: "single" | "range";
+  selected?: Date | [Date | null, Date | null] | null;
+  onSelect?: (date: Date | [Date | null, Date | null] | null) => void;
+  disabled?: (date: Date) => boolean;
+  fromDate?: Date;
+  toDate?: Date;
+  locale?: string;
+  dir?: "ltr" | "rtl";
+}
 
 function Calendar({
   className,
   classNames,
   showOutsideDays = true,
+  mode = "single",
+  selected,
+  onSelect,
+  disabled,
+  fromDate,
+  toDate,
+  locale = "en",
+  dir = "ltr",
   ...props
-}: React.ComponentProps<typeof DayPicker>) {
-  return (
-    <DayPicker
-      showOutsideDays={showOutsideDays}
-      className={cn("p-3", className)}
-      classNames={{
-        months: "flex flex-col sm:flex-row gap-2",
-        month: "flex flex-col gap-4",
-        caption: "flex justify-center pt-1 relative items-center w-full",
-        caption_label: "text-sm font-medium",
-        nav: "flex items-center gap-1",
-        nav_button: cn(
+}: CalendarProps) {
+  const isRangeMode = mode === "range";
+
+  const handleDateChange = (date: Date | [Date | null, Date | null] | null) => {
+    if (onSelect) {
+      onSelect(date);
+    }
+  };
+
+  const customHeader = ({
+    date,
+    decreaseMonth,
+    increaseMonth,
+    prevMonthButtonDisabled,
+    nextMonthButtonDisabled,
+  }: any) => (
+    <div className="flex justify-between items-center px-2 py-2">
+      <button
+        type="button"
+        onClick={decreaseMonth}
+        disabled={prevMonthButtonDisabled}
+        className={cn(
           buttonVariants({ variant: "outline" }),
           "size-7 bg-transparent p-0 opacity-50 hover:opacity-100"
-        ),
-        nav_button_previous: "absolute left-1",
-        nav_button_next: "absolute right-1",
-        table: "w-full border-collapse space-x-1",
-        head_row: "flex",
-        head_cell:
-          "text-muted-foreground rounded-md w-8 font-normal text-[0.8rem]",
-        row: "flex w-full mt-2",
-        cell: cn(
-          "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent [&:has([aria-selected].day-range-end)]:rounded-r-md",
-          props.mode === "range"
-            ? "[&:has(>.day-range-end)]:rounded-r-md [&:has(>.day-range-start)]:rounded-l-md first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md"
-            : "[&:has([aria-selected])]:rounded-md"
-        ),
-        day: cn(
-          buttonVariants({ variant: "ghost" }),
-          "size-8 p-0 font-normal aria-selected:opacity-100"
-        ),
-        day_range_start:
-          "day-range-start aria-selected:bg-primary aria-selected:text-primary-foreground",
-        day_range_end:
-          "day-range-end aria-selected:bg-primary aria-selected:text-primary-foreground",
-        day_selected:
-          "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-        day_today: "bg-accent text-accent-foreground",
-        day_outside:
-          "day-outside text-muted-foreground aria-selected:text-muted-foreground",
-        day_disabled: "text-muted-foreground opacity-50",
-        day_range_middle:
-          "aria-selected:bg-accent aria-selected:text-accent-foreground",
-        day_hidden: "invisible",
-        ...classNames,
-      }}
-      components={{
-        IconLeft: ({ className, ...props }) => (
-          <ChevronLeft className={cn("size-4", className)} {...props} />
-        ),
-        IconRight: ({ className, ...props }) => (
-          <ChevronRight className={cn("size-4", className)} {...props} />
-        ),
-      }}
-      {...props}
-    />
-  )
+        )}
+      >
+        <ChevronLeft className="size-4" />
+      </button>
+
+      <span className="text-sm font-medium">
+        {date.toLocaleDateString(locale, { month: "long", year: "numeric" })}
+      </span>
+
+      <button
+        type="button"
+        onClick={increaseMonth}
+        disabled={nextMonthButtonDisabled}
+        className={cn(
+          buttonVariants({ variant: "outline" }),
+          "size-7 bg-transparent p-0 opacity-50 hover:opacity-100"
+        )}
+      >
+        <ChevronRight className="size-4" />
+      </button>
+    </div>
+  );
+
+  // پیکربندی مشترک
+  const baseProps = {
+    onChange: handleDateChange,
+    inline: true,
+    renderCustomHeader: customHeader,
+    filterDate: disabled ? (date: Date) => !disabled(date) : undefined,
+    minDate: fromDate,
+    maxDate: toDate,
+    locale: locale,
+    calendarClassName: cn(
+      "border-none shadow-none bg-transparent",
+      "text-sm",
+      "[&_.react-datepicker__day]:size-8 [&_.react-datepicker__day]:leading-8",
+      "[&_.react-datepicker__day]:rounded-md [&_.react-datepicker__day]:border-0",
+      "[&_.react-datepicker__day:hover]:bg-accent",
+      "[&_.react-datepicker__day--selected]:bg-primary [&_.react-datepicker__day--selected]:text-primary-foreground",
+      "[&_.react-datepicker__day--today]:bg-accent [&_.react-datepicker__day--today]:text-accent-foreground",
+      "[&_.react-datepicker__day--outside-month]:text-muted-foreground [&_.react-datepicker__day--outside-month]:opacity-50",
+      "[&_.react-datepicker__day--disabled]:text-muted-foreground [&_.react-datepicker__day--disabled]:opacity-50",
+      "[&_.react-datepicker__day--in-range]:bg-accent [&_.react-datepicker__day--in-range]:text-accent-foreground",
+      "[&_.react-datepicker__day--range-start]:bg-primary [&_.react-datepicker__day--range-start]:text-primary-foreground",
+      "[&_.react-datepicker__day--range-end]:bg-primary [&_.react-datepicker__day--range-end]:text-primary-foreground",
+      "[&_.react-datepicker__header]:bg-transparent [&_.react-datepicker__header]:border-none",
+      "[&_.react-datepicker__day-names]:mb-1",
+      "[&_.react-datepicker__day-name]:text-muted-foreground [&_.react-datepicker__day-name]:text-xs [&_.react-datepicker__day-name]:font-normal [&_.react-datepicker__day-name]:size-8",
+      "[&_.react-datepicker__week]:gap-0",
+      classNames?.root
+    ),
+    dayClassName: (date: Date) =>
+      cn(
+        "text-center cursor-pointer transition-colors",
+        date.getDate() === new Date().getDate() &&
+          date.getMonth() === new Date().getMonth() &&
+          date.getFullYear() === new Date().getFullYear()
+          ? "bg-accent text-accent-foreground"
+          : ""
+      ),
+    ...props,
+  };
+
+  return (
+    <div className={cn("p-3", className)} dir={dir}>
+      {isRangeMode ? (
+        <DatePicker
+          {...baseProps}
+          selectsRange
+          startDate={Array.isArray(selected) ? selected[0] : undefined}
+          endDate={Array.isArray(selected) ? selected[1] : undefined}
+        />
+      ) : (
+        <DatePicker {...baseProps} selected={selected as Date | null} />
+      )}
+    </div>
+  );
 }
 
-export { Calendar }
+export { Calendar };
