@@ -84,7 +84,10 @@
     "optional": "اختیاری",
     "duration": "مدت",
     "generalInfo": "اطلاعات عمومی",
-    "selected": "انتخاب شده"
+    "selected": "انتخاب شده",
+    "used": "استفاده شده",
+    "compatible": "سازگار",
+    "incompatible": "ناسازگار"
   },
   "auth": {
     "login": "ورود",
@@ -244,8 +247,63 @@
       "modeInputPlaceholder": "حالت مقایسه را وارد کنید",
       "addMode": "افزودن حالت",
       "noModes": "هیچ حالت مقایسه‌ای تعریف نشده است",
-      "modeExists": "این حالت قبلاً اضافه شده است"
-    }
+      "modeExists": "این حالت قبلاً اضافه شده است",
+      "platforms": "پلتفرم‌ها",
+      "totalLimitDescription": "کل درخواست‌های مجاز (-1 برای نامحدود)",
+      "targetPlatforms": "پلتفرم‌های هدف",
+      "targetPlatformsDescription": "پلتفرم‌هایی که این پلن در آن‌ها قابل استفاده است",
+      "selectedPlatforms": "پلتفرم‌های انتخاب شده",
+      "noPlatformsSelected": "هیچ پلتفرمی انتخاب نشده"
+    },
+    "totalPlans": "کل پلن‌ها",
+    "activePlans": "پلن‌های فعال",
+    "inactivePlans": "پلن‌های غیرفعال",
+    "filterByPlatform": "فیلتر بر اساس پلتفرم",
+    "selectPlatform": "انتخاب پلتفرم",
+    "allPlatforms": "همه پلتفرم‌ها",
+    "platforms": {
+      "all": "همه پلتفرم‌ها",
+      "normal": "عادی",
+      "divar": "دیوار",
+      "torob": "ترب",
+      "basalam": "باسلام"
+    },
+    "platformDescriptions": {
+      "all": "سازگار با همه پلتفرم‌ها",
+      "normal": "پلتفرم عادی",
+      "divar": "پلتفرم دیوار",
+      "torob": "پلتفرم ترب",
+      "basalam": "پلتفرم باسلام"
+    },
+    "targetPlatforms": "پلتفرم‌های هدف",
+    "targetPlatformsDescription": "این پلن در پلتفرم‌های زیر قابل استفاده است",
+    "showingAllPlans": "نمایش {{count}} پلن",
+    "showingFilteredPlans": "نمایش {{count}} پلن برای {{platform}}",
+    "noPlatformPlans": "پلنی برای {{platform}} موجود نیست",
+    "noPlatformPlansDescription": "برای این پلتفرم هنوز پلنی تعریف نشده است",
+    "platformStatistics": "آمار پلتفرم‌ها",
+    "yourPlatform": "پلتفرم شما",
+    "compatiblePlans": "پلن‌های سازگار",
+    "supportedPlatforms": "پلتفرم‌های پشتیبانی شده",
+    "incompatiblePlan": "پلن ناسازگار",
+    "incompatiblePlanDescription": "این پلن با پلتفرم شما ({{userPlatform}}) سازگار نیست. پلتفرم‌های پشتیبانی شده: {{supportedPlatforms}}",
+    "incompatiblePlatformError": "این پلن با پلتفرم شما سازگار نیست",
+    "incompatiblePlatform": "پلتفرم ناسازگار",
+    "noCompatiblePlans": "پلن سازگاری موجود نیست",
+    "availableOnAllPlatforms": "در همه پلتفرم‌ها قابل استفاده",
+    "availableOnSpecificPlatforms": "در {{count}} پلتفرم قابل استفاده",
+    "platformInfo": {
+      "title": "اطلاعات پلتفرم",
+      "description": "شما در حال استفاده از پلتفرم {{platform}} هستید. فقط پلن‌های سازگار با این پلتفرم نمایش داده می‌شوند."
+    },
+    "andMoreFeatures": "و {{count}} ویژگی دیگر",
+    "notAvailable": "غیرقابل دسترس",
+    "totalRequests": "کل درخواست‌ها",
+    "patterns": "الگوها",
+    "allowedSources": "منابع مجاز",
+    "allowedViews": "نماهای مجاز",
+    "comparisonModes": "حالت‌های مقایسه",
+    "mediaFeatures": "ویژگی‌های رسانه‌ای"
   },
   "packages": {
     "title": "بسته‌ها",
@@ -284,7 +342,8 @@
     "noSuspendedPackages": "بسته معلقی ندارید",
     "requestLimit": {
       "monthly": "محدودیت ماهانه",
-      "remaining": "باقی‌مانده"
+      "remaining": "باقی‌مانده",
+      "total": "کل"
     },
     "error": {
       "title": "خطا در دریافت بسته‌ها",
@@ -296,7 +355,29 @@
     "suspended": "معلق",
     "currentPackage": "بسته فعلی",
     "willRenewSamePlan": "همان پلن فعلی شما تمدید خواهد شد",
-    "expirationWarning": "اعتبار بسته شما به زودی به پایان می‌رسد. لطفاً آن را تمدید کنید."
+    "expirationWarning": "اعتبار بسته شما به زودی به پایان می‌رسد. لطفاً آن را تمدید کنید.",
+    "totalPackages": "کل بسته‌ها",
+    "activePlatforms": "پلتفرم‌های فعال",
+    "filterBy": "فیلتر بر اساس",
+    "filterByStatus": "فیلتر بر اساس وضعیت",
+    "filterByPlatform": "فیلتر بر اساس پلتفرم",
+    "purchasePlatform": "پلتفرم خرید",
+    "platforms": {
+      "normal": "عادی",
+      "divar": "دیوار",
+      "torob": "ترب",
+      "basalam": "باسلام"
+    },
+    "platformDescriptions": {
+      "normal": "پلتفرم عادی",
+      "divar": "پلتفرم دیوار",
+      "torob": "پلتفرم ترب",
+      "basalam": "پلتفرم باسلام"
+    },
+    "noPlatformPackages": "بسته‌ای برای {{platform}} موجود نیست",
+    "noPlatformPackagesDescription": "برای پلتفرم {{platform}} هنوز بسته‌ای خریداری نکرده‌اید",
+    "platformStats": "آمار پلتفرم‌ها",
+    "unlimitedRequests": "درخواست‌های نامحدود"
   },
   "sdk": {
     "title": "SDK",
@@ -940,7 +1021,48 @@
         "extendFailed": "خطا در تمدید بسته",
         "suspendFailed": "خطا در تعلیق بسته",
         "reactivateFailed": "خطا در فعال‌سازی بسته"
-      }
+      },
+      "total": "کل",
+      "remaining": "باقی‌مانده",
+      "totalPackages": "کل بسته‌ها",
+      "activePackages": "بسته‌های فعال",
+      "expiredPackages": "بسته‌های منقضی شده",
+      "suspendedPackages": "بسته‌های معلق",
+      "filterByPlatform": "فیلتر بر اساس پلتفرم",
+      "selectPlatform": "انتخاب پلتفرم",
+      "allPlatforms": "همه پلتفرم‌ها",
+      "filterByStatus": "فیلتر بر اساس وضعیت",
+      "selectStatus": "انتخاب وضعیت",
+      "allStatuses": "همه وضعیت‌ها",
+      "showingResults": "نمایش {{count}} مورد از {{total}}",
+      "platformStatistics": "آمار پلتفرم‌ها",
+      "packages": "بسته",
+      "requestStatistics": "آمار درخواست‌ها",
+      "unlimitedPackages": "بسته‌های نامحدود",
+      "almostFinishedPackages": "بسته‌های در حال اتمام",
+      "noPackagesFound": "بسته‌ای یافت نشد",
+      "noPackagesDescription": "بسته‌ای برای نمایش موجود نیست",
+      "createPackageDescription": "بسته جدیدی برای کاربران ایجاد کنید",
+      "createPackageInfo": "برای ایجاد بسته جدید، کاربر، پلن و پلتفرم خرید را انتخاب کنید.",
+      "creationSteps": "مراحل ایجاد",
+      "step1Title": "انتخاب کاربر",
+      "step1Description": "کاربری که بسته برای آن ایجاد می‌شود",
+      "step2Title": "انتخاب پلن",
+      "step2Description": "پلنی که بسته بر اساس آن ایجاد می‌شود",
+      "step3Title": "تنظیمات بسته",
+      "step3Description": "پلتفرم خرید و تنظیمات اضافی",
+      "step4Title": "تایید و ایجاد",
+      "step4Description": "بررسی نهایی و ایجاد بسته",
+      "platformsInfo": "اطلاعات پلتفرم‌ها",
+      "platformsInfoDescription": "پلتفرم‌های مختلف موجود برای خرید",
+      "importantNotes": "نکات مهم",
+      "note1": "بسته بلافاصله پس از ایجاد فعال می‌شود",
+      "note2": "مدت زمان بسته از تاریخ ایجاد محاسبه می‌شود",
+      "note3": "امکان تمدید و تعلیق بسته‌ها وجود دارد",
+      "warningNote": "بسته‌های حذف شده قابل بازگردانی نیستند",
+      "quickStats": "آمار سریع",
+      "availablePlatforms": "پلتفرم‌های موجود",
+      "totalLimit": "محدودیت کل"
     },
     "notifications": {
       "title": "اطلاعیه‌ها",

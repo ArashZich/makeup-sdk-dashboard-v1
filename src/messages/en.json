@@ -84,7 +84,10 @@
     "optional": "Optional",
     "duration": "Duration",
     "generalInfo": "General Information",
-    "selected": "Selected"
+    "selected": "Selected",
+    "used": "Used",
+    "compatible": "Compatible",
+    "incompatible": "Incompatible"
   },
   "auth": {
     "login": "Login",
@@ -244,8 +247,63 @@
       "modeInputPlaceholder": "Enter comparison mode",
       "addMode": "Add Mode",
       "noModes": "No comparison modes defined",
-      "modeExists": "This mode has already been added"
-    }
+      "modeExists": "This mode has already been added",
+      "platforms": "Platforms",
+      "totalLimitDescription": "Total allowed requests (-1 for unlimited)",
+      "targetPlatforms": "Target Platforms",
+      "targetPlatformsDescription": "Platforms where this plan can be used",
+      "selectedPlatforms": "Selected Platforms",
+      "noPlatformsSelected": "No platforms selected"
+    },
+    "totalPlans": "Total Plans",
+    "activePlans": "Active Plans",
+    "inactivePlans": "Inactive Plans",
+    "filterByPlatform": "Filter by Platform",
+    "selectPlatform": "Select Platform",
+    "allPlatforms": "All Platforms",
+    "platforms": {
+      "all": "All Platforms",
+      "normal": "Normal",
+      "divar": "Divar",
+      "torob": "Torob",
+      "basalam": "Basalam"
+    },
+    "platformDescriptions": {
+      "all": "Compatible with all platforms",
+      "normal": "Normal platform",
+      "divar": "Divar platform",
+      "torob": "Torob platform",
+      "basalam": "Basalam platform"
+    },
+    "targetPlatforms": "Target Platforms",
+    "targetPlatformsDescription": "This plan is available on the following platforms",
+    "showingAllPlans": "Showing {{count}} plans",
+    "showingFilteredPlans": "Showing {{count}} plans for {{platform}}",
+    "noPlatformPlans": "No plans available for {{platform}}",
+    "noPlatformPlansDescription": "No plans have been defined for this platform yet",
+    "platformStatistics": "Platform Statistics",
+    "yourPlatform": "Your Platform",
+    "compatiblePlans": "Compatible Plans",
+    "supportedPlatforms": "Supported Platforms",
+    "incompatiblePlan": "Incompatible Plan",
+    "incompatiblePlanDescription": "This plan is not compatible with your platform ({{userPlatform}}). Supported platforms: {{supportedPlatforms}}",
+    "incompatiblePlatformError": "This plan is not compatible with your platform",
+    "incompatiblePlatform": "Incompatible Platform",
+    "noCompatiblePlans": "No compatible plans available",
+    "availableOnAllPlatforms": "Available on all platforms",
+    "availableOnSpecificPlatforms": "Available on {{count}} platforms",
+    "platformInfo": {
+      "title": "Platform Information",
+      "description": "You are using the {{platform}} platform. Only plans compatible with this platform are shown."
+    },
+    "andMoreFeatures": "and {{count}} more features",
+    "notAvailable": "Not Available",
+    "totalRequests": "Total Requests",
+    "patterns": "Patterns",
+    "allowedSources": "Allowed Sources",
+    "allowedViews": "Allowed Views",
+    "comparisonModes": "Comparison Modes",
+    "mediaFeatures": "Media Features"
   },
   "packages": {
     "title": "Packages",
@@ -284,7 +342,8 @@
     "noSuspendedPackages": "No Suspended Packages",
     "requestLimit": {
       "monthly": "Monthly Limit",
-      "remaining": "Remaining"
+      "remaining": "Remaining",
+      "total": "Total"
     },
     "error": {
       "title": "Error Fetching Packages",
@@ -296,7 +355,29 @@
     "suspended": "Suspended",
     "currentPackage": "Current Package",
     "willRenewSamePlan": "Your current plan will be renewed",
-    "expirationWarning": "Your package is expiring soon. Please renew it."
+    "expirationWarning": "Your package is expiring soon. Please renew it.",
+    "totalPackages": "Total Packages",
+    "activePlatforms": "Active Platforms",
+    "filterBy": "Filter By",
+    "filterByStatus": "Filter by Status",
+    "filterByPlatform": "Filter by Platform",
+    "purchasePlatform": "Purchase Platform",
+    "platforms": {
+      "normal": "Normal",
+      "divar": "Divar",
+      "torob": "Torob",
+      "basalam": "Basalam"
+    },
+    "platformDescriptions": {
+      "normal": "Normal platform",
+      "divar": "Divar platform",
+      "torob": "Torob platform",
+      "basalam": "Basalam platform"
+    },
+    "noPlatformPackages": "No packages for {{platform}}",
+    "noPlatformPackagesDescription": "You haven't purchased any packages for {{platform}} platform yet",
+    "platformStats": "Platform Statistics",
+    "unlimitedRequests": "Unlimited Requests"
   },
   "sdk": {
     "title": "SDK",
@@ -978,7 +1059,48 @@
         "extendFailed": "Error extending package",
         "suspendFailed": "Error suspending package",
         "reactivateFailed": "Error reactivating package"
-      }
+      },
+      "total": "Total",
+      "remaining": "Remaining",
+      "totalPackages": "Total Packages",
+      "activePackages": "Active Packages",
+      "expiredPackages": "Expired Packages",
+      "suspendedPackages": "Suspended Packages",
+      "filterByPlatform": "Filter by Platform",
+      "selectPlatform": "Select Platform",
+      "allPlatforms": "All Platforms",
+      "filterByStatus": "Filter by Status",
+      "selectStatus": "Select Status",
+      "allStatuses": "All Statuses",
+      "showingResults": "Showing {{count}} of {{total}} results",
+      "platformStatistics": "Platform Statistics",
+      "packages": "Packages",
+      "requestStatistics": "Request Statistics",
+      "unlimitedPackages": "Unlimited Packages",
+      "almostFinishedPackages": "Almost Finished Packages",
+      "noPackagesFound": "No Packages Found",
+      "noPackagesDescription": "No packages available for display",
+      "createPackageDescription": "Create a new package for users",
+      "createPackageInfo": "To create a new package, select user, plan and purchase platform.",
+      "creationSteps": "Creation Steps",
+      "step1Title": "Select User",
+      "step1Description": "User for whom the package will be created",
+      "step2Title": "Select Plan",
+      "step2Description": "Plan on which the package will be based",
+      "step3Title": "Package Settings",
+      "step3Description": "Purchase platform and additional settings",
+      "step4Title": "Confirm and Create",
+      "step4Description": "Final review and package creation",
+      "platformsInfo": "Platform Information",
+      "platformsInfoDescription": "Different platforms available for purchase",
+      "importantNotes": "Important Notes",
+      "note1": "Package becomes active immediately after creation",
+      "note2": "Package duration is calculated from creation date",
+      "note3": "Packages can be extended and suspended",
+      "warningNote": "Deleted packages cannot be recovered",
+      "quickStats": "Quick Stats",
+      "availablePlatforms": "Available Platforms",
+      "totalLimit": "Total Limit"
     },
     "coupons": {
       "title": "Discount Coupons",
