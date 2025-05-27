@@ -303,7 +303,8 @@
     "allowedSources": "Allowed Sources",
     "allowedViews": "Allowed Views",
     "comparisonModes": "Comparison Modes",
-    "mediaFeatures": "Media Features"
+    "mediaFeatures": "Media Features",
+    "compatible": "Compatible"
   },
   "packages": {
     "title": "Packages",
@@ -1117,6 +1118,31 @@
           "requestsMax": "Requests cannot be more than 1,000,000",
           "daysMin": "Days must be at least 1",
           "daysMax": "Days cannot be more than 365"
+        }
+      },
+      "limits": {
+        "title": "Update Package Limits",
+        "description": "You can increase the number of requests or remaining days of the package",
+        "alertMessage": "At least one field must be greater than zero for changes to be applied.",
+        "addRequestsLabel": "Add Requests",
+        "addDaysLabel": "Add Days",
+        "requestsPlaceholder": "e.g: 1000",
+        "daysPlaceholder": "e.g: 30",
+        "requestsDescription": "Number of requests to add to current limit (optional)",
+        "daysDescription": "Number of days to add to package duration (optional)",
+        "tipTitle": "Usage Guide",
+        "tip1": "At least one field must be filled",
+        "tip2": "You can fill both fields simultaneously",
+        "tip3": "Changes will be applied immediately",
+        "tip4": "Values will be added to current limits",
+        "updating": "Updating...",
+        "updateButton": "Update Limits",
+        "validation": {
+          "requestsMin": "Number of requests cannot be negative",
+          "requestsMax": "Maximum 1,000,000 requests",
+          "daysMin": "Number of days cannot be negative",
+          "daysMax": "Maximum 365 days",
+          "atLeastOne": "At least one field must be greater than zero"
         }
       }
     },

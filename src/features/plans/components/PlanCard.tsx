@@ -120,7 +120,7 @@ export function PlanCard({
         <div className="space-y-3">
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">
-              {t("plans.duration")}:
+              {t("common.duration")}:
             </span>
             <span className="font-medium">
               {t("plans.durationDays", { days: plan.duration })}

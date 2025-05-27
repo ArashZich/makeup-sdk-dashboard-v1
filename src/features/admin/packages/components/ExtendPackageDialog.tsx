@@ -19,16 +19,18 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
   ExtendPackageRequest,
   UpdatePackageLimitsRequest,
 } from "@/api/types/packages.types";
-import { Calendar, Zap } from "lucide-react";
+import { Calendar, Zap, AlertCircle } from "lucide-react";
 
 interface ExtendPackageDialogProps {
   open: boolean;
@@ -54,23 +56,20 @@ export function ExtendPackageDialog({
 
   // اسکیمای اعتبارسنجی برای روزها
   const extendDaysSchema = z.object({
-    days: z
-      .number()
-      .min(1, t("admin.packages.extend.validation.daysMin"))
-      .max(365, t("admin.packages.extend.validation.daysMax")),
+    days: z.coerce.number().min(1, "حداقل 1 روز").max(365, "حداکثر 365 روز"),
   });
 
-  // اسکیمای اعتبارسنجی برای درخواست‌ها
+  // اسکیمای اعتبارسنجی برای درخواست‌ها - اصلاح شده
   const updateLimitsSchema = z.object({
-    addRequests: z
+    addRequests: z.coerce
       .number()
-      .min(1, t("admin.packages.updateLimits.validation.requestsMin"))
-      .max(1000000, t("admin.packages.updateLimits.validation.requestsMax"))
+      .min(0, "تعداد درخواست نمی‌تواند منفی باشد")
+      .max(1000000, "حداکثر 1,000,000 درخواست")
       .optional(),
-    addDays: z
+    addDays: z.coerce
       .number()
-      .min(1, t("admin.packages.updateLimits.validation.daysMin"))
-      .max(365, t("admin.packages.updateLimits.validation.daysMax"))
+      .min(0, "تعداد روز نمی‌تواند منفی باشد")
+      .max(365, "حداکثر 365 روز")
       .optional(),
   });
 
@@ -87,8 +86,8 @@ export function ExtendPackageDialog({
   const updateForm = useForm<UpdateLimitsData>({
     resolver: zodResolver(updateLimitsSchema),
     defaultValues: {
-      addRequests: undefined,
-      addDays: undefined,
+      addRequests: 0,
+      addDays: 0,
     },
   });
 
@@ -99,18 +98,48 @@ export function ExtendPackageDialog({
   };
 
   const handleUpdateLimits = async (data: UpdateLimitsData) => {
-    await onUpdateLimits(data);
+    // فقط فیلدهایی که مقدار مثبت دارن رو بفرست
+    const cleanData: UpdatePackageLimitsRequest = {};
+
+    if (data.addRequests && data.addRequests > 0) {
+      cleanData.addRequests = data.addRequests;
+    }
+
+    if (data.addDays && data.addDays > 0) {
+      cleanData.addDays = data.addDays;
+    }
+
+    // اگه هیچ فیلدی پر نشده، خطا نشون بده
+    if (!cleanData.addRequests && !cleanData.addDays) {
+      updateForm.setError("addRequests", {
+        type: "manual",
+        message: "حداقل یکی از فیلدها باید بیشتر از صفر باشد",
+      });
+      return;
+    }
+
+    await onUpdateLimits(cleanData);
     updateForm.reset();
     onOpenChange(false);
   };
 
+  // reset کردن فرم‌ها وقتی دیالوگ بسته میشه
+  const handleDialogChange = (isOpen: boolean) => {
+    if (!isOpen) {
+      extendForm.reset();
+      updateForm.reset();
+      setActiveTab("days");
+    }
+    onOpenChange(isOpen);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleDialogChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>{t("admin.packages.extendPackage")}</DialogTitle>
+          <DialogTitle>تمدید و بروزرسانی بسته</DialogTitle>
           <DialogDescription>
-            {t("admin.packages.extendPackageDescription")}
+            می‌توانید بسته را تمدید کنید یا محدودیت‌های آن را افزایش دهید
           </DialogDescription>
         </DialogHeader>
 
@@ -118,16 +147,24 @@ export function ExtendPackageDialog({
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="days" className="flex items-center gap-2">
               <Calendar className="h-4 w-4" />
-              {t("admin.packages.extendDays")}
+              تمدید روزها
             </TabsTrigger>
             <TabsTrigger value="limits" className="flex items-center gap-2">
               <Zap className="h-4 w-4" />
-              {t("admin.packages.updateLimits.title")}
+              افزایش محدودیت‌ها
             </TabsTrigger>
           </TabsList>
 
           {/* تب تمدید روزها */}
-          <TabsContent value="days">
+          <TabsContent value="days" className="space-y-4">
+            <Alert>
+              <Calendar className="h-4 w-4" />
+              <AlertDescription>
+                با این گزینه فقط تاریخ انقضای بسته تمدید می‌شود و محدودیت
+                درخواست‌ها تغییر نمی‌کند.
+              </AlertDescription>
+            </Alert>
+
             <Form {...extendForm}>
               <form
                 onSubmit={extendForm.handleSubmit(handleExtendDays)}
@@ -138,21 +175,24 @@ export function ExtendPackageDialog({
                   name="days"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>
-                        {t("admin.packages.extend.daysLabel")}
-                      </FormLabel>
+                      <FormLabel>تعداد روز برای تمدید</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
-                          placeholder={t(
-                            "admin.packages.extend.daysPlaceholder"
-                          )}
-                          {...field}
-                          onChange={(e) =>
-                            field.onChange(parseInt(e.target.value) || 0)
-                          }
+                          placeholder="مثال: 30"
+                          value={field.value || ""}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            field.onChange(value ? parseInt(value) : 0);
+                          }}
+                          onBlur={field.onBlur}
+                          name={field.name}
+                          ref={field.ref}
                         />
                       </FormControl>
+                      <FormDescription>
+                        تعداد روزهایی که به مدت بسته اضافه می‌شود (1 تا 365 روز)
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -162,15 +202,13 @@ export function ExtendPackageDialog({
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => onOpenChange(false)}
+                    onClick={() => handleDialogChange(false)}
                     disabled={isLoadingExtend}
                   >
-                    {t("common.cancel")}
+                    انصراف
                   </Button>
                   <Button type="submit" disabled={isLoadingExtend}>
-                    {isLoadingExtend
-                      ? t("admin.packages.extend.extending")
-                      : t("admin.packages.extend.extendButton")}
+                    {isLoadingExtend ? "در حال تمدید..." : "تمدید بسته"}
                   </Button>
                 </div>
               </form>
@@ -178,7 +216,15 @@ export function ExtendPackageDialog({
           </TabsContent>
 
           {/* تب آپدیت محدودیت‌ها */}
-          <TabsContent value="limits">
+          <TabsContent value="limits" className="space-y-4">
+            <Alert>
+              <Zap className="h-4 w-4" />
+              <AlertDescription>
+                با این گزینه می‌توانید به تعداد درخواست‌ها یا روزها اضافه کنید.
+                حداقل یکی از فیلدها باید بیشتر از صفر باشد.
+              </AlertDescription>
+            </Alert>
+
             <Form {...updateForm}>
               <form
                 onSubmit={updateForm.handleSubmit(handleUpdateLimits)}
@@ -189,25 +235,24 @@ export function ExtendPackageDialog({
                   name="addRequests"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>
-                        {t("admin.packages.updateLimits.requestsLabel")}
-                      </FormLabel>
+                      <FormLabel>افزایش تعداد درخواست</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
-                          placeholder={t(
-                            "admin.packages.updateLimits.requestsPlaceholder"
-                          )}
-                          {...field}
-                          onChange={(e) =>
-                            field.onChange(
-                              e.target.value
-                                ? parseInt(e.target.value)
-                                : undefined
-                            )
-                          }
+                          placeholder="مثال: 1000"
+                          value={field.value || ""}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            field.onChange(value ? parseInt(value) : 0);
+                          }}
+                          onBlur={field.onBlur}
+                          name={field.name}
+                          ref={field.ref}
                         />
                       </FormControl>
+                      <FormDescription>
+                        تعداد درخواستی که به محدودیت فعلی اضافه می‌شود
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -218,43 +263,53 @@ export function ExtendPackageDialog({
                   name="addDays"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>
-                        {t("admin.packages.updateLimits.daysLabel")}
-                      </FormLabel>
+                      <FormLabel>افزایش تعداد روز</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
-                          placeholder={t(
-                            "admin.packages.updateLimits.daysPlaceholder"
-                          )}
-                          {...field}
-                          onChange={(e) =>
-                            field.onChange(
-                              e.target.value
-                                ? parseInt(e.target.value)
-                                : undefined
-                            )
-                          }
+                          placeholder="مثال: 30"
+                          value={field.value || ""}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            field.onChange(value ? parseInt(value) : 0);
+                          }}
+                          onBlur={field.onBlur}
+                          name={field.name}
+                          ref={field.ref}
                         />
                       </FormControl>
+                      <FormDescription>
+                        تعداد روزی که به مدت بسته اضافه می‌شود
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
+                <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-lg">
+                  <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
+                    💡 نکته مهم
+                  </h4>
+                  <ul className="text-xs text-blue-700 dark:text-blue-300 space-y-1">
+                    <li>• حداقل یکی از فیلدها باید بیشتر از صفر باشد</li>
+                    <li>• می‌توانید هر دو فیلد را همزمان پر کنید</li>
+                    <li>• تغییرات بلافاصله اعمال خواهد شد</li>
+                  </ul>
+                </div>
+
                 <div className="flex justify-end space-x-2 space-x-reverse">
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => onOpenChange(false)}
+                    onClick={() => handleDialogChange(false)}
                     disabled={isLoadingUpdate}
                   >
-                    {t("common.cancel")}
+                    انصراف
                   </Button>
                   <Button type="submit" disabled={isLoadingUpdate}>
                     {isLoadingUpdate
-                      ? t("admin.packages.updateLimits.updating")
-                      : t("admin.packages.updateLimits.updateButton")}
+                      ? "در حال بروزرسانی..."
+                      : "بروزرسانی محدودیت‌ها"}
                   </Button>
                 </div>
               </form>

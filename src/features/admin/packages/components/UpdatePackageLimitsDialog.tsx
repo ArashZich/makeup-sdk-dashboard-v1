@@ -22,9 +22,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { UpdatePackageLimitsRequest } from "@/api/types/packages.types";
-import { Zap, Calendar } from "lucide-react";
+import { Zap, Calendar, AlertCircle } from "lucide-react";
 
 interface UpdatePackageLimitsDialogProps {
   open: boolean;
@@ -43,14 +44,14 @@ export function UpdatePackageLimitsDialog({
 }: UpdatePackageLimitsDialogProps) {
   const { t } = useLanguage();
 
-  // اسکیمای اعتبارسنجی
+  // اسکیمای اعتبارسنجی با پیام‌های دیکشنری
   const limitsFormSchema = z.object({
-    addRequests: z
+    addRequests: z.coerce
       .number()
       .min(0, t("admin.packages.limits.validation.requestsMin"))
-      .max(100000, t("admin.packages.limits.validation.requestsMax"))
+      .max(1000000, t("admin.packages.limits.validation.requestsMax"))
       .optional(),
-    addDays: z
+    addDays: z.coerce
       .number()
       .min(0, t("admin.packages.limits.validation.daysMin"))
       .max(365, t("admin.packages.limits.validation.daysMax"))
@@ -62,14 +63,25 @@ export function UpdatePackageLimitsDialog({
   const form = useForm<LimitsFormData>({
     resolver: zodResolver(limitsFormSchema),
     defaultValues: {
-      addRequests: undefined,
-      addDays: undefined,
+      addRequests: 0,
+      addDays: 0,
     },
   });
 
   const handleSubmit = async (data: LimitsFormData) => {
-    // حداقل یکی از فیلدها باید مقدار داشته باشه
-    if (!data.addRequests && !data.addDays) {
+    // فقط فیلدهایی که مقدار بیشتر از صفر دارن رو ارسال کن
+    const cleanData: UpdatePackageLimitsRequest = {};
+
+    if (data.addRequests && data.addRequests > 0) {
+      cleanData.addRequests = data.addRequests;
+    }
+
+    if (data.addDays && data.addDays > 0) {
+      cleanData.addDays = data.addDays;
+    }
+
+    // اگه هیچ فیلدی پر نشده، خطا نشون بده
+    if (!cleanData.addRequests && !cleanData.addDays) {
       form.setError("addRequests", {
         type: "manual",
         message: t("admin.packages.limits.validation.atLeastOne"),
@@ -77,22 +89,21 @@ export function UpdatePackageLimitsDialog({
       return;
     }
 
-    // فقط فیلدهایی که مقدار دارن رو ارسال کن
-    const cleanData: UpdatePackageLimitsRequest = {};
-    if (data.addRequests && data.addRequests > 0) {
-      cleanData.addRequests = data.addRequests;
-    }
-    if (data.addDays && data.addDays > 0) {
-      cleanData.addDays = data.addDays;
-    }
-
     await onConfirm(cleanData);
     form.reset();
     onOpenChange(false);
   };
 
+  // reset کردن فرم وقتی دیالوگ بسته میشه
+  const handleDialogChange = (isOpen: boolean) => {
+    if (!isOpen) {
+      form.reset();
+    }
+    onOpenChange(isOpen);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleDialogChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
@@ -103,6 +114,13 @@ export function UpdatePackageLimitsDialog({
             {t("admin.packages.limits.description")}
           </DialogDescription>
         </DialogHeader>
+
+        <Alert>
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            {t("admin.packages.limits.alertMessage")}
+          </AlertDescription>
+        </Alert>
 
         <Form {...form}>
           <form
@@ -125,11 +143,14 @@ export function UpdatePackageLimitsDialog({
                       placeholder={t(
                         "admin.packages.limits.requestsPlaceholder"
                       )}
-                      {...field}
+                      value={field.value || ""}
                       onChange={(e) => {
                         const value = e.target.value;
-                        field.onChange(value ? parseInt(value) : undefined);
+                        field.onChange(value ? parseInt(value) : 0);
                       }}
+                      onBlur={field.onBlur}
+                      name={field.name}
+                      ref={field.ref}
                     />
                   </FormControl>
                   <FormDescription>
@@ -154,11 +175,14 @@ export function UpdatePackageLimitsDialog({
                     <Input
                       type="number"
                       placeholder={t("admin.packages.limits.daysPlaceholder")}
-                      {...field}
+                      value={field.value || ""}
                       onChange={(e) => {
                         const value = e.target.value;
-                        field.onChange(value ? parseInt(value) : undefined);
+                        field.onChange(value ? parseInt(value) : 0);
                       }}
+                      onBlur={field.onBlur}
+                      name={field.name}
+                      ref={field.ref}
                     />
                   </FormControl>
                   <FormDescription>
@@ -178,6 +202,7 @@ export function UpdatePackageLimitsDialog({
                 <li>• {t("admin.packages.limits.tip1")}</li>
                 <li>• {t("admin.packages.limits.tip2")}</li>
                 <li>• {t("admin.packages.limits.tip3")}</li>
+                <li>• {t("admin.packages.limits.tip4")}</li>
               </ul>
             </div>
 
@@ -186,7 +211,7 @@ export function UpdatePackageLimitsDialog({
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => onOpenChange(false)}
+                onClick={() => handleDialogChange(false)}
                 disabled={isLoading}
               >
                 {t("common.cancel")}
