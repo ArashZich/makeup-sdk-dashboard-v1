@@ -1062,7 +1062,25 @@
       "warningNote": "بسته‌های حذف شده قابل بازگردانی نیستند",
       "quickStats": "آمار سریع",
       "availablePlatforms": "پلتفرم‌های موجود",
-      "totalLimit": "محدودیت کل"
+      "totalLimit": "محدودیت کل",
+      "extendPackageDescription": "روز یا درخواست اضافه کنید",
+      "extendDays": "تمدید روز",
+      "updateLimits": {
+        "title": "آپدیت محدودیت‌های بسته",
+        "description": "درخواست یا روز اضافه کنید",
+        "requestsLabel": "تعداد درخواست اضافه",
+        "requestsPlaceholder": "1000",
+        "daysLabel": "تعداد روز اضافه",
+        "daysPlaceholder": "30",
+        "updating": "در حال آپدیت...",
+        "updateButton": "آپدیت محدودیت‌ها",
+        "validation": {
+          "requestsMin": "تعداد درخواست باید حداقل 1 باشد",
+          "requestsMax": "تعداد درخواست نمی‌تواند بیشتر از 1,000,000 باشد",
+          "daysMin": "تعداد روز باید حداقل 1 باشد",
+          "daysMax": "تعداد روز نمی‌تواند بیشتر از 365 باشد"
+        }
+      }
     },
     "notifications": {
       "title": "اطلاعیه‌ها",

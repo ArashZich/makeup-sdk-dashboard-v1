@@ -30,6 +30,7 @@ import {
   PackageStatus,
   PurchasePlatform,
   ExtendPackageRequest,
+  UpdatePackageLimitsRequest,
 } from "@/api/types/packages.types";
 import { Plus, Filter, BarChart3, Package, Zap } from "lucide-react";
 import { logger } from "@/lib/logger";
@@ -68,9 +69,11 @@ export function PackagesView() {
   // عملیات‌های بسته
   const {
     extendPackage,
+    updatePackageLimits,
     suspendPackage,
     reactivatePackage,
     isExtendingPackage,
+    isUpdatingPackageLimits,
     isSuspendingPackage,
     isReactivatingPackage,
   } = useAdminPackages();
@@ -147,13 +150,39 @@ export function PackagesView() {
     setTrue("showExtendDialog");
   };
 
+  // ✅ مدیریت تمدید روزها (API قدیمی)
   const handleExtendConfirm = async (data: ExtendPackageRequest) => {
     try {
+      logger.api(
+        "Extending package days:",
+        selectedPackageId,
+        "with data:",
+        data
+      );
       await extendPackage({ packageId: selectedPackageId, data });
+      logger.success("Package days extended successfully");
       setFalse("showExtendDialog");
       setSelectedPackageId("");
     } catch (error) {
       logger.error("Error extending package:", error);
+    }
+  };
+
+  // ✅ مدیریت آپدیت محدودیت‌ها (API جدید)
+  const handleUpdateLimits = async (data: UpdatePackageLimitsRequest) => {
+    try {
+      logger.api(
+        "Updating package limits:",
+        selectedPackageId,
+        "with data:",
+        data
+      );
+      await updatePackageLimits({ packageId: selectedPackageId, data });
+      logger.success("Package limits updated successfully");
+      setFalse("showExtendDialog");
+      setSelectedPackageId("");
+    } catch (error) {
+      logger.error("Error updating package limits:", error);
     }
   };
 
@@ -469,16 +498,18 @@ export function PackagesView() {
         </CardContent>
       </Card>
 
-      {/* دیالوگ تمدید بسته */}
+      {/* ✅ دیالوگ تمدید بسته - آپدیت شده */}
       <ExtendPackageDialog
         open={getValue("showExtendDialog")}
         onOpenChange={(open) => setValue("showExtendDialog", open)}
-        onConfirm={handleExtendConfirm}
-        isLoading={isExtendingPackage}
+        onExtendDays={handleExtendConfirm}
+        onUpdateLimits={handleUpdateLimits}
+        isLoadingExtend={isExtendingPackage}
+        isLoadingUpdate={isUpdatingPackageLimits}
         packageId={selectedPackageId}
       />
 
-      {/* دیالوگ تعلیق/فعال‌سازی بسته */}
+      {/* ✅ دیالوگ تعلیق/فعال‌سازی بسته */}
       <SuspendPackageDialog
         open={getValue("showSuspendDialog")}
         onOpenChange={(open) => setValue("showSuspendDialog", open)}

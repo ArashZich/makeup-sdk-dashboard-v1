@@ -16,7 +16,10 @@ import { BackButtonIcon } from "@/components/common/BackButton";
 import { Calendar, Pause, Play, Zap, ExternalLink } from "lucide-react";
 import { formatDate } from "@/lib/date";
 import { formatCurrency } from "@/lib/utils";
-import { ExtendPackageRequest } from "@/api/types/packages.types";
+import {
+  ExtendPackageRequest,
+  UpdatePackageLimitsRequest,
+} from "@/api/types/packages.types";
 import { getPackagePlatformConfig } from "@/constants/platform-configs";
 import logger from "@/lib/logger";
 
@@ -51,14 +54,16 @@ export function PackageDetailsView() {
   // عملیات‌های بسته
   const {
     extendPackage,
+    updatePackageLimits,
     suspendPackage,
     reactivatePackage,
     isExtendingPackage,
+    isUpdatingPackageLimits,
     isSuspendingPackage,
     isReactivatingPackage,
   } = useAdminPackages();
 
-  // ✅ مدیریت تمدید بسته
+  // ✅ مدیریت تمدید بسته (فقط روز)
   const handleExtendConfirm = async (data: ExtendPackageRequest) => {
     try {
       logger.api("Extending package:", packageId, "with data:", data);
@@ -67,6 +72,18 @@ export function PackageDetailsView() {
       setFalse("showExtendDialog");
     } catch (error) {
       logger.fail("Error extending package:", error);
+    }
+  };
+
+  // ✅ مدیریت آپدیت محدودیت‌ها (روز و درخواست)
+  const handleUpdateLimits = async (data: UpdatePackageLimitsRequest) => {
+    try {
+      logger.api("Updating package limits:", packageId, "with data:", data);
+      await updatePackageLimits({ packageId, data });
+      logger.success("Package limits updated successfully");
+      setFalse("showExtendDialog");
+    } catch (error) {
+      logger.fail("Error updating package limits:", error);
     }
   };
 
@@ -408,12 +425,14 @@ export function PackageDetailsView() {
         )}
       </div>
 
-      {/* ✅ دیالوگ تمدید بسته - با useBoolean */}
+      {/* ✅ دیالوگ تمدید بسته - آپدیت شده */}
       <ExtendPackageDialog
         open={getValue("showExtendDialog")}
         onOpenChange={(open) => setValue("showExtendDialog", open)}
-        onConfirm={handleExtendConfirm}
-        isLoading={isExtendingPackage}
+        onExtendDays={handleExtendConfirm}
+        onUpdateLimits={handleUpdateLimits}
+        isLoadingExtend={isExtendingPackage}
+        isLoadingUpdate={isUpdatingPackageLimits}
         packageId={packageId}
       />
 

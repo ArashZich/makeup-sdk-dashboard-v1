@@ -1100,7 +1100,25 @@
       "warningNote": "Deleted packages cannot be recovered",
       "quickStats": "Quick Stats",
       "availablePlatforms": "Available Platforms",
-      "totalLimit": "Total Limit"
+      "totalLimit": "Total Limit",
+      "extendPackageDescription": "Add days or requests to the package",
+      "extendDays": "Extend Days",
+      "updateLimits": {
+        "title": "Update Package Limits",
+        "description": "Add requests or days to the package",
+        "requestsLabel": "Additional Requests",
+        "requestsPlaceholder": "1000",
+        "daysLabel": "Additional Days",
+        "daysPlaceholder": "30",
+        "updating": "Updating...",
+        "updateButton": "Update Limits",
+        "validation": {
+          "requestsMin": "Requests must be at least 1",
+          "requestsMax": "Requests cannot be more than 1,000,000",
+          "daysMin": "Days must be at least 1",
+          "daysMax": "Days cannot be more than 365"
+        }
+      }
     },
     "coupons": {
       "title": "Discount Coupons",
