@@ -1,45 +1,18 @@
-// src/features/auth/components/OtpVerificationForm.tsx - آپدیت شده
+// src/features/auth/components/OtpVerificationForm.tsx
 "use client";
 
 import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuthActions } from "@/api/hooks/useAuth"; // تغییر
+import { useAuthActions } from "@/api/hooks/useAuth";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { OtpInput } from "@/components/common/OtpInput";
 import { Loader } from "@/components/common/Loader";
 import {
   cleanOtpCode,
   validateOtpCode,
-  convertPersianToEnglishNumbers,
   convertEnglishToPersianNumbers,
 } from "@/lib/numberConverter";
 import { logger } from "@/lib/logger";
-
-// اسکیمای اعتبارسنجی فرم
-const otpVerificationSchema = z.object({
-  code: z
-    .string()
-    .min(1, "کد تأیید الزامی است")
-    .transform((val) => cleanOtpCode(val))
-    .refine((val) => validateOtpCode(val, 4, 6), {
-      message: "کد تأیید باید بین ۴ تا ۶ رقم باشد",
-    }),
-  phone: z.string(),
-});
-
-type OtpVerificationFormValues = z.infer<typeof otpVerificationSchema>;
 
 interface OtpVerificationFormProps {
   phone: string;
@@ -51,18 +24,12 @@ export function OtpVerificationForm({
   onResendOtp,
 }: OtpVerificationFormProps) {
   const { t, isRtl } = useLanguage();
-  const { verifyOtp, isVerifyingOtp } = useAuthActions(); // تغییر
-  const router = useRouter();
+  const { verifyOtp, isVerifyingOtp } = useAuthActions();
+  const [otpCode, setOtpCode] = useState("");
+  const [otpError, setOtpError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [isResending, setIsResending] = useState(false);
   const [seconds, setSeconds] = useState(120);
-
-  const form = useForm<OtpVerificationFormValues>({
-    resolver: zodResolver(otpVerificationSchema),
-    defaultValues: {
-      code: "",
-      phone,
-    },
-  });
 
   // شمارنده معکوس برای ارسال مجدد کد
   useEffect(() => {
@@ -79,113 +46,144 @@ export function OtpVerificationForm({
     return () => clearInterval(interval);
   }, []);
 
+  // پاک کردن خطا وقتی کاربر شروع به تایپ می‌کنه
+  useEffect(() => {
+    if (otpCode && otpError) {
+      setOtpError(false);
+      setErrorMessage("");
+    }
+  }, [otpCode, otpError]);
+
   const handleResendOtp = async () => {
-    if (seconds > 0) return;
+    if (seconds > 0 || isResending) return;
 
     setIsResending(true);
     try {
       await onResendOtp();
       setSeconds(120);
+      setOtpCode(""); // پاک کردن کد قبلی
+      setOtpError(false);
+      setErrorMessage("");
     } finally {
       setIsResending(false);
     }
   };
 
-  const onSubmit = async (values: OtpVerificationFormValues) => {
+  // تابع submit دستی - فقط وقتی کاربر دکمه بزنه
+  const handleSubmit = async () => {
+    if (isVerifyingOtp) return; // جلوگیری از کلیک چندباره
+
+    // بررسی طول کد
+    if (otpCode.length !== 5) {
+      setOtpError(true);
+      setErrorMessage("کد تأیید باید ۵ رقم باشد");
+      return;
+    }
+
+    // اعتبارسنجی کد
+    const cleanCode = cleanOtpCode(otpCode);
+
+    if (!validateOtpCode(cleanCode, 5, 5)) {
+      setOtpError(true);
+      setErrorMessage(t("auth.error.invalidOtp"));
+      return;
+    }
+
     try {
-      await verifyOtp({ phone: values.phone, code: values.code });
-      // navigation خودکار توسط context انجام میشه
-    } catch (error) {
+      await verifyOtp({ phone, code: cleanCode });
+      // navigation خودکار توسط context انجام می‌شه
+    } catch (error: any) {
       logger.error("خطا در تأیید کد:", error);
+      setOtpError(true);
+      setErrorMessage(
+        error?.response?.data?.message || t("auth.error.invalidOtp")
+      );
+      // پاک کردن کد برای امتحان مجدد
+      setOtpCode("");
     }
   };
 
+  // فعال بودن دکمه تأیید
+  const isSubmitEnabled = otpCode.length === 5 && !isVerifyingOtp;
+
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4 w-full"
-        dir={isRtl ? "rtl" : "ltr"}
-      >
-        <div className="text-center mb-4">
-          <p className="text-muted-foreground text-sm">
-            {t("auth.enterOtp")}
-            <br />
-            <span className="text-foreground font-medium mt-2 inline-block text-base">
-              {phone}
-            </span>
-          </p>
-        </div>
+    <div className="space-y-8 w-full" dir={isRtl ? "rtl" : "ltr"}>
+      {/* اطلاعات شماره تلفن */}
+      <div className="text-center space-y-2">
+        <p className="text-muted-foreground text-sm">{t("auth.enterOtp")}</p>
+        <p className="text-foreground font-semibold text-lg">{phone}</p>
+      </div>
 
-        <FormField
-          control={form.control}
-          name="code"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-sm font-medium">
-                {t("auth.verifyOtp")}
-              </FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="12345"
-                  {...field}
-                  autoComplete="one-time-code"
-                  disabled={isVerifyingOtp}
-                  className={`text-center text-lg tracking-widest h-12 ${
-                    isRtl ? "font-iran" : "font-montserrat"
-                  }`}
-                  maxLength={6}
-                  onChange={(e) => {
-                    const convertedValue = convertPersianToEnglishNumbers(
-                      e.target.value
-                    );
-                    field.onChange(convertedValue);
-                  }}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button
-          type="submit"
-          className="w-full h-10 text-sm"
+      {/* کامپوننت OTP Input - ۵ خانه */}
+      <div className="flex justify-center">
+        <OtpInput
+          length={5}
+          value={otpCode}
+          onChange={setOtpCode}
           disabled={isVerifyingOtp}
+          error={otpError}
+          size="lg"
+          autoFocus={true}
+          className="max-w-sm"
+        />
+      </div>
+
+      {/* نمایش خطا */}
+      {otpError && errorMessage && (
+        <div className="text-center">
+          <p className="text-sm text-destructive font-medium">{errorMessage}</p>
+        </div>
+      )}
+
+      {/* دکمه تأیید */}
+      <div className="flex justify-center">
+        <Button
+          onClick={handleSubmit}
+          disabled={!isSubmitEnabled}
+          size="lg"
+          className="min-w-[200px] h-12 text-base font-semibold"
         >
           {isVerifyingOtp ? (
-            <Loader size="sm" variant="spinner" />
+            <div className="flex items-center gap-2">
+              <Loader size="sm" variant="spinner" />
+              <span>در حال تأیید...</span>
+            </div>
           ) : (
             t("auth.verifyOtp")
           )}
         </Button>
+      </div>
 
-        <div className="text-center mt-4">
-          {seconds > 0 ? (
-            <p className="text-sm text-muted-foreground">
-              {t("auth.remainingTimeToResend", {
-                seconds: isRtl
-                  ? convertEnglishToPersianNumbers(seconds.toString())
-                  : seconds,
-              })}
-            </p>
-          ) : (
-            <Button
-              type="button"
-              variant="ghost"
-              className="text-sm"
-              onClick={handleResendOtp}
-              disabled={isResending}
-            >
-              {isResending ? (
+      {/* بخش ارسال مجدد */}
+      <div className="text-center pt-4 border-t border-border/50">
+        {seconds > 0 ? (
+          <p className="text-sm text-muted-foreground">
+            {t("auth.remainingTimeToResend", {
+              seconds: isRtl
+                ? convertEnglishToPersianNumbers(seconds.toString())
+                : seconds,
+            })}
+          </p>
+        ) : (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={handleResendOtp}
+            disabled={isResending}
+            className="text-sm"
+          >
+            {isResending ? (
+              <div className="flex items-center gap-2">
                 <Loader size="sm" variant="spinner" />
-              ) : (
-                t("auth.resendOtp")
-              )}
-            </Button>
-          )}
-        </div>
-      </form>
-    </Form>
+                <span>در حال ارسال...</span>
+              </div>
+            ) : (
+              t("auth.resendOtp")
+            )}
+          </Button>
+        )}
+      </div>
+    </div>
   );
 }
