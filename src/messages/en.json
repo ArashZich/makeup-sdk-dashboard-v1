@@ -37,7 +37,8 @@
       "fetchFailed": "Failed to fetch data. Please try again."
     },
     "success": {
-      "update": "Updated successfully"
+      "update": "Updated successfully",
+      "create": "Created successfully"
     },
     "theme": {
       "light": "Light",
@@ -101,10 +102,14 @@
     "remainingTimeToResend": "Time remaining to resend: {{seconds}} seconds",
     "logout": "Logout",
     "loginSuccess": "Login success",
+    "verifying": "Verifying...",
+    "sending": "Sending...",
     "error": {
       "invalidPhone": "Invalid phone number",
       "invalidOtp": "Invalid verification code",
-      "expiredOtp": "Verification code expired"
+      "expiredOtp": "Verification code expired",
+      "phoneRequired": "Phone number is required",
+      "otpRequired": "Verification code is required"
     },
     "loggingOut": "Logging out...",
     "logoutSuccess": "Successfully logged out"
@@ -748,7 +753,9 @@
       "paymentCanceled": "Payment successfully canceled"
     },
     "paidAt": "Paid At",
-    "paymentInitFailed": "Payment initialization failed"
+    "paymentInitFailed": "Payment initialization failed",
+    "paymentMethod": "Payment Method",
+    "referenceInformation": "Reference Information"
   },
   "settings": {
     "title": "Settings",
@@ -1228,7 +1235,14 @@
       "deactivateCoupon": "Deactivate Coupon",
       "deleteCouponConfirmation": "Are you sure you want to delete coupon \"{{code}}\"?",
       "deleteWarning": "This action will deactivate the coupon. Used coupons will not be affected.",
-      "descriptionPlaceholder": "Enter coupon description"
+      "descriptionPlaceholder": "Enter coupon description",
+      "maxUsagePerUser": "Per User Limit",
+      "maxUsagePerUserPlaceholder": "Enter usage limit per user",
+      "maxUsagePerUserDescription": "Maximum number of times each user can use this coupon (-1 for unlimited)",
+      "unlimitedUsage": "Unlimited Usage",
+      "usagePerUser": "Usage Per User",
+      "limitedUsage": "Limited Usage",
+      "userUsageLimit": "User Usage Limit"
     },
     "payments": {
       "title": "Payments Management",

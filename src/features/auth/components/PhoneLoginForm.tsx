@@ -1,11 +1,10 @@
-// src/features/auth/components/PhoneLoginForm.tsx - آپدیت شده
+// src/features/auth/components/PhoneLoginForm.tsx
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuthActions } from "@/api/hooks/useAuth"; // تغییر
+import { z } from "zod";
+import { useAuthActions } from "@/api/hooks/useAuth";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -26,23 +25,23 @@ import {
 } from "@/lib/numberConverter";
 import { logger } from "@/lib/logger";
 
-// اسکیمای اعتبارسنجی فرم
-const phoneLoginSchema = z.object({
-  phone: z
-    .string()
-    .min(1, "شماره تلفن الزامی است")
-    .transform((val) => cleanPhoneNumber(val))
-    .refine((val) => validateIranianPhoneNumber(val), {
-      message: "فرمت شماره تلفن صحیح نیست. مثال: 09123456789",
-    }),
-});
-
-type PhoneLoginFormValues = z.infer<typeof phoneLoginSchema>;
-
 export function PhoneLoginForm() {
   const { t, isRtl } = useLanguage();
-  const { sendOtp, isSendingOtp } = useAuthActions(); // تغییر
+  const { sendOtp, isSendingOtp } = useAuthActions();
   const router = useRouter();
+
+  // تعریف Schema با استفاده مستقیم از t()
+  const phoneLoginSchema = z.object({
+    phone: z
+      .string()
+      .min(1, t("auth.error.phoneRequired"))
+      .transform((val) => cleanPhoneNumber(val))
+      .refine((val) => validateIranianPhoneNumber(val), {
+        message: t("auth.error.invalidPhone"),
+      }),
+  });
+
+  type PhoneLoginFormValues = z.infer<typeof phoneLoginSchema>;
 
   const form = useForm<PhoneLoginFormValues>({
     resolver: zodResolver(phoneLoginSchema),
@@ -61,6 +60,7 @@ export function PhoneLoginForm() {
       );
     } catch (error) {
       logger.error("خطا در ارسال کد تأیید:", error);
+      // خطاها توسط useAuthActions مدیریت می‌شوند
     }
   };
 

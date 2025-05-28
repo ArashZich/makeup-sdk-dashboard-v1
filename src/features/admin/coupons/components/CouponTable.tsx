@@ -24,6 +24,8 @@ import {
   XCircle,
   Calendar,
   Percent,
+  Users,
+  Infinity,
 } from "lucide-react";
 
 interface CouponTableProps {
@@ -83,6 +85,30 @@ export function CouponTable({ coupons, onDeleteCoupon }: CouponTableProps) {
           <span>{row.original.maxUsage}</span>
         </div>
       ),
+    },
+    // 🆕 ستون جدید برای maxUsagePerUser
+    {
+      accessorKey: "maxUsagePerUser",
+      header: t("admin.coupons.maxUsagePerUser"),
+      cell: ({ row }) => {
+        const maxUsagePerUser = row.original.maxUsagePerUser;
+
+        return (
+          <div className="flex items-center">
+            {maxUsagePerUser === -1 ? (
+              <>
+                <Infinity className="mr-2 h-4 w-4 text-blue-500" />
+                <span className="text-blue-500">{t("common.unlimited")}</span>
+              </>
+            ) : (
+              <>
+                <Users className="mr-2 h-4 w-4 text-muted-foreground" />
+                <span>{maxUsagePerUser}</span>
+              </>
+            )}
+          </div>
+        );
+      },
     },
     {
       accessorKey: "endDate",

@@ -27,6 +27,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -35,7 +42,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Loader } from "@/components/common/Loader";
 import { Badge } from "@/components/ui/badge";
 import { DateTime } from "luxon";
-import { CalendarIcon, Plus, X } from "lucide-react";
+import { CalendarIcon, Plus, X, Users, Infinity } from "lucide-react";
 import { toJalali } from "@/lib/date";
 import logger from "@/lib/logger";
 
@@ -56,6 +63,9 @@ const couponSchema = z
     maxUsage: z.coerce
       .number()
       .min(1, { message: "Max usage must be at least 1" }),
+    maxUsagePerUser: z.coerce
+      .number()
+      .min(-1, { message: "Max usage per user cannot be less than -1" }), // 🆕 فیلد جدید
     startDate: z.date(),
     endDate: z.date(),
     forPlans: z.array(z.string()).optional(),
@@ -73,7 +83,7 @@ type CouponFormValues = z.infer<typeof couponSchema>;
 interface CouponFormProps {
   coupon?: Coupon;
   isSubmitting: boolean;
-  onSubmit: (data: CreateCouponRequest | UpdateCouponRequest) => Promise<void>; // ✅ اضافه کردن Promise<void>
+  onSubmit: (data: CreateCouponRequest | UpdateCouponRequest) => Promise<void>;
 }
 
 export function CouponForm({
@@ -95,6 +105,7 @@ export function CouponForm({
     percent: coupon?.percent || 10,
     maxAmount: coupon?.maxAmount || 0,
     maxUsage: coupon?.maxUsage || 1,
+    maxUsagePerUser: coupon?.maxUsagePerUser ?? -1, // 🆕 پیش‌فرض -1 (نامحدود)
     startDate: coupon ? new Date(coupon.startDate) : new Date(),
     endDate: coupon
       ? new Date(coupon.endDate)
@@ -174,6 +185,7 @@ export function CouponForm({
         percent: values.percent,
         maxAmount: values.maxAmount,
         maxUsage: values.maxUsage,
+        maxUsagePerUser: values.maxUsagePerUser, // 🆕 اضافه کردن فیلد جدید
         startDate: DateTime.fromJSDate(values.startDate).toISO()!,
         endDate: DateTime.fromJSDate(values.endDate).toISO()!,
         forPlans: values.forPlans,
@@ -324,6 +336,80 @@ export function CouponForm({
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* 🆕 فیلد جدید maxUsagePerUser */}
+              <FormField
+                control={form.control}
+                name="maxUsagePerUser"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2">
+                      <Users className="h-4 w-4" />
+                      {t("admin.coupons.maxUsagePerUser")}
+                    </FormLabel>
+                    <FormControl>
+                      <div className="space-y-2">
+                        <Select
+                          value={field.value.toString()}
+                          onValueChange={(value) =>
+                            field.onChange(parseInt(value))
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue
+                              placeholder={t(
+                                "admin.coupons.maxUsagePerUserPlaceholder"
+                              )}
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="-1">
+                              <div className="flex items-center gap-2">
+                                <Infinity className="h-4 w-4 text-blue-500" />
+                                <span>{t("admin.coupons.unlimitedUsage")}</span>
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="1">
+                              1 {t("admin.coupons.usagePerUser")}
+                            </SelectItem>
+                            <SelectItem value="2">
+                              2 {t("admin.coupons.usagePerUser")}
+                            </SelectItem>
+                            <SelectItem value="3">
+                              3 {t("admin.coupons.usagePerUser")}
+                            </SelectItem>
+                            <SelectItem value="5">
+                              5 {t("admin.coupons.usagePerUser")}
+                            </SelectItem>
+                            <SelectItem value="10">
+                              10 {t("admin.coupons.usagePerUser")}
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+
+                        {/* نمایش فیلد manual برای مقادیر سفارشی */}
+                        {![-1, 1, 2, 3, 5, 10].includes(field.value) && (
+                          <Input
+                            type="number"
+                            placeholder={t(
+                              "admin.coupons.maxUsagePerUserPlaceholder"
+                            )}
+                            value={field.value}
+                            onChange={(e) =>
+                              field.onChange(parseInt(e.target.value) || -1)
+                            }
+                            min="-1"
+                          />
+                        )}
+                      </div>
+                    </FormControl>
+                    <FormDescription>
+                      {t("admin.coupons.maxUsagePerUserDescription")}
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

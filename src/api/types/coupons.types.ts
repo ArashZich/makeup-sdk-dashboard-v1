@@ -11,6 +11,7 @@ export interface Coupon {
   percent: number;
   maxAmount: number;
   maxUsage: number;
+  maxUsagePerUser: number; // 🆕 فیلد جدید اضافه شده
   usedCount: number;
   startDate: string;
   endDate: string;
@@ -50,6 +51,7 @@ export interface CreateCouponRequest {
   percent: number;
   maxAmount: number;
   maxUsage: number;
+  maxUsagePerUser?: number; // 🆕 فیلد جدید اضافه شده (اختیاری)
   startDate: string;
   endDate: string;
   forPlans?: string[];
@@ -63,6 +65,7 @@ export interface UpdateCouponRequest {
   percent?: number;
   maxAmount?: number;
   maxUsage?: number;
+  maxUsagePerUser?: number; // 🆕 فیلد جدید اضافه شده
   startDate?: string;
   endDate?: string;
   forPlans?: string[];

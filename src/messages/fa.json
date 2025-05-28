@@ -37,7 +37,8 @@
       "fetchFailed": "خطا در دریافت اطلاعات. لطفا دوباره تلاش کنید."
     },
     "success": {
-      "update": "با موفقیت به‌روزرسانی شد"
+      "update": "با موفقیت به‌روزرسانی شد",
+      "create": "با موفقیت ایجاد شد."
     },
     "theme": {
       "light": "روشن",
@@ -101,10 +102,14 @@
     "remainingTimeToResend": "زمان باقی‌مانده برای ارسال مجدد: {{seconds}} ثانیه",
     "logout": "خروج",
     "loginSuccess": "ورود با موفقیت",
+    "verifying": "در حال تأیید...",
+    "sending": "در حال ارسال...",
     "error": {
       "invalidPhone": "شماره تلفن نامعتبر است",
       "invalidOtp": "کد تأیید نامعتبر است",
-      "expiredOtp": "کد تأیید منقضی شده است"
+      "expiredOtp": "کد تأیید منقضی شده است",
+      "phoneRequired": "شماره تلفن الزامی است",
+      "otpRequired": "کد تأیید الزامی است"
     },
     "loggingOut": "در حال خروج...",
     "logoutSuccess": "با موفقیت خارج شدید"
@@ -750,7 +755,9 @@
       "paymentCanceled": "پرداخت با موفقیت لغو شد"
     },
     "paidAt": "پرداخت شده در",
-    "paymentInitFailed": "خطا در انجام پرداخت"
+    "paymentInitFailed": "خطا در انجام پرداخت",
+    "paymentMethod": "نوع پرداخت",
+    "referenceInformation": "اطلاعات مرجع"
   },
   "settings": {
     "title": "تنظیمات",
@@ -984,7 +991,14 @@
       "deactivateCoupon": "غیرفعال‌سازی کد تخفیف",
       "deleteCouponConfirmation": "آیا از حذف کد تخفیف «{{code}}» اطمینان دارید؟",
       "deleteWarning": "این عمل کد تخفیف را غیرفعال می‌کند. کدهای تخفیف استفاده شده تحت تأثیر قرار نمی‌گیرند.",
-      "descriptionPlaceholder": "توضیحات کوپون رو وارد نمایید."
+      "descriptionPlaceholder": "توضیحات کوپون رو وارد نمایید.",
+      "maxUsagePerUser": "محدودیت هر کاربر",
+      "maxUsagePerUserPlaceholder": "تعداد دفعات استفاده هر کاربر را وارد کنید",
+      "maxUsagePerUserDescription": "حداکثر تعداد دفعاتی که هر کاربر می‌تواند از این کوپن استفاده کند (-1 برای نامحدود)",
+      "unlimitedUsage": "استفاده نامحدود",
+      "usagePerUser": "استفاده هر کاربر",
+      "limitedUsage": "استفاده محدود",
+      "userUsageLimit": "محدودیت کاربری"
     },
     "packages": {
       "title": "مدیریت بسته‌ها",

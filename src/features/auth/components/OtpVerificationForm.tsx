@@ -2,11 +2,21 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { useAuthActions } from "@/api/hooks/useAuth";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { OtpInput } from "@/components/common/OtpInput";
 import { Loader } from "@/components/common/Loader";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import {
   cleanOtpCode,
   validateOtpCode,
@@ -25,11 +35,30 @@ export function OtpVerificationForm({
 }: OtpVerificationFormProps) {
   const { t, isRtl } = useLanguage();
   const { verifyOtp, isVerifyingOtp } = useAuthActions();
-  const [otpCode, setOtpCode] = useState("");
-  const [otpError, setOtpError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const [isResending, setIsResending] = useState(false);
   const [seconds, setSeconds] = useState(120);
+
+  // تعریف Schema با استفاده مستقیم از t()
+  const otpVerificationSchema = z.object({
+    otp: z
+      .string()
+      .min(1, t("auth.error.otpRequired"))
+      .transform((val) => cleanOtpCode(val))
+      .refine((val) => validateOtpCode(val, 5, 5), {
+        message: t("auth.error.invalidOtp"),
+      }),
+  });
+
+  type OtpVerificationFormValues = z.infer<typeof otpVerificationSchema>;
+
+  const form = useForm<OtpVerificationFormValues>({
+    resolver: zodResolver(otpVerificationSchema),
+    defaultValues: {
+      otp: "",
+    },
+  });
+
+  const watchedOtp = form.watch("otp");
 
   // شمارنده معکوس برای ارسال مجدد کد
   useEffect(() => {
@@ -48,11 +77,10 @@ export function OtpVerificationForm({
 
   // پاک کردن خطا وقتی کاربر شروع به تایپ می‌کنه
   useEffect(() => {
-    if (otpCode && otpError) {
-      setOtpError(false);
-      setErrorMessage("");
+    if (watchedOtp && form.formState.errors.otp) {
+      form.clearErrors("otp");
     }
-  }, [otpCode, otpError]);
+  }, [watchedOtp, form]);
 
   const handleResendOtp = async () => {
     if (seconds > 0 || isResending) return;
@@ -61,50 +89,38 @@ export function OtpVerificationForm({
     try {
       await onResendOtp();
       setSeconds(120);
-      setOtpCode(""); // پاک کردن کد قبلی
-      setOtpError(false);
-      setErrorMessage("");
+      form.setValue("otp", ""); // پاک کردن کد قبلی
+      form.clearErrors();
     } finally {
       setIsResending(false);
     }
   };
 
-  // تابع submit دستی - فقط وقتی کاربر دکمه بزنه
-  const handleSubmit = async () => {
-    if (isVerifyingOtp) return; // جلوگیری از کلیک چندباره
-
-    // بررسی طول کد
-    if (otpCode.length !== 5) {
-      setOtpError(true);
-      setErrorMessage("کد تأیید باید ۵ رقم باشد");
-      return;
-    }
-
-    // اعتبارسنجی کد
-    const cleanCode = cleanOtpCode(otpCode);
-
-    if (!validateOtpCode(cleanCode, 5, 5)) {
-      setOtpError(true);
-      setErrorMessage(t("auth.error.invalidOtp"));
-      return;
-    }
-
+  const onSubmit = async (values: OtpVerificationFormValues) => {
     try {
-      await verifyOtp({ phone, code: cleanCode });
+      await verifyOtp({ phone, code: values.otp });
       // navigation خودکار توسط context انجام می‌شه
     } catch (error: any) {
       logger.error("خطا در تأیید کد:", error);
-      setOtpError(true);
-      setErrorMessage(
-        error?.response?.data?.message || t("auth.error.invalidOtp")
-      );
+      form.setError("otp", {
+        type: "manual",
+        message: error?.response?.data?.message || t("auth.error.invalidOtp"),
+      });
       // پاک کردن کد برای امتحان مجدد
-      setOtpCode("");
+      form.setValue("otp", "");
+    }
+  };
+
+  // تابع برای مدیریت Enter key
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && watchedOtp.length === 5 && !isVerifyingOtp) {
+      e.preventDefault();
+      form.handleSubmit(onSubmit)();
     }
   };
 
   // فعال بودن دکمه تأیید
-  const isSubmitEnabled = otpCode.length === 5 && !isVerifyingOtp;
+  const isSubmitEnabled = watchedOtp.length === 5 && !isVerifyingOtp;
 
   return (
     <div className="space-y-8 w-full" dir={isRtl ? "rtl" : "ltr"}>
@@ -114,45 +130,58 @@ export function OtpVerificationForm({
         <p className="text-foreground font-semibold text-lg">{phone}</p>
       </div>
 
-      {/* کامپوننت OTP Input - ۵ خانه */}
-      <div className="flex justify-center">
-        <OtpInput
-          length={5}
-          value={otpCode}
-          onChange={setOtpCode}
-          disabled={isVerifyingOtp}
-          error={otpError}
-          size="lg"
-          autoFocus={true}
-          className="max-w-sm"
-        />
-      </div>
-
-      {/* نمایش خطا */}
-      {otpError && errorMessage && (
-        <div className="text-center">
-          <p className="text-sm text-destructive font-medium">{errorMessage}</p>
-        </div>
-      )}
-
-      {/* دکمه تأیید */}
-      <div className="flex justify-center">
-        <Button
-          onClick={handleSubmit}
-          disabled={!isSubmitEnabled}
-          size="lg"
-          className="min-w-[200px] h-12 text-base font-semibold"
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-6"
+          onKeyDown={handleKeyDown}
         >
-          {isVerifyingOtp ? (
-            <div className="flex items-center gap-2">
-              <Loader size="sm" variant="spinner" />
-              <span>در حال تأیید...</span>
-            </div>
-          ) : (
-            t("auth.verifyOtp")
-          )}
-        </Button>
-      </div>
+          {/* کامپوننت OTP Input */}
+          <FormField
+            control={form.control}
+            name="otp"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <div className="flex justify-center">
+                    <OtpInput
+                      length={5}
+                      value={field.value}
+                      onChange={field.onChange}
+                      onKeyDown={handleKeyDown}
+                      disabled={isVerifyingOtp}
+                      error={!!form.formState.errors.otp}
+                      size="lg"
+                      autoFocus={true}
+                      className="max-w-sm"
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage className="text-center" />
+              </FormItem>
+            )}
+          />
+
+          {/* دکمه تأیید */}
+          <div className="flex justify-center">
+            <Button
+              type="submit"
+              disabled={!isSubmitEnabled}
+              size="lg"
+              className="min-w-[200px] h-12 text-base font-semibold"
+            >
+              {isVerifyingOtp ? (
+                <div className="flex items-center gap-2">
+                  <Loader size="sm" variant="spinner" />
+                  <span>{t("auth.verifying")}</span>
+                </div>
+              ) : (
+                t("auth.verifyOtp")
+              )}
+            </Button>
+          </div>
+        </form>
+      </Form>
 
       {/* بخش ارسال مجدد */}
       <div className="text-center pt-4 border-t border-border/50">
@@ -176,7 +205,7 @@ export function OtpVerificationForm({
             {isResending ? (
               <div className="flex items-center gap-2">
                 <Loader size="sm" variant="spinner" />
-                <span>در حال ارسال...</span>
+                <span>{t("auth.sending")}</span>
               </div>
             ) : (
               t("auth.resendOtp")

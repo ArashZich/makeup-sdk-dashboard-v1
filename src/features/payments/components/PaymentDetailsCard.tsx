@@ -186,7 +186,9 @@ export function PaymentDetailsCard({
                     </p>
                     <p className="font-medium flex items-center gap-2">
                       <CreditCard className="h-4 w-4 text-muted-foreground" />
-                      {formattedCardNumber || payment.cardHashPan || "-"}
+                      <span dir="ltr">
+                        {formattedCardNumber || payment.cardHashPan || "-"}
+                      </span>
                     </p>
                   </div>
                 </div>
