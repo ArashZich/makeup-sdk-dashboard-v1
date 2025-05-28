@@ -30,10 +30,13 @@ import {
   PaletteIcon,
   CopyIcon,
   CheckIcon,
+  ShoppingCartIcon,
+  PackageIcon,
 } from "lucide-react";
 import Image from "next/image";
 import { useClipboard } from "@/hooks/useClipboard";
 import { BackButtonIcon } from "@/components/common/BackButton";
+import Link from "next/link";
 
 interface ProductDetailsViewProps {
   productId: string;
@@ -59,6 +62,9 @@ export function ProductDetailsView({ productId }: ProductDetailsViewProps) {
 
   // Get product data
   const { data: product, isLoading, error, refetch } = getProduct(productId);
+
+  // ✅ Check if error is related to no active package
+  const isNoActivePackageError = (error as any)?.response?.status === 402;
 
   // Clipboard hook for copying product ID/UID
   const { isCopied, copyToClipboard } = useClipboard({
@@ -136,8 +142,65 @@ export function ProductDetailsView({ productId }: ProductDetailsViewProps) {
     );
   }
 
-  // Error state
-  if (error || !product) {
+  // ✅ No active package error state
+  if (isNoActivePackageError) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center gap-2 mb-4">
+          <BackButtonIcon onClick={handleBack} />
+        </div>
+
+        {/* No Package Alert */}
+        <Alert className="border-orange-200 bg-orange-50 dark:bg-orange-950/20">
+          <ShoppingCartIcon className="h-4 w-4 text-orange-600" />
+          <AlertTitle className="text-orange-800 dark:text-orange-200">
+            {t("dashboard.noPlanTitle")}
+          </AlertTitle>
+          <AlertDescription className="text-orange-700 dark:text-orange-300">
+            {t("dashboard.noPlanDescription")}
+          </AlertDescription>
+        </Alert>
+
+        {/* Call to Action */}
+        <div className="text-center py-12">
+          <div className="inline-flex items-center justify-center p-4 bg-orange-100 dark:bg-orange-900/20 rounded-full mb-4">
+            <PackageIcon className="h-8 w-8 text-orange-600" />
+          </div>
+          <h3 className="text-lg font-medium mb-2">
+            {t("packages.noActivePackages")}
+          </h3>
+          <p className="text-muted-foreground max-w-md mx-auto mb-6">
+            {t("packages.noActivePackagesDescription")}
+          </p>
+          <Button asChild>
+            <Link href="/dashboard/plans">
+              <ShoppingCartIcon className="mr-2 h-4 w-4" />
+              {t("plans.viewAllPlans")}
+            </Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Other error states
+  if (error && !isNoActivePackageError) {
+    return (
+      <Alert variant="destructive">
+        <InfoIcon className="h-4 w-4" />
+        <AlertTitle>{t("products.error.title")}</AlertTitle>
+        <AlertDescription>
+          {t("products.error.productNotFound")}
+        </AlertDescription>
+        <div className="mt-4">
+          <BackButtonIcon onClick={handleBack} />
+        </div>
+      </Alert>
+    );
+  }
+
+  // Product not found
+  if (!product) {
     return (
       <Alert variant="destructive">
         <InfoIcon className="h-4 w-4" />

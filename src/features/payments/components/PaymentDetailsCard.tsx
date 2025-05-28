@@ -14,14 +14,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import {
-  Calendar,
-  Receipt,
-  CreditCard,
-  ClipboardCopy,
-  ArrowLeft,
-  ArrowRight,
-} from "lucide-react";
+import { Calendar, Receipt, CreditCard, ClipboardCopy } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useClipboard } from "@/hooks/useClipboard";
 import { Badge } from "@/components/ui/badge";
@@ -48,6 +41,19 @@ export function PaymentDetailsCard({
       ? payment.planId
       : (payment.planId as Plan).name
     : t("common.unknown");
+
+  // ✅ Handle coupon properly - could be string or object
+  const getCouponDisplay = () => {
+    if (!payment.couponId) return null;
+
+    if (typeof payment.couponId === "string") {
+      return payment.couponId;
+    }
+
+    return t("common.unknown");
+  };
+
+  const couponDisplay = getCouponDisplay();
 
   // Handle back button click
   const handleBackClick = () => {
@@ -230,7 +236,8 @@ export function PaymentDetailsCard({
                   </div>
                 )}
 
-                {payment.couponId && (
+                {/* ✅ Fixed coupon display */}
+                {couponDisplay && (
                   <div className="space-y-1">
                     <p className="text-xs text-muted-foreground">
                       {t("payments.couponCode")}
@@ -239,7 +246,7 @@ export function PaymentDetailsCard({
                       variant="outline"
                       className="bg-blue-50 text-blue-700 border-blue-200"
                     >
-                      {payment.couponId}
+                      {couponDisplay}
                     </Badge>
                   </div>
                 )}

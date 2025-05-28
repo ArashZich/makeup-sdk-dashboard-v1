@@ -39,6 +39,19 @@ export function PaymentCard({
       : (payment.planId as Plan).name
     : t("common.unknown");
 
+  // ✅ Handle coupon properly - could be string or object
+  const getCouponDisplay = () => {
+    if (!payment.couponId) return null;
+
+    if (typeof payment.couponId === "string") {
+      return payment.couponId;
+    }
+
+    return t("common.unknown");
+  };
+
+  const couponDisplay = getCouponDisplay();
+
   // Handle view details click
   const handleViewDetails = () => {
     router.push(`/dashboard/payments/${payment._id}`);
@@ -85,7 +98,8 @@ export function PaymentCard({
                 : formatDate(payment.createdAt, isRtl ? "fa-IR" : "en-US")}
             </p>
           </div>
-          {payment.couponId && (
+          {/* ✅ Fixed coupon display */}
+          {couponDisplay && (
             <>
               <div className="space-y-1">
                 <p className="text-xs text-muted-foreground">

@@ -4,7 +4,7 @@
 import { useState } from "react";
 import { useProducts } from "@/api/hooks/useProducts";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useBoolean } from "@/hooks/useBoolean"; // ✅ اضافه کردن hook
+import { useBoolean } from "@/hooks/useBoolean";
 import { Product } from "@/api/types/products.types";
 import { ProductCard } from "../components/ProductCard";
 import { ProductForm } from "../components/ProductForm";
@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { showToast } from "@/lib/toast";
-import logger from "@/lib/logger"; // ✅ اضافه کردن logger
+import logger from "@/lib/logger";
 import {
   InfoIcon,
   PlusIcon,
@@ -22,12 +22,14 @@ import {
   LayoutGridIcon,
   TableIcon,
   PackageIcon,
+  ShoppingCartIcon,
 } from "lucide-react";
+import Link from "next/link";
 
 export function ProductsListView() {
   const { t } = useLanguage();
 
-  // ✅ استفاده از useBoolean به جای state های جداگانه
+  // State management using useBoolean
   const { getValue, setTrue, setFalse } = useBoolean({
     isCreateFormOpen: false,
     isEditFormOpen: false,
@@ -53,6 +55,9 @@ export function ProductsListView() {
   // Get products data
   const { data: products, isLoading, error, refetch } = getUserProducts();
 
+  // ✅ Check if error is related to no active package
+  const isNoActivePackageError = (error as any)?.response?.status === 402;
+
   // Filter products by search term
   const filteredProducts = products
     ? products.results.filter(
@@ -65,10 +70,10 @@ export function ProductsListView() {
       )
     : [];
 
-  // ✅ Create form handlers
+  // Create form handlers
   const handleOpenCreateForm = () => {
     logger.api("Opening create product form");
-    setSelectedProduct(null); // پاک کردن محصول انتخاب شده
+    setSelectedProduct(null);
     setTrue("isCreateFormOpen");
   };
 
@@ -78,7 +83,7 @@ export function ProductsListView() {
     setSelectedProduct(null);
   };
 
-  // ✅ Edit form handlers
+  // Edit form handlers
   const handleOpenEditForm = (product: Product) => {
     logger.api("Opening edit product form for:", product.name);
     setSelectedProduct(product);
@@ -91,7 +96,7 @@ export function ProductsListView() {
     setSelectedProduct(null);
   };
 
-  // ✅ Delete dialog handlers
+  // Delete dialog handlers
   const handleOpenDeleteDialog = (product: Product) => {
     logger.api("Opening delete dialog for:", product.name);
     setSelectedProduct(product);
@@ -104,7 +109,7 @@ export function ProductsListView() {
     setSelectedProduct(null);
   };
 
-  // ✅ CRUD operations
+  // CRUD operations
   const handleCreateProduct = async (data: any) => {
     try {
       logger.api("Creating product with data:", data);
@@ -160,7 +165,7 @@ export function ProductsListView() {
     }
   };
 
-  // ✅ View mode handlers
+  // View mode handlers
   const handleSetGridView = () => {
     logger.api("Switching to grid view");
     setViewMode("grid");
@@ -171,7 +176,7 @@ export function ProductsListView() {
     setViewMode("list");
   };
 
-  // ✅ Search handler
+  // Search handler
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchTerm(value);
@@ -189,8 +194,56 @@ export function ProductsListView() {
     );
   }
 
-  // Error state
-  if (error) {
+  // ✅ No active package error state
+  if (isNoActivePackageError) {
+    logger.warn("User has no active package");
+    return (
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">
+              {t("products.title")}
+            </h1>
+            <p className="text-muted-foreground">{t("products.description")}</p>
+          </div>
+        </div>
+
+        {/* No Package Alert */}
+        <Alert className="border-orange-200 bg-orange-50 dark:bg-orange-950/20">
+          <ShoppingCartIcon className="h-4 w-4 text-orange-600" />
+          <AlertTitle className="text-orange-800 dark:text-orange-200">
+            {t("dashboard.noPlanTitle")}
+          </AlertTitle>
+          <AlertDescription className="text-orange-700 dark:text-orange-300">
+            {t("dashboard.noPlanDescription")}
+          </AlertDescription>
+        </Alert>
+
+        {/* Call to Action */}
+        <div className="text-center py-12">
+          <div className="inline-flex items-center justify-center p-4 bg-orange-100 dark:bg-orange-900/20 rounded-full mb-4">
+            <PackageIcon className="h-8 w-8 text-orange-600" />
+          </div>
+          <h3 className="text-lg font-medium mb-2">
+            {t("packages.noActivePackages")}
+          </h3>
+          <p className="text-muted-foreground max-w-md mx-auto mb-6">
+            {t("packages.noActivePackagesDescription")}
+          </p>
+          <Button asChild>
+            <Link href="/dashboard/plans">
+              <ShoppingCartIcon className="mr-2 h-4 w-4" />
+              {t("plans.viewAllPlans")}
+            </Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Other error states
+  if (error && !isNoActivePackageError) {
     logger.fail("Error loading products:", error);
     return (
       <Alert variant="destructive">
@@ -294,7 +347,7 @@ export function ProductsListView() {
         </div>
       )}
 
-      {/* ✅ Modals و Dialogs با استفاده از useBoolean */}
+      {/* Modals and Dialogs */}
 
       {/* Create Product Form Modal */}
       {getValue("isCreateFormOpen") && (

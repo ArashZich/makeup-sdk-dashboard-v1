@@ -50,7 +50,7 @@ export function PaymentList({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader size="lg" text="payments.loading" />
+        <Loader size="lg" text="common.loading" />
       </div>
     );
   }
