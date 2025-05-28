@@ -146,13 +146,13 @@ export function DashboardOverview() {
               </div>
               <p className="text-xs text-muted-foreground mt-1">
                 {t("dashboard.totalRequests")}:{" "}
-                {activePackage.requestLimit?.monthly === -1
+                {activePackage.requestLimit?.total === -1
                   ? t("common.unlimited")
-                  : activePackage.requestLimit?.monthly || 0}
+                  : activePackage.requestLimit?.total || 0}
               </p>
 
               {/* فقط وقتی محدود باشه progress bar نشون بده */}
-              {activePackage.requestLimit?.monthly !== -1 && (
+              {activePackage.requestLimit?.total !== -1 && (
                 <div className="mt-4 h-2 w-full rounded-full bg-secondary">
                   <div
                     className="h-2 rounded-full bg-primary"
@@ -160,7 +160,7 @@ export function DashboardOverview() {
                       width: `${Math.min(
                         100,
                         (activePackage.requestLimit?.remaining /
-                          activePackage.requestLimit?.monthly) *
+                          activePackage.requestLimit?.total) *
                           100 || 0
                       )}%`,
                     }}
@@ -226,7 +226,9 @@ export function DashboardOverview() {
                     </p>
                     <p className="text-sm">
                       {t("plans.requestLimit")}:
-                      {t("plans.monthly", { count: plan.requestLimit.monthly })}
+                      {plan.requestLimit.total === -1
+                        ? t("common.unlimited")
+                        : plan.requestLimit.total}
                     </p>
                   </div>
                 </CardContent>
