@@ -561,7 +561,15 @@
     "invalidDomain": "Invalid domain format",
     "domainExists": "This domain has already been added",
     "domainsUpdateSuccess": "Allowed domains updated successfully",
-    "domainsUpdateError": "Error updating allowed domains"
+    "domainsUpdateError": "Error updating allowed domains",
+    "requiredInfo": "Complete Required Information",
+    "requiredInfoDescription": "To continue with your purchase, please complete the following information:",
+    "nationalIdRequired": "National ID is required",
+    "nationalIdInvalid": "National ID must be 10 digits",
+    "nationalIdPlaceholder": "10-digit National ID",
+    "companyId": "Company National ID",
+    "companyIdInvalid": "Company National ID must be at least 8 digits",
+    "companyIdPlaceholder": "Company National ID"
   },
   "notifications": {
     "title": "Notifications",
@@ -755,7 +763,11 @@
     "paidAt": "Paid At",
     "paymentInitFailed": "Payment initialization failed",
     "paymentMethod": "Payment Method",
-    "referenceInformation": "Reference Information"
+    "referenceInformation": "Reference Information",
+    "tax": "Value Added Tax",
+    "taxAmount": "Tax Amount",
+    "finalAmountWithTax": "Final Amount with Tax",
+    "taxRate": "Tax Rate: 10%"
   },
   "settings": {
     "title": "Settings",

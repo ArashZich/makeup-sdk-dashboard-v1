@@ -11,6 +11,7 @@ import {
   UpdateDomainsRequest,
   CreateUserRequest,
   UpdateUserRequest,
+  UpdateRequiredInfoRequest, // 🆕 جدید
   UserSdkFeaturesResponse, // تایپ جدید
 } from "@/api/types/users.types";
 
@@ -32,6 +33,31 @@ export const useUserProfile = () => {
     queryKey: ["userProfile"],
     queryFn: usersService.getCurrentUser,
     staleTime: 5 * 60 * 1000, // 5 دقیقه
+  });
+
+  // به‌روزرسانی اطلاعات ضروری کاربر (جدید) 🆕
+  const updateRequiredInfoMutation = useMutation({
+    mutationFn: (data: UpdateRequiredInfoRequest) =>
+      usersService.updateRequiredInfo(data),
+    onSuccess: (data) => {
+      // به‌روزرسانی cache پروفایل
+      queryClient.setQueryData(["userProfile"], (oldData: any) => ({
+        ...oldData,
+        userType: data.user.userType,
+        nationalId: data.user.nationalId,
+      }));
+      // به‌روزرسانی store
+      updateUserStore({
+        userType: data.user.userType,
+        nationalId: data.user.nationalId,
+      });
+      showToast.success(t("profile.updateSuccess"));
+    },
+    onError: (error: any) => {
+      showToast.error(
+        error.response?.data?.message || t("common.error.general")
+      );
+    },
   });
 
   // به‌روزرسانی پروفایل کاربر جاری
@@ -73,8 +99,10 @@ export const useUserProfile = () => {
     refetchProfile: refetch,
     updateProfile: updateProfileMutation.mutateAsync,
     updateDomains: updateDomainsMutation.mutateAsync,
+    updateRequiredInfo: updateRequiredInfoMutation.mutateAsync, // 🆕 جدید
     isUpdatingProfile: updateProfileMutation.isPending,
     isUpdatingDomains: updateDomainsMutation.isPending,
+    isUpdatingRequiredInfo: updateRequiredInfoMutation.isPending, // 🆕 جدید
   };
 };
 

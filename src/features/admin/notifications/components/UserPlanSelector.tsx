@@ -11,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { X, Users, Package } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";

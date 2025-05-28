@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { usePlans } from "@/api/hooks/usePlans";
 import { useCoupons } from "@/api/hooks/useCoupons";
 import { useUserPayments } from "@/api/hooks/usePayments";
+import { useUserProfile } from "@/api/hooks/useUsers"; // 🆕 جدید
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useCookies } from "@/lib/cookies";
 import { Loader } from "@/components/common/Loader";
@@ -35,7 +36,9 @@ import {
 } from "lucide-react";
 import { showToast } from "@/lib/toast";
 import { BackButtonIcon } from "@/components/common/BackButton";
+import { RequiredInfoDialog } from "@/components/dialogs/RequiredInfoDialog"; // 🆕 جدید
 import { TargetPlatform } from "@/api/types/plans.types";
+import { useBoolean } from "@/hooks/useBoolean";
 
 interface PlanDetailsViewProps {
   planId: string;
@@ -53,10 +56,15 @@ export function PlanDetailsView({ planId }: PlanDetailsViewProps) {
     finalPrice: number;
   } | null>(null);
 
+  const { getValue, setFalse, setTrue } = useBoolean({
+    showRequiredInfoDialog: false,
+  });
+
   // React Query hooks
   const { getPlan, isPlanAvailableForPlatform } = usePlans();
   const { validateCoupon, isValidatingCoupon } = useCoupons();
   const { createPayment, isCreatingPayment } = useUserPayments();
+  const { profile } = useUserProfile(); // 🆕 جدید
 
   const { data: plan, isLoading, error } = getPlan(planId);
 
@@ -75,6 +83,26 @@ export function PlanDetailsView({ planId }: PlanDetailsViewProps) {
     if (!plan) return false;
     return isPlanAvailableForPlatform(plan, userPlatform);
   }, [plan, userPlatform, isPlanAvailableForPlatform]);
+
+  // 🆕 محاسبه مالیات
+  const taxCalculation = useMemo(() => {
+    const baseAmount = appliedCoupon
+      ? appliedCoupon.finalPrice
+      : plan?.price || 0;
+    const taxAmount = Math.floor(baseAmount * 0.1); // 10% مالیات
+    const finalAmountWithTax = baseAmount + taxAmount;
+
+    return {
+      baseAmount,
+      taxAmount,
+      finalAmountWithTax,
+    };
+  }, [plan?.price, appliedCoupon]);
+
+  // 🆕 بررسی اطلاعات ضروری
+  const hasRequiredInfo = useMemo(() => {
+    return profile?.userType && profile?.nationalId;
+  }, [profile]);
 
   // فرمت کردن تعداد requests
   const formatRequestLimit = (total: number) => {
@@ -151,6 +179,12 @@ export function PlanDetailsView({ planId }: PlanDetailsViewProps) {
       return;
     }
 
+    // 🆕 بررسی اطلاعات ضروری
+    if (!hasRequiredInfo) {
+      setTrue("showRequiredInfoDialog");
+      return;
+    }
+
     try {
       const response = await createPayment({
         planId,
@@ -164,6 +198,13 @@ export function PlanDetailsView({ planId }: PlanDetailsViewProps) {
     } catch (error) {
       showToast.error(t("payments.paymentInitFailed"));
     }
+  };
+
+  // 🆕 handle موفقیت dialog
+  const handleRequiredInfoSuccess = () => {
+    setFalse("showRequiredInfoDialog");
+    // اجرای مجدد پرداخت
+    handlePurchase();
   };
 
   if (isLoading) {
@@ -351,17 +392,30 @@ export function PlanDetailsView({ planId }: PlanDetailsViewProps) {
                   </div>
                 )}
 
+                {/* 🆕 نمایش مالیات */}
+                <div className="flex justify-between text-muted-foreground">
+                  <span className="flex items-center gap-2">
+                    {t("payments.tax")}
+                    <span className="text-xs">({t("payments.taxRate")})</span>
+                  </span>
+                  <span className="font-medium">
+                    {new Intl.NumberFormat(isRtl ? "fa-IR" : "en-US", {
+                      style: "currency",
+                      currency: isRtl ? "IRR" : "USD",
+                      maximumFractionDigits: 0,
+                    }).format(taxCalculation.taxAmount)}
+                  </span>
+                </div>
+
                 <div className="border-t pt-4">
                   <div className="flex justify-between font-bold">
-                    <span>{t("plans.totalPrice")}</span>
+                    <span>{t("payments.finalAmountWithTax")}</span>
                     <span>
                       {new Intl.NumberFormat(isRtl ? "fa-IR" : "en-US", {
                         style: "currency",
                         currency: isRtl ? "IRR" : "USD",
                         maximumFractionDigits: 0,
-                      }).format(
-                        appliedCoupon ? appliedCoupon.finalPrice : plan.price
-                      )}
+                      }).format(taxCalculation.finalAmountWithTax)}
                     </span>
                   </div>
                 </div>
@@ -446,6 +500,13 @@ export function PlanDetailsView({ planId }: PlanDetailsViewProps) {
           </Card>
         </div>
       </div>
+
+      {/* 🆕 Dialog اطلاعات ضروری */}
+      <RequiredInfoDialog
+        isOpen={getValue("showRequiredInfoDialog")}
+        onClose={() => setFalse("showRequiredInfoDialog")}
+        onSuccess={handleRequiredInfoSuccess}
+      />
     </div>
   );
 }

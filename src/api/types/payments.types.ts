@@ -44,9 +44,12 @@ export interface CreatePaymentRequest {
 export interface CreatePaymentResponse {
   paymentId: string;
   paymentUrl: string;
+  code: string;
   amount: number;
-  discount?: number;
+  discount: number;
   finalAmount: number;
+  taxAmount: number; // 🆕 جدید
+  finalAmountWithTax: number; // 🆕 جدید
 }
 
 // تایپ پاسخ صفحه‌بندی شده پرداخت‌ها

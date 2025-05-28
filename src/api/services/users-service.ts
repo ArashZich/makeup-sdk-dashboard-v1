@@ -8,6 +8,8 @@ import {
   UpdateDomainsRequest,
   CreateUserRequest,
   UpdateUserRequest,
+  UpdateRequiredInfoRequest, // 🆕 جدید
+  UpdateRequiredInfoResponse, // 🆕 جدید
   PaginatedUsers,
   UserSdkFeaturesResponse, // تایپ جدید اضافه شده
 } from "@/api/types/users.types";
@@ -18,6 +20,17 @@ export const usersService = {
    */
   getCurrentUser: async (): Promise<User> => {
     const response = await axios.get("/users/me");
+    return response.data;
+  },
+
+  /**
+   * به‌روزرسانی اطلاعات ضروری کاربر (جدید) 🆕
+   * @param data اطلاعات ضروری (نوع کاربر و کد/شناسه ملی)
+   */
+  updateRequiredInfo: async (
+    data: UpdateRequiredInfoRequest
+  ): Promise<UpdateRequiredInfoResponse> => {
+    const response = await axios.put("/users/me/required-info", data);
     return response.data;
   },
 

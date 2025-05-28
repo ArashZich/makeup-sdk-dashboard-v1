@@ -131,6 +131,16 @@ export interface CreateUserRequest {
   };
 }
 
+export interface UpdateRequiredInfoRequest {
+  userType: "real" | "legal";
+  nationalId: string;
+}
+
+export interface UpdateRequiredInfoResponse {
+  message: string;
+  user: Pick<User, "_id" | "name" | "userType" | "nationalId">;
+}
+
 export interface UpdateUserRequest extends UpdateProfileRequest {
   role?: "user" | "admin";
 }

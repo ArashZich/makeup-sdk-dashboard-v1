@@ -562,7 +562,15 @@
     "invalidDomain": "فرمت دامنه نامعتبر است",
     "domainExists": "این دامنه قبلاً اضافه شده است",
     "domainsUpdateSuccess": "دامنه‌های مجاز با موفقیت به‌روزرسانی شدند",
-    "domainsUpdateError": "خطا در به‌روزرسانی دامنه‌های مجاز"
+    "domainsUpdateError": "خطا در به‌روزرسانی دامنه‌های مجاز",
+    "requiredInfo": "تکمیل اطلاعات ضروری",
+    "requiredInfoDescription": "برای ادامه خرید، لطفاً اطلاعات زیر را تکمیل کنید:",
+    "nationalIdRequired": "وارد کردن کد ملی الزامی است",
+    "nationalIdInvalid": "کد ملی باید 10 رقم باشد",
+    "nationalIdPlaceholder": "کد ملی 10 رقمی",
+    "companyId": "شناسه ملی شرکت",
+    "companyIdInvalid": "شناسه ملی شرکت حداقل 8 رقم باشد",
+    "companyIdPlaceholder": "شناسه ملی شرکت"
   },
   "notifications": {
     "title": "اطلاعیه‌ها",
@@ -757,7 +765,11 @@
     "paidAt": "پرداخت شده در",
     "paymentInitFailed": "خطا در انجام پرداخت",
     "paymentMethod": "نوع پرداخت",
-    "referenceInformation": "اطلاعات مرجع"
+    "referenceInformation": "اطلاعات مرجع",
+    "tax": "مالیات ارزش افزوده",
+    "taxAmount": "مبلغ مالیات",
+    "finalAmountWithTax": "مبلغ نهایی با مالیات",
+    "taxRate": "نرخ مالیات: ۱۰٪"
   },
   "settings": {
     "title": "تنظیمات",
