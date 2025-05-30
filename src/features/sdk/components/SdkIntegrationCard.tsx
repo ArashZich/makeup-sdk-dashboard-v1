@@ -227,7 +227,7 @@ function MakeupComponent({ productUid }) {
         <div className="mt-6 flex flex-col sm:flex-row gap-2">
           <Button asChild className="flex-1">
             <a
-              href="https://sdk.armogroup.tech/makeup/guide-v2/"
+              href="https://cdn.makeup.armogroup.tech/makeup/guide"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2"

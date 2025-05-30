@@ -84,7 +84,7 @@ export function SdkDashboardView() {
         </div>
         <Button>
           <a
-            href="https://sdk.armogroup.tech/makeup/guide-v2/"
+            href="https://cdn.makeup.armogroup.tech/makeup/guide"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2"
