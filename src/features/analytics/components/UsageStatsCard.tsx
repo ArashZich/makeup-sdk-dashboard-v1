@@ -4,10 +4,8 @@
 import { formatCurrency, cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
-import { Eye, EyeOff } from "lucide-react";
 
 interface UsageStatsCardProps {
   title: string;
