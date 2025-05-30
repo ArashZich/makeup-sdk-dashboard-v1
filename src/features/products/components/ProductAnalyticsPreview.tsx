@@ -14,6 +14,7 @@ import {
   AlertCircle,
   Zap,
 } from "lucide-react";
+import { parseSuccessRate, formatSuccessRate } from "@/lib/analytics-utils";
 
 interface ProductAnalyticsPreviewProps {
   product: Product;
@@ -68,9 +69,8 @@ export function ProductAnalyticsPreview({
   }
 
   // محاسبه نرخ موفقیت به عنوان عدد
-  const successRateNum = parseFloat(
-    analytics.successRate.rate.replace("%", "")
-  );
+  const successRateNum = parseSuccessRate(analytics.successRate.rate);
+
   const isGoodPerformance = successRateNum >= 95;
   const isOkPerformance = successRateNum >= 80;
 
@@ -103,7 +103,7 @@ export function ProductAnalyticsPreview({
           {!isGoodPerformance && !isOkPerformance && (
             <TrendingDown className="h-3 w-3 mr-1" />
           )}
-          {analytics.successRate.rate}
+          {formatSuccessRate(analytics.successRate.rate)}
         </Badge>
       </div>
 

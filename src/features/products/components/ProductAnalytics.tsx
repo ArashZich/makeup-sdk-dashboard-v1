@@ -27,6 +27,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { logger } from "@/lib/logger";
+import { parseSuccessRate, formatSuccessRate } from "@/lib/analytics-utils";
 
 // Dynamic import برای ApexCharts
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
@@ -91,8 +92,7 @@ export function ProductAnalytics({
 
   // محاسبه نرخ موفقیت به عنوان عدد
   const getSuccessRateNumber = (): number => {
-    if (!analytics) return 0;
-    return parseFloat(analytics.successRate.rate.replace("%", ""));
+    return parseSuccessRate(analytics?.successRate?.rate);
   };
 
   // تنظیمات نمودار خطی/منطقه‌ای برای استفاده روزانه
@@ -421,7 +421,7 @@ export function ProductAnalytics({
                           : "text-red-600"
                       }`}
                     >
-                      {analytics.successRate.rate}
+                      {formatSuccessRate(analytics.successRate.rate)}
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">
                       {analytics.successRate.success}{" "}
