@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { packagesService } from "@/api/services/packages-service";
 import { showToast } from "@/lib/toast";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getErrorMessage, type ApiError } from "@/api/types/error.types";
 import {
   PackageFilters,
   CreatePackageRequest,
@@ -18,8 +19,6 @@ import {
  * هوک برای استفاده از API بسته‌ها برای کاربر عادی
  */
 export const useUserPackages = () => {
-  const { t } = useLanguage();
-
   // دریافت بسته‌های کاربر جاری با فیلتر وضعیت (اختیاری)
   const getUserPackages = (status?: PackageStatus) => {
     return useQuery({
@@ -142,10 +141,8 @@ export const useAdminPackages = () => {
       });
       showToast.success(t("common.success.create"));
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -163,10 +160,8 @@ export const useAdminPackages = () => {
       queryClient.setQueryData(["package", data._id], data);
       showToast.success(t("common.success.update"));
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -189,10 +184,8 @@ export const useAdminPackages = () => {
       });
       showToast.success(t("common.success.update"));
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -215,10 +208,8 @@ export const useAdminPackages = () => {
       });
       showToast.success(t("common.success.update"));
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -238,10 +229,8 @@ export const useAdminPackages = () => {
         t("packages.admin.suspendPackage") + ": " + t("common.success.update")
       );
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -263,10 +252,8 @@ export const useAdminPackages = () => {
           t("common.success.update")
       );
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 

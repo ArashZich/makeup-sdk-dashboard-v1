@@ -5,6 +5,7 @@ import { showToast } from "@/lib/toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useUIStore } from "@/store/ui.store";
 import { useEffect } from "react";
+import { getErrorMessage, type ApiError } from "@/api/types/error.types";
 import {
   NotificationFilters,
   SendNotificationRequest,
@@ -33,8 +34,7 @@ export const useNotifications = () => {
       if (result.data && filters?.read === false) {
         setUnreadNotifications(result.data.totalResults);
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [result.data]);
+    }, [result.data, filters?.read, setUnreadNotifications]);
 
     return result;
   };
@@ -58,10 +58,8 @@ export const useNotifications = () => {
         setUnreadNotifications(unreadData.totalResults - 1);
       }
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -77,10 +75,8 @@ export const useNotifications = () => {
         t("notifications.markAllAsRead") + ": " + t("common.success.update")
       );
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -101,8 +97,7 @@ export const useNotifications = () => {
       if (data) {
         setUnreadNotifications(data.totalResults);
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data]);
+    }, [data, setUnreadNotifications]);
 
     return {
       count: data?.totalResults || 0,
@@ -154,7 +149,7 @@ export const useAdminNotifications = () => {
         const userId =
           typeof data.notification.userId === "string"
             ? data.notification.userId
-            : (data.notification.userId as any)._id;
+            : (data.notification.userId as { _id: string })._id;
 
         queryClient.invalidateQueries({
           queryKey: ["userNotifications", { userId }],
@@ -167,10 +162,8 @@ export const useAdminNotifications = () => {
           t("notifications.success.create")
       );
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 

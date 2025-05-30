@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { couponsService } from "@/api/services/coupons-service";
 import { showToast } from "@/lib/toast";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getErrorMessage, type ApiError } from "@/api/types/error.types";
 import {
   CouponFilters,
   ValidateCouponRequest,
@@ -20,10 +21,8 @@ export const useCoupons = () => {
   const validateCouponMutation = useMutation({
     mutationFn: (data: ValidateCouponRequest) =>
       couponsService.validateCoupon(data),
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -64,15 +63,13 @@ export const useAdminCoupons = () => {
   const createCouponMutation = useMutation({
     mutationFn: (data: CreateCouponRequest) =>
       couponsService.createCoupon(data),
-    onSuccess: (data) => {
+    onSuccess: () => {
       // باطل کردن کش کوپن‌ها
       queryClient.invalidateQueries({ queryKey: ["coupons"] });
       showToast.success(t("common.success.create"));
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -92,10 +89,8 @@ export const useAdminCoupons = () => {
       queryClient.invalidateQueries({ queryKey: ["coupons"] });
       showToast.success(t("common.success.update"));
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -110,10 +105,8 @@ export const useAdminCoupons = () => {
         t("admin.coupons.deactivateCoupon") + ": " + t("common.success.update")
       );
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 

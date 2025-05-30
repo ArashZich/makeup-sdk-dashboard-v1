@@ -3,6 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { sdkService } from "@/api/services/sdk-service";
 import { showToast } from "@/lib/toast";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getErrorMessage, type ApiError } from "@/api/types/error.types";
 import {
   ValidateTokenRequest,
   ApplyMakeupRequest,
@@ -18,10 +19,8 @@ export const useSdk = (token?: string) => {
   // اعتبارسنجی توکن SDK
   const validateTokenMutation = useMutation({
     mutationFn: (data: ValidateTokenRequest) => sdkService.validateToken(data),
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -52,10 +51,8 @@ export const useSdk = (token?: string) => {
   const applyMakeupMutation = useMutation({
     mutationFn: (data: ApplyMakeupRequest) =>
       sdkService.applyMakeup(token!, data),
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 

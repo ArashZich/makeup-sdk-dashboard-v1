@@ -3,6 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { analyticsService } from "@/api/services/analytics-service";
 import { showToast } from "@/lib/toast";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getErrorMessage, type ApiError } from "@/api/types/error.types";
 import {
   TimeRange,
   AnalyticsRequest,
@@ -90,10 +91,8 @@ export const useUserAnalytics = () => {
 
       showToast.success(t("analytics.downloadSuccess"));
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("analytics.downloadError")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("analytics.downloadError")));
     },
   });
 
@@ -177,10 +176,8 @@ export const useAdminAnalytics = () => {
 
       showToast.success(t("analytics.downloadSuccess"));
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("analytics.downloadError")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("analytics.downloadError")));
     },
   });
 

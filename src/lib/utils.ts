@@ -19,19 +19,6 @@ export function formatCurrency(
   }).format(amount);
 }
 
-// تبدیل تاریخ به فرمت محلی
-export function formatDate(date: Date | string, locale = "fa-IR"): string {
-  if (!date) return "";
-
-  const dateObj = typeof date === "string" ? new Date(date) : date;
-
-  return new Intl.DateTimeFormat(locale, {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(dateObj);
-}
-
 // تولید شناسه یکتا
 export function generateId(): string {
   return Math.random().toString(36).substring(2, 11);

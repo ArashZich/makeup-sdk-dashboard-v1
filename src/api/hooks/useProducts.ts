@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { productsService } from "@/api/services/products-service";
 import { showToast } from "@/lib/toast";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getErrorMessage, type ApiError } from "@/api/types/error.types";
 import {
   ProductFilters,
   CreateProductRequest,
@@ -48,15 +49,13 @@ export const useProducts = () => {
   const createProductMutation = useMutation({
     mutationFn: (data: CreateProductRequest) =>
       productsService.createProduct(data),
-    onSuccess: (data) => {
+    onSuccess: () => {
       // باطل کردن کش محصولات
       queryClient.invalidateQueries({ queryKey: ["userProducts"] });
       showToast.success(t("common.success.create"));
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -77,10 +76,8 @@ export const useProducts = () => {
       queryClient.invalidateQueries({ queryKey: ["userProducts"] });
       showToast.success(t("common.success.update"));
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -94,10 +91,8 @@ export const useProducts = () => {
       queryClient.invalidateQueries({ queryKey: ["userProducts"] });
       showToast.success(t("common.success.delete"));
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -166,11 +161,9 @@ export const useAdminProducts = () => {
       });
       showToast.success(t("common.success.create"));
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       logger.fail("🔴 Hook - createProductForUser error:", error);
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -215,12 +208,13 @@ export const useAdminProducts = () => {
       });
       showToast.success(t("common.success.update"));
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       logger.fail("🔴 Hook - updateUserProduct error:", error);
-      logger.fail("🔴 Hook - Error response:", error.response?.data);
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
+      logger.fail(
+        "🔴 Hook - Error response:",
+        (error as { response?: { data?: unknown } }).response?.data
       );
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -248,11 +242,9 @@ export const useAdminProducts = () => {
       });
       showToast.success(t("common.success.delete"));
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       logger.fail("🔴 Hook - deleteUserProduct error:", error);
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 

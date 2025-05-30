@@ -1,0 +1,453 @@
+
+> makeup-sdk-dashboard@0.1.0 build
+> next build
+
+   ▲ Next.js 15.3.2
+   - Environments: .env
+
+   Creating an optimized production build ...
+ ⚠ Compiled with warnings in 7.0s
+
+./src/lib/index.ts
+The requested module './utils' contains conflicting star exports for the name 'formatDate' with the previous requested module './date'
+
+Import trace for requested module:
+./src/lib/index.ts
+./src/features/dashboard/views/DashboardOverview.tsx
+
+ ⚠ Compiled with warnings in 3.0s
+
+./src/lib/index.ts
+The requested module './utils' contains conflicting star exports for the name 'formatDate' with the previous requested module './date'
+
+Import trace for requested module:
+./src/lib/index.ts
+./src/features/admin/users/views/UserDetailsView.tsx
+
+ ✓ Compiled successfully in 10.0s
+   Linting and checking validity of types ...
+
+Failed to compile.
+
+./src/api/hooks/useAnalytics.ts
+20:12  Error: React Hook "useQuery" is called in function "getUserAnalytics" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+29:12  Error: React Hook "useQuery" is called in function "getAllProductsAnalytics" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+41:12  Error: React Hook "useQuery" is called in function "getProductAnalyticsById" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+55:12  Error: React Hook "useQuery" is called in function "getProductAnalyticsByUid" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+93:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+139:12  Error: React Hook "useQuery" is called in function "getUserAnalytics" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+180:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/api/hooks/useAuth.ts
+19:9  Error: 'router' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+20:9  Error: 'queryClient' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+21:11  Error: 'setCookie' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+21:22  Error: 'removeCookie' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+32:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+53:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+74:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+90:15  Error: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+90:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/api/hooks/useCoupons.ts
+23:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+47:12  Error: React Hook "useQuery" is called in function "getCoupons" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+56:12  Error: React Hook "useQuery" is called in function "getCoupon" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+67:17  Error: 'data' is defined but never used.  @typescript-eslint/no-unused-vars
+72:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+95:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+113:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/api/hooks/useDivar.ts
+20:12  Error: React Hook "useQuery" is called in function "getDivarPosts" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+29:12  Error: React Hook "useQuery" is called in function "getDivarPost" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+57:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+75:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/api/hooks/useNotifications.ts
+24:20  Error: React Hook "useQuery" is called in function "getUserNotifications" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+32:5  Error: React Hook "useEffect" is called in function "getUserNotifications" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+61:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+80:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+89:49  Error: React Hook "useQuery" is called in function "getUnreadCount" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+100:5  Error: React Hook "useEffect" is called in function "getUnreadCount" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+104:7  Warning: Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps').
+137:12  Error: React Hook "useQuery" is called in function "getAllNotifications" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+157:44  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+170:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/api/hooks/usePackages.ts
+21:11  Error: 't' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+25:12  Error: React Hook "useQuery" is called in function "getUserPackages" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+34:12  Error: React Hook "useQuery" is called in function "getPackage" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+126:12  Error: React Hook "useQuery" is called in function "getAllPackages" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+145:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+166:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+192:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+218:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+241:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+266:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/api/hooks/usePayments.ts
+32:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+41:12  Error: React Hook "useQuery" is called in function "getUserPayments" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+50:12  Error: React Hook "useQuery" is called in function "getPayment" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+69:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+90:11  Error: 't' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+94:12  Error: React Hook "useQuery" is called in function "getAllPayments" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+110:11  Error: 't' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+271:12  Error: React Hook "usePlatformStats" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
+274:10  Error: React Hook "useAllPlatformsStats" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
+
+./src/api/hooks/usePlans.ts
+18:11  Error: 't' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+34:12  Error: React Hook "useQuery" is called in function "getAllPlans" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+43:12  Error: React Hook "useQuery" is called in function "getPlan" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+148:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+172:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+190:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/api/hooks/useProducts.ts
+22:12  Error: React Hook "useQuery" is called in function "getUserProducts" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+31:12  Error: React Hook "useQuery" is called in function "getProduct" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+40:12  Error: React Hook "useQuery" is called in function "getProductByUid" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+51:17  Error: 'data' is defined but never used.  @typescript-eslint/no-unused-vars
+56:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+80:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+97:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+130:12  Error: React Hook "useQuery" is called in function "getUserProducts" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+140:12  Error: React Hook "useQuery" is called in function "getAllProducts" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+169:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+218:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+251:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/api/hooks/useSdk.ts
+21:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+43:12  Error: React Hook "useQuery" is called in function "getProductByUid" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+55:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/api/hooks/useUsers.ts
+44:59  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+56:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+72:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+88:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+131:8  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+197:12  Error: React Hook "useQuery" is called in function "getUsers" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+206:12  Error: React Hook "useQuery" is called in function "getUser" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use".  react-hooks/rules-of-hooks
+220:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+241:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+261:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+276:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/api/services/products-service.ts
+72:7  Error: '_id' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+73:7  Error: '__v' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+74:7  Error: 'createdAt' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+75:7  Error: 'updatedAt' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+76:7  Error: 'userId' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+77:7  Error: 'uid' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+78:7  Error: 'type' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+79:7  Error: 'code' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+81:17  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+145:22  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+149:35  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+150:35  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/api/services/upload-service.ts
+9:3  Error: 'UploadErrorType' is defined but never used.  @typescript-eslint/no-unused-vars
+68:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+106:30  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+181:38  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/api/types/notifications.types.ts
+18:29  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+37:29  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/api/types/sdk.types.ts
+35:33  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/api/types/upload.types.ts
+61:32  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/components/common/ImageUpload.tsx
+45:5  Error: 'getUploadedImageUrl' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/common/OtpInput.tsx
+107:8  Warning: React Hook useEffect has a missing dependency: 'values'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+146:24  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/components/dashboard/Header.tsx
+45:9  Error: 'getInitials' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/dashboard/NotificationsDropdown.tsx
+37:5  Error: 'isMarkingAsRead' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/dialogs/RequiredInfoDialog.tsx
+66:14  Error: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/ui/calendar.tsx
+27:3  Error: 'showOutsideDays' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+52:6  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/config/dashboard-nav.ts
+9:3  Error: 'PanelRight' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/contexts/AuthContext.tsx
+72:16  Error: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+103:6  Warning: React Hook useEffect has a missing dependency: 'checkAuth'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/contexts/LanguageContext.tsx
+18:32  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+27:13  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+29:44  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+93:58  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+116:51  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+118:17  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/features/admin/analytics/components/PlatformRevenueChart.tsx
+160:66  Error: 'w' is defined but never used.  @typescript-eslint/no-unused-vars
+160:71  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/features/admin/notifications/components/SendNotificationForm.tsx
+84:14  Error: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/admin/notifications/views/AdminNotificationsView.tsx
+32:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+48:9  Warning: The 'notifications' logical expression could make the dependencies of useMemo Hook (at line 69) change on every render. Move it inside the useMemo callback. Alternatively, wrap the initialization of 'notifications' in its own useMemo() Hook.  react-hooks/exhaustive-deps
+
+./src/features/admin/packages/components/ExtendPackageDialog.tsx
+33:25  Error: 'AlertCircle' is defined but never used.  @typescript-eslint/no-unused-vars
+52:3  Error: 'packageId' is defined but never used.  @typescript-eslint/no-unused-vars
+54:11  Error: 't' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/admin/packages/components/PackageForm.tsx
+4:10  Error: 'useState' is defined but never used.  @typescript-eslint/no-unused-vars
+32:3  Error: 'PurchasePlatform' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/admin/packages/components/UpdatePackageLimitsDialog.tsx
+43:3  Error: 'packageId' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/admin/payments/components/PaymentFilters.tsx
+88:47  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/features/admin/payments/views/AdminPaymentsView.tsx
+31:19  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+53:9  Warning: The 'payments' logical expression could make the dependencies of useMemo Hook (at line 72) change on every render. To fix this, wrap the initialization of 'payments' in its own useMemo() Hook.  react-hooks/exhaustive-deps
+
+./src/features/admin/plans/components/PlanTable.tsx
+4:10  Error: 'useState' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/admin/plans/views/CreatePlanView.tsx
+25:37  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/features/admin/plans/views/EditPlanView.tsx
+42:27  Error: React Hook "usePlans" is called conditionally. React Hooks must be called in the exact same order in every component render.  react-hooks/rules-of-hooks
+43:42  Error: React Hook "useAdminPlans" is called conditionally. React Hooks must be called in the exact same order in every component render.  react-hooks/rules-of-hooks
+53:37  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/features/admin/plans/views/PlanDetailsView.tsx
+28:3  Error: 'Package' is defined but never used.  @typescript-eslint/no-unused-vars
+33:3  Error: 'ExternalLink' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/admin/plans/views/PlansView.tsx
+32:3  Error: 'ExternalLink' is defined but never used.  @typescript-eslint/no-unused-vars
+39:19  Error: 'setFilters' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/admin/products/components/ProductDetailsModal.tsx
+200:15  Warning: Image elements must have an alt prop, either with meaningful text, or an empty string for decorative images.  jsx-a11y/alt-text
+208:19  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+220:17  Warning: Image elements must have an alt prop, either with meaningful text, or an empty string for decorative images.  jsx-a11y/alt-text
+272:27  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+284:25  Warning: Image elements must have an alt prop, either with meaningful text, or an empty string for decorative images.  jsx-a11y/alt-text
+345:27  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/features/admin/products/components/ProductFilters.tsx
+82:47  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/features/admin/products/components/ProductForm.tsx
+36:24  Error: 'Image' is defined but never used.  @typescript-eslint/no-unused-vars
+83:20  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+141:9  Error: 'availablePatterns' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+227:38  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+516:64  Error: Optional chain expressions can return undefined by design - using a non-null assertion is unsafe and wrong.  @typescript-eslint/no-non-null-asserted-optional-chain
+
+./src/features/admin/products/components/ProductTable.tsx
+119:13  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+129:11  Warning: Image elements must have an alt prop, either with meaningful text, or an empty string for decorative images.  jsx-a11y/alt-text
+
+./src/features/admin/products/views/AdminProductsView.tsx
+72:9  Warning: The 'allProducts' logical expression could make the dependencies of useMemo Hook (at line 89) change on every render. To fix this, wrap the initialization of 'allProducts' in its own useMemo() Hook.  react-hooks/exhaustive-deps
+125:41  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/features/admin/users/components/UserFilters.tsx
+19:15  Error: 'role' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/admin/users/views/CreateUserView.tsx
+8:10  Error: 'Button' is defined but never used.  @typescript-eslint/no-unused-vars
+9:10  Error: 'ArrowLeft' is defined but never used.  @typescript-eslint/no-unused-vars
+19:37  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/features/admin/users/views/EditUserView.tsx
+28:51  Error: React Hook "useAdminUsers" is called conditionally. React Hooks must be called in the exact same order in every component render.  react-hooks/rules-of-hooks
+32:37  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/features/analytics/components/BrowserStatsCard.tsx
+145:41  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+157:36  Error: 'w' is defined but never used.  @typescript-eslint/no-unused-vars
+157:39  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+205:35  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/features/analytics/components/UsageChartCard.tsx
+84:14  Error: 'e' is defined but never used.  @typescript-eslint/no-unused-vars
+146:13  Error: 'series' is defined but never used.  @typescript-eslint/no-unused-vars
+146:21  Error: 'seriesIndex' is defined but never used.  @typescript-eslint/no-unused-vars
+146:50  Error: 'w' is defined but never used.  @typescript-eslint/no-unused-vars
+146:55  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+159:69  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+242:35  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/features/analytics/components/UsageStatsCard.tsx
+7:10  Error: 'Button' is defined but never used.  @typescript-eslint/no-unused-vars
+10:10  Error: 'Eye' is defined but never used.  @typescript-eslint/no-unused-vars
+10:15  Error: 'EyeOff' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/analytics/views/AnalyticsView.tsx
+4:20  Error: 'useEffect' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/auth/components/OtpVerificationForm.tsx
+103:21  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/features/auth/views/verify-otp.tsx
+25:10  Error: 'isResending' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/dashboard/views/DashboardOverview.tsx
+42:9  Warning: The 'activePackages' logical expression could make the dependencies of useEffect Hook (at line 51) change on every render. Move it inside the useEffect callback. Alternatively, wrap the initialization of 'activePackages' in its own useMemo() Hook.  react-hooks/exhaustive-deps
+
+./src/features/divar/components/DivarPostFilters.tsx
+4:20  Error: 'useEffect' is defined but never used.  @typescript-eslint/no-unused-vars
+6:10  Error: 'Button' is defined but never used.  @typescript-eslint/no-unused-vars
+9:18  Error: 'Filter' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/divar/views/DivarIntegrationView.tsx
+57:12  Error: 'productsError' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/notifications/components/NotificationsList.tsx
+12:3  Error: 'Notification' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/packages/views/PackagesListView.tsx
+10:10  Error: 'PackageStatus' is defined but never used.  @typescript-eslint/no-unused-vars
+41:5  Error: 'filterPackagesByPlatform' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/payments/components/PaymentFilters.tsx
+3:20  Error: 'useEffect' is defined but never used.  @typescript-eslint/no-unused-vars
+6:10  Error: 'Button' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/payments/views/PaymentsListView.tsx
+4:20  Error: 'useEffect' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/plans/components/PlanCard.tsx
+18:24  Error: 'Smartphone' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/plans/views/PlanDetailsView.tsx
+65:27  Error: 'isValidatingCoupon' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+162:14  Error: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+198:14  Error: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/plans/views/PlansListView.tsx
+78:34  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/features/products/components/ColorPicker.tsx
+34:3  Error: 'className' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/products/components/ProductCard.tsx
+26:7  Error: 'productTypeLabels' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+48:14  Error: 'isRtl' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/products/components/ProductForm.tsx
+61:20  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+191:46  Error: '_' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/products/components/ProductTypeSelect.tsx
+27:67  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+59:5  Error: 'sdkFeatures' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/products/views/ProductDetailsView.tsx
+46:14  Error: 'isRtl' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+67:44  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+100:44  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+111:14  Error: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+124:14  Error: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/products/views/ProductsListView.tsx
+59:44  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+113:44  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+127:44  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/features/profile/components/DomainsCard.tsx
+99:14  Error: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/profile/components/PersonalInfoCard.tsx
+4:10  Error: 'useState' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/sdk/components/SdkFeaturesCard.tsx
+8:17  Error: 'X' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/sdk/views/SdkDashboardView.tsx
+4:10  Error: 'useState' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/settings/components/AppearanceSettings.tsx
+8:10  Error: 'Button' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/settings/components/NotificationSettings.tsx
+19:23  Error: 'Bell' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/features/settings/views/SettingsView.tsx
+8:25  Error: 'LayoutGrid' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/hooks/useClipboard.ts
+38:16  Error: 'err' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/layouts/AuthLayout.tsx
+8:10  Error: 'Logo' is defined but never used.  @typescript-eslint/no-unused-vars
+15:11  Error: 't' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/layouts/DashboardLayout.tsx
+4:21  Error: 'useState' is defined but never used.  @typescript-eslint/no-unused-vars
+20:11  Error: 'isSidebarOpen' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/axios.ts
+80:16  Error: 'refreshError' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/logger.ts
+7:51  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+7:65  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+17:16  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+17:30  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+23:17  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+23:31  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+29:17  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+29:31  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+35:18  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+35:32  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+41:18  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+41:32  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+48:20  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+48:34  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+54:20  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+54:34  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+60:16  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+60:30  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+66:17  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+66:31  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+72:17  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+72:31  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+88:15  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/lib/upload-axios.ts
+86:16  Error: 'refreshError' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/store/ui.store.ts
+12:14  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+13:39  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules

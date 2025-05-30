@@ -3,7 +3,7 @@
 import { Payment } from "@/api/types/payments.types";
 import { PaymentStatusBadge } from "./PaymentStatusBadge";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatCurrency, formatDate } from "@/lib";
 import { Plan } from "@/api/types/plans.types";
 import {
   Card,

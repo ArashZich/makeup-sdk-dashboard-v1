@@ -1,11 +1,10 @@
 // src/api/hooks/useAuth.ts - ساده شده
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { authService } from "@/api/services/auth-service";
-import { useCookies } from "@/lib/cookies";
-import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth as useAuthContext } from "@/contexts/AuthContext"; // استفاده از context
 import { showToast } from "@/lib/toast";
+import { getErrorMessage, type ApiError } from "@/api/types/error.types";
 import {
   SendOtpRequest,
   VerifyOtpRequest,
@@ -16,24 +15,17 @@ import {
  * هوک برای actions احراز هویت (login/logout)
  */
 export const useAuthActions = () => {
-  const router = useRouter();
-  const queryClient = useQueryClient();
-  const { setCookie, removeCookie } = useCookies();
   const { login: contextLogin, logout: contextLogout } = useAuthContext();
   const { t } = useLanguage();
 
   // استفاده از mutation برای ارسال درخواست OTP
   const sendOtpMutation = useMutation({
     mutationFn: (data: SendOtpRequest) => authService.sendOtp(data),
-    onSuccess: (data) => {
+    onSuccess: () => {
       showToast.success(t("auth.otpSent"));
-      return data;
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("auth.error.invalidPhone")
-      );
-      throw error;
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("auth.error.invalidPhone")));
     },
   });
 
@@ -48,13 +40,9 @@ export const useAuthActions = () => {
         data.user
       );
       showToast.success(t("auth.loginSuccess"));
-      return data;
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("auth.error.invalidOtp")
-      );
-      throw error;
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("auth.error.invalidOtp")));
     },
   });
 
@@ -69,13 +57,11 @@ export const useAuthActions = () => {
         data.user
       );
       showToast.success(t("auth.loginSuccess"));
-      return data;
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       showToast.error(
-        error.response?.data?.message || t("auth.error.invalidCredentials")
+        getErrorMessage(error, t("auth.error.invalidCredentials"))
       );
-      throw error;
     },
   });
 
@@ -87,7 +73,7 @@ export const useAuthActions = () => {
       contextLogout();
       showToast.success(t("auth.logoutSuccess"));
     },
-    onError: (error: any) => {
+    onError: () => {
       // حتی اگر logout از سرور با خطا مواجه شد، کاربر رو logout کن
       contextLogout();
     },

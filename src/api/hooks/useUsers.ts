@@ -5,6 +5,7 @@ import { usersService } from "@/api/services/users-service";
 import { showToast } from "@/lib/toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuthStore } from "@/store/auth.store";
+import { getErrorMessage, type ApiError } from "@/api/types/error.types";
 import {
   UserFilters,
   UpdateProfileRequest,
@@ -41,11 +42,14 @@ export const useUserProfile = () => {
       usersService.updateRequiredInfo(data),
     onSuccess: (data) => {
       // به‌روزرسانی cache پروفایل
-      queryClient.setQueryData(["userProfile"], (oldData: any) => ({
-        ...oldData,
-        userType: data.user.userType,
-        nationalId: data.user.nationalId,
-      }));
+      queryClient.setQueryData(
+        ["userProfile"],
+        (oldData: { userType?: string; nationalId?: string }) => ({
+          ...oldData,
+          userType: data.user.userType,
+          nationalId: data.user.nationalId,
+        })
+      );
       // به‌روزرسانی store
       updateUserStore({
         userType: data.user.userType,
@@ -53,10 +57,8 @@ export const useUserProfile = () => {
       });
       showToast.success(t("profile.updateSuccess"));
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -69,10 +71,8 @@ export const useUserProfile = () => {
       updateUserStore(data);
       showToast.success(t("common.success.update"));
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -85,10 +85,8 @@ export const useUserProfile = () => {
       updateUserStore(data);
       showToast.success(t("common.success.update"));
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -128,7 +126,7 @@ export const useUserSdkFeatures = () => {
   const isPremium = sdkFeatures?.isPremium ?? false;
   const features = (
     sdkFeatures?.hasActivePackage === true ? sdkFeatures.features : []
-  ) as any[];
+  ) as { type: string; patterns: string[] }[];
 
   // دریافت الگوهای مجاز برای یک نوع آرایش خاص
   const getPatternsForType = (type: string): string[] => {
@@ -217,10 +215,8 @@ export const useAdminUsers = () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       showToast.success(t("common.success.create"));
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -238,10 +234,8 @@ export const useAdminUsers = () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       showToast.success(t("common.success.update"));
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -258,10 +252,8 @@ export const useAdminUsers = () => {
       queryClient.setQueryData(["user", data._id], data);
       showToast.success(t("common.success.update"));
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -273,10 +265,8 @@ export const useAdminUsers = () => {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       showToast.success(t("common.success.delete"));
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 

@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { paymentsService } from "@/api/services/payments-service";
 import { showToast } from "@/lib/toast";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getErrorMessage, type ApiError } from "@/api/types/error.types";
 import {
   PaymentFilters,
   CreatePaymentRequest,
@@ -29,10 +30,8 @@ export const useUserPayments = () => {
         window.location.href = data.paymentUrl;
       }
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -66,10 +65,8 @@ export const useUserPayments = () => {
         t("payments.cancelPayment") + ": " + t("common.success.update")
       );
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -87,8 +84,6 @@ export const useUserPayments = () => {
  * هوک برای استفاده از API پرداخت‌ها برای ادمین
  */
 export const useAdminPayments = () => {
-  const { t } = useLanguage();
-
   // دریافت همه پرداخت‌ها با فیلتر
   const getAllPayments = (filters?: PaymentFilters) => {
     return useQuery({
@@ -107,8 +102,6 @@ export const useAdminPayments = () => {
  * هوک برای استفاده از API آمار درآمد پرداخت‌ها
  */
 export const usePaymentsStats = () => {
-  const { t } = useLanguage();
-
   /**
    * دریافت آمار کلی همه پلتفرم‌ها
    * @param timeRange بازه زمانی

@@ -9,7 +9,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "images.rojashop.com",
+        hostname: "storage.makeup.armogroup.tech",
       },
     ],
   },

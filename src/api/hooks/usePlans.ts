@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { plansService } from "@/api/services/plans-service";
 import { showToast } from "@/lib/toast";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getErrorMessage, type ApiError } from "@/api/types/error.types";
 import {
   PlanFilters,
   CreatePlanRequest,
@@ -15,8 +16,6 @@ import {
  * هوک برای استفاده از API پلن‌ها برای کاربر عادی - آپدیت شده
  */
 export const usePlans = () => {
-  const { t } = useLanguage();
-
   // دریافت پلن‌های عمومی (فعال) - آپدیت شده با فیلتر خودکار پلتفرم
   const {
     data: publicPlans,
@@ -145,10 +144,8 @@ export const useAdminPlans = () => {
       queryClient.invalidateQueries({ queryKey: ["publicPlans"] });
       showToast.success(t("common.success.create"));
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -169,10 +166,8 @@ export const useAdminPlans = () => {
       queryClient.invalidateQueries({ queryKey: ["publicPlans"] });
       showToast.success(t("common.success.update"));
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
@@ -187,10 +182,8 @@ export const useAdminPlans = () => {
       queryClient.invalidateQueries({ queryKey: ["publicPlans"] });
       showToast.success(t("common.success.delete"));
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("common.error.general")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 

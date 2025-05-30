@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { divarService } from "@/api/services/divar-service";
 import { showToast } from "@/lib/toast";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getErrorMessage, type ApiError } from "@/api/types/error.types";
 import {
   DivarPostFilters,
   AddDivarAddonRequest,
@@ -54,10 +55,8 @@ export const useDivar = () => {
 
       showToast.success(t("divar.addonAdded"));
     },
-    onError: (error: any) => {
-      showToast.error(
-        error.response?.data?.message || t("divar.error.addAddonFailed")
-      );
+    onError: (error: ApiError) => {
+      showToast.error(getErrorMessage(error, t("divar.error.addAddonFailed")));
     },
   });
 
@@ -72,9 +71,9 @@ export const useDivar = () => {
 
       showToast.success(t("divar.addonRemoved"));
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       showToast.error(
-        error.response?.data?.message || t("divar.error.removeAddonFailed")
+        getErrorMessage(error, t("divar.error.removeAddonFailed"))
       );
     },
   });
