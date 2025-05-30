@@ -27,7 +27,7 @@ export interface NotificationFilters {
   limit?: number;
 }
 
-// مدل درخواست ارسال اطلاعیه (ادمین)
+// مدل درخواست ارسال اطلاعیه (ادمین) - به‌روزرسانی شده
 export interface SendNotificationRequest {
   userId?: string;
   planId?: string;
@@ -36,6 +36,7 @@ export interface SendNotificationRequest {
   type: NotificationType;
   metadata?: Record<string, any>;
   sendSms?: boolean;
+  sendEmail?: boolean; // 🆕 فیلد جدید اضافه شده
 }
 
 // مدل پاسخ ارسال اطلاعیه (ادمین)

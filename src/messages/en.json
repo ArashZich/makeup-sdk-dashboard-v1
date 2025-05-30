@@ -986,6 +986,8 @@
         "usersPlaceholder": "Enter user IDs",
         "sendSmsLabel": "Send SMS",
         "sendSmsDescription": "Also send SMS in addition to internal notification",
+        "sendEmailLabel": "Send Email",
+        "sendEmailDescription": "Also send Email in addition to internal notification",
         "sending": "Sending...",
         "sendButton": "Send Notification",
         "maxUsersWarning": "⚠️ Max {{maxUsers}} users can be selected",
@@ -1233,7 +1235,7 @@
       "planRestrictionsDescription": "This coupon can only be used for selected plans",
       "userRestrictions": "User Restrictions",
       "userRestrictionsDescription": "This coupon can only be used by selected users",
-      "userIdPlaceholder": "Enter user ID",
+      "userIdPlaceholder": "Select user to add",
       "addUser": "Add User",
       "currentUsers": "Current Users",
       "noUsersAdded": "No users added",
@@ -1254,7 +1256,13 @@
       "unlimitedUsage": "Unlimited Usage",
       "usagePerUser": "Usage Per User",
       "limitedUsage": "Limited Usage",
-      "userUsageLimit": "User Usage Limit"
+      "userUsageLimit": "User Usage Limit",
+      "selectUser": "Select User",
+      "searchUsers": "Search users...",
+      "clearAllUsers": "Clear All",
+      "noUsersFound": "No users found",
+      "userSelected": "User selected",
+      "removeUser": "Remove user"
     },
     "payments": {
       "title": "Payments Management",
