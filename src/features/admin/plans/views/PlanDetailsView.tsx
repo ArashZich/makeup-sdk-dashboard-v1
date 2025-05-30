@@ -25,12 +25,10 @@ import {
   Star,
   Calendar,
   DollarSign,
-  Package,
   Check,
   AlertCircle,
   Globe,
   Smartphone,
-  ExternalLink,
   Zap,
   Settings,
 } from "lucide-react";

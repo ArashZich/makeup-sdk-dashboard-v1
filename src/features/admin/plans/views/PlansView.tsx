@@ -29,7 +29,6 @@ import {
   BarChart3,
   Globe,
   Smartphone,
-  ExternalLink,
 } from "lucide-react";
 import { logger } from "@/lib/logger";
 

@@ -33,7 +33,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Plus, Trash2, Image } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { Product } from "@/api/types/products.types";
 import { Label } from "@/components/ui/label";
 import { logger } from "@/lib/logger";

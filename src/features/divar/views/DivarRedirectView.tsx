@@ -1,7 +1,7 @@
-// src/features/divar/views/DivarRedirectView.tsx
+// src/features/divar/views/DivarRedirectView.tsx - Fixed with Suspense
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCookies } from "@/lib/cookies";
 import { useAuthStore } from "@/store/auth.store";
@@ -11,7 +11,8 @@ import { showToast } from "@/lib/toast";
 import { User } from "@/api/types/auth.types";
 import { logger } from "@/lib/logger";
 
-export function DivarRedirectView() {
+// کامپوننت اصلی که useSearchParams استفاده می‌کنه
+function DivarRedirectContent() {
   const { t } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -19,11 +20,9 @@ export function DivarRedirectView() {
   const { setAuth } = useAuthStore();
   const [isProcessing, setIsProcessing] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [processed, setProcessed] = useState(false); // Flag to prevent multiple processing
+  const [processed, setProcessed] = useState(false);
 
-  // Use useCallback to prevent the function from being recreated on each render
   const processParams = useCallback(async () => {
-    // Skip if already processed
     if (processed) return;
     setProcessed(true);
 
@@ -61,11 +60,9 @@ export function DivarRedirectView() {
       };
 
       // ذخیره توکن‌ها در کوکی
-      // ایجاد تاریخ انقضا برای توکن‌ها - مثلاً 7 روز برای refresh token
       const refreshExpires = new Date();
       refreshExpires.setDate(refreshExpires.getDate() + 7);
 
-      // و 1 روز برای access token
       const accessExpires = new Date();
       accessExpires.setDate(accessExpires.getDate() + 1);
 
@@ -93,9 +90,7 @@ export function DivarRedirectView() {
       // هدایت به صفحه داشبورد بعد از 2 ثانیه
       setTimeout(() => {
         const redirectPath =
-          hasActivePackage === "true"
-            ? "/dashboard/divar" // اگر بسته فعال داره، مستقیم به صفحه دیوار بره
-            : "/dashboard"; // در غیر این صورت به داشبورد اصلی
+          hasActivePackage === "true" ? "/dashboard/divar" : "/dashboard";
 
         router.push(redirectPath);
       }, 2000);
@@ -107,7 +102,6 @@ export function DivarRedirectView() {
     }
   }, [searchParams, setCookie, setAuth, router, t, processed]);
 
-  // Call processParams once when the component mounts
   useEffect(() => {
     processParams();
   }, [processParams]);
@@ -181,5 +175,29 @@ export function DivarRedirectView() {
         )}
       </div>
     </div>
+  );
+}
+
+// کامپوننت Loading
+function DivarRedirectLoading() {
+  const { t } = useLanguage();
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-b from-background to-secondary/20">
+      <div className="max-w-md w-full bg-card p-8 rounded-lg shadow-lg text-center">
+        <h1 className="text-2xl font-bold mb-4">{t("divar.connecting")}</h1>
+        <Loader size="lg" className="my-6" />
+        <p className="text-muted-foreground">{t("common.loading")}</p>
+      </div>
+    </div>
+  );
+}
+
+// کامپوننت اصلی با Suspense
+export function DivarRedirectView() {
+  return (
+    <Suspense fallback={<DivarRedirectLoading />}>
+      <DivarRedirectContent />
+    </Suspense>
   );
 }

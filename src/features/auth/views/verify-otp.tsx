@@ -1,28 +1,28 @@
-// src/features/auth/views/verify-otp.tsx - آپدیت شده
+// src/features/auth/views/verify-otp.tsx - Fixed with Suspense
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAuth } from "@/contexts/AuthContext"; // تغییر
-import { useAuthActions } from "@/api/hooks/useAuth"; // تغییر
+import { useAuth } from "@/contexts/AuthContext";
+import { useAuthActions } from "@/api/hooks/useAuth";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { OtpVerificationForm } from "../components/OtpVerificationForm";
 import { showToast } from "@/lib/toast";
 import { logger } from "@/lib/logger";
 import { BackButton } from "@/components/common/BackButton";
+import { Loader } from "@/components/common/Loader";
 
-export default function VerifyOtpView() {
+// کامپوننت اصلی که useSearchParams استفاده می‌کنه
+function VerifyOtpContent() {
   const { t, isRtl } = useLanguage();
-  const { user, isLoading } = useAuth(); // از context
-  const { sendOtp } = useAuthActions(); // از actions
+  const { user, isLoading } = useAuth();
+  const { sendOtp } = useAuthActions();
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const phone = searchParams.get("phone") || "";
   const userId = searchParams.get("userId") || "";
-
-  const [isResending, setIsResending] = useState(false);
 
   // اگر شماره تلفن یا شناسه کاربر موجود نباشد، به صفحه ورود هدایت می‌شود
   useEffect(() => {
@@ -39,14 +39,11 @@ export default function VerifyOtpView() {
   }, [user, isLoading, router]);
 
   const handleResendOtp = async () => {
-    setIsResending(true);
     try {
       await sendOtp({ phone });
       showToast.success(t("auth.otpResent"));
     } catch (error) {
       logger.error("خطا در ارسال مجدد کد:", error);
-    } finally {
-      setIsResending(false);
     }
   };
 
@@ -83,5 +80,23 @@ export default function VerifyOtpView() {
         <BackButton label={t("common.back")} href="/auth/login" />
       </div>
     </div>
+  );
+}
+
+// کامپوننت Loading
+function VerifyOtpLoading() {
+  return (
+    <div className="flex items-center justify-center min-h-[400px]">
+      <Loader size="lg" variant="spinner" />
+    </div>
+  );
+}
+
+// کامپوننت اصلی با Suspense
+export default function VerifyOtpView() {
+  return (
+    <Suspense fallback={<VerifyOtpLoading />}>
+      <VerifyOtpContent />
+    </Suspense>
   );
 }

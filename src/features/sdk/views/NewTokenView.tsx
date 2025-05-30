@@ -1,7 +1,7 @@
-// src/features/sdk/views/NewTokenView.tsx
+// src/features/sdk/views/NewTokenView.tsx - Fixed with Suspense
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useUserPackages } from "@/api/hooks/usePackages";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -30,7 +30,8 @@ import {
 import confetti from "canvas-confetti";
 import { logger } from "@/lib/logger";
 
-export function NewTokenView() {
+// کامپوننت اصلی که useSearchParams استفاده می‌کنه
+function NewTokenContent() {
   const { t, isRtl } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -229,5 +230,25 @@ export function NewTokenView() {
         </ul>
       </div>
     </div>
+  );
+}
+
+// کامپوننت Loading
+function NewTokenLoading() {
+  const { t } = useLanguage();
+
+  return (
+    <div className="flex items-center justify-center h-64">
+      <Loader size="lg" text="common.loading" />
+    </div>
+  );
+}
+
+// کامپوننت اصلی با Suspense
+export function NewTokenView() {
+  return (
+    <Suspense fallback={<NewTokenLoading />}>
+      <NewTokenContent />
+    </Suspense>
   );
 }

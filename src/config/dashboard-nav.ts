@@ -6,7 +6,6 @@ import {
   CreditCard,
   Home,
   Package,
-  PanelRight,
   Settings,
   ShoppingBag,
   TagIcon,

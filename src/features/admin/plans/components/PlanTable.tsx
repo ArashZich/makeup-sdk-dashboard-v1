@@ -1,7 +1,6 @@
 // src/features/admin/plans/components/PlanTable.tsx
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Plan } from "@/api/types/plans.types";

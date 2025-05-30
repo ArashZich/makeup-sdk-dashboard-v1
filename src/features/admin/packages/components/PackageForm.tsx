@@ -1,7 +1,6 @@
 // src/features/admin/packages/components/PackageForm.tsx
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -27,10 +26,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { usePlans } from "@/api/hooks/usePlans";
 import { useAdminUsers } from "@/api/hooks/useUsers";
-import {
-  CreatePackageRequest,
-  PurchasePlatform,
-} from "@/api/types/packages.types";
+import { CreatePackageRequest } from "@/api/types/packages.types";
 import { getPackagePlatformConfigs } from "@/constants/platform-configs";
 import { logger } from "@/lib/logger";
 

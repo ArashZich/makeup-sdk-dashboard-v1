@@ -30,7 +30,7 @@ import {
   ExtendPackageRequest,
   UpdatePackageLimitsRequest,
 } from "@/api/types/packages.types";
-import { Calendar, Zap, AlertCircle } from "lucide-react";
+import { Calendar, Zap } from "lucide-react";
 
 interface ExtendPackageDialogProps {
   open: boolean;

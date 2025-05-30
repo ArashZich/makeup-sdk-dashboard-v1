@@ -34,7 +34,7 @@ export const useNotifications = () => {
       if (result.data && filters?.read === false) {
         setUnreadNotifications(result.data.totalResults);
       }
-    }, [result.data, filters?.read, setUnreadNotifications]);
+    }, [result.data, filters?.read]);
 
     return result;
   };
@@ -97,7 +97,7 @@ export const useNotifications = () => {
       if (data) {
         setUnreadNotifications(data.totalResults);
       }
-    }, [data, setUnreadNotifications]);
+    }, [data]);
 
     return {
       count: data?.totalResults || 0,

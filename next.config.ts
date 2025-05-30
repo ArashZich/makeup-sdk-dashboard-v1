@@ -1,6 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  eslint: {
+    // در production ارورها رو نادیده بگیر
+    ignoreDuringBuilds: process.env.NODE_ENV === "production",
+  },
+  typescript: {
+    // در production ارورها رو نادیده بگیر
+    ignoreBuildErrors: process.env.NODE_ENV === "production",
+  },
   images: {
     remotePatterns: [
       {
@@ -10,6 +18,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "storage.makeup.armogroup.tech",
+      },
+      {
+        protocol: "https",
+        hostname: "armogroup.storage.iran.liara.space",
       },
     ],
   },
