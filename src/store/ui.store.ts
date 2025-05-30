@@ -9,7 +9,7 @@ interface UIState {
 
   // مودال‌ها
   activeModal: string | null;
-  modalData: any | null;
+  modalData: { [key: string]: unknown } | null;
   openModal: (modalId: string, data?: any) => void;
   closeModal: () => void;
 

@@ -6,7 +6,7 @@
    - Environments: .env
 
    Creating an optimized production build ...
- ✓ Compiled successfully in 9.0s
+ ✓ Compiled successfully in 13.0s
    Skipping validation of types
    Skipping linting
    Collecting page data ...
@@ -28,10 +28,10 @@ Route (app)                                 Size  First Load JS
 ├ ○ /dashboard/admin/coupons             9.69 kB         292 kB
 ├ ○ /dashboard/admin/coupons/create        731 B         337 kB
 ├ ƒ /dashboard/admin/coupons/edit/[id]     830 B         337 kB
-├ ○ /dashboard/admin/notifications       14.8 kB         293 kB
+├ ○ /dashboard/admin/notifications       14.7 kB         293 kB
 ├ ○ /dashboard/admin/packages            4.45 kB         293 kB
 ├ ƒ /dashboard/admin/packages/[id]       3.48 kB         253 kB
-├ ○ /dashboard/admin/packages/create     9.61 kB         237 kB
+├ ○ /dashboard/admin/packages/create     9.61 kB         238 kB
 ├ ○ /dashboard/admin/payments            13.6 kB         257 kB
 ├ ○ /dashboard/admin/plans               7.26 kB         273 kB
 ├ ƒ /dashboard/admin/plans/[id]           6.5 kB         231 kB
@@ -40,7 +40,7 @@ Route (app)                                 Size  First Load JS
 ├ ○ /dashboard/admin/products            13.3 kB         299 kB
 ├ ○ /dashboard/admin/users               4.97 kB         296 kB
 ├ ƒ /dashboard/admin/users/[id]           7.2 kB         253 kB
-├ ○ /dashboard/admin/users/create          655 B         273 kB
+├ ○ /dashboard/admin/users/create          654 B         273 kB
 ├ ƒ /dashboard/admin/users/edit/[id]     1.56 kB         274 kB
 ├ ○ /dashboard/analytics                 10.7 kB         248 kB
 ├ ○ /dashboard/divar                     7.57 kB         248 kB
@@ -54,7 +54,7 @@ Route (app)                                 Size  First Load JS
 ├ ○ /dashboard/products                  5.18 kB         311 kB
 ├ ƒ /dashboard/products/[id]             7.13 kB         316 kB
 ├ ○ /dashboard/profile                   10.9 kB         299 kB
-├ ○ /dashboard/sdk                        233 kB         474 kB
+├ ○ /dashboard/sdk                        233 kB         475 kB
 ├ ○ /dashboard/sdk/new-token               11 kB         220 kB
 ├ ○ /dashboard/settings                  6.38 kB         217 kB
 └ ○ /kenar-divar                         4.01 kB         182 kB

@@ -17,12 +17,15 @@ const eslintConfig = [
       "react-hooks/rules-of-hooks": "off",
       "react-hooks/exhaustive-deps": "warn",
 
-      // غیرفعال کردن سایر قوانین مزاحم
-      "@typescript-eslint/no-unused-vars": "warn",
-      "@typescript-eslint/no-explicit-any": "warn",
+      // سخت‌گیری برای type any و unused variables
+      "@typescript-eslint/no-unused-vars": "error",
+      "@typescript-eslint/no-explicit-any": "error",
+
+      // سایر قوانین
       "@next/next/no-img-element": "warn",
       "jsx-a11y/alt-text": "warn",
       "@typescript-eslint/no-non-null-asserted-optional-chain": "warn",
+      "no-console": "warn",
     },
   },
 ];

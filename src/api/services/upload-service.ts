@@ -65,7 +65,7 @@ export const uploadService = {
       });
 
       return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       // مدیریت خطاها
       const uploadError = uploadService.handleUploadError(error);
       throw uploadError;
@@ -103,9 +103,15 @@ export const uploadService = {
    * مدیریت خطاهای آپلود
    * @param error خطای دریافت شده
    */
-  handleUploadError: (error: any): UploadError => {
+  handleUploadError: (error: unknown): UploadError => {
     // اگر درخواست cancel شده
-    if (error.name === "CanceledError" || error.code === "ERR_CANCELED") {
+    if (
+      (error instanceof Error && error.name === "CanceledError") ||
+      (typeof error === "object" &&
+        error !== null &&
+        "code" in error &&
+        (error as { code: string }).code === "ERR_CANCELED")
+    ) {
       return {
         type: "CANCELLED",
         message: "آپلود لغو شد",
@@ -114,11 +120,29 @@ export const uploadService = {
     }
 
     // اگر پاسخ از سرور دریافت شده
-    if (error.response?.data) {
-      const serverError = error.response.data;
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "response" in error &&
+      typeof (error as { response: unknown }).response === "object" &&
+      (error as { response: { data?: unknown } }).response.data
+    ) {
+      const serverError = (
+        error as {
+          response: {
+            data: {
+              message?: string;
+              code?: number;
+            };
+          };
+        }
+      ).response.data;
 
       // تشخیص نوع خطا بر اساس پیام سرور
-      if (serverError.message.includes("سایز فایل زیاد")) {
+      if (
+        serverError.message &&
+        serverError.message.includes("سایز فایل زیاد")
+      ) {
         return {
           type: "FILE_TOO_LARGE",
           message: serverError.message,
@@ -126,7 +150,10 @@ export const uploadService = {
         };
       }
 
-      if (serverError.message.includes("نوع فایل مجاز نیست")) {
+      if (
+        serverError.message &&
+        serverError.message.includes("نوع فایل مجاز نیست")
+      ) {
         return {
           type: "INVALID_FILE_TYPE",
           message: serverError.message,
@@ -134,7 +161,7 @@ export const uploadService = {
         };
       }
 
-      if (serverError.message.includes("تعداد آپلود")) {
+      if (serverError.message && serverError.message.includes("تعداد آپلود")) {
         return {
           type: "RATE_LIMIT_EXCEEDED",
           message: serverError.message,
@@ -150,7 +177,7 @@ export const uploadService = {
     }
 
     // خطای شبکه
-    if (error.request) {
+    if (typeof error === "object" && error !== null && "request" in error) {
       return {
         type: "NETWORK_ERROR",
         message: "خطا در ارتباط با سرور. اتصال اینترنت خود را بررسی کنید.",
@@ -159,9 +186,16 @@ export const uploadService = {
     }
 
     // سایر خطاها
+    const message =
+      error instanceof Error
+        ? error.message
+        : typeof error === "string"
+        ? error
+        : "خطای نامشخص در آپلود";
+
     return {
       type: "SERVER_ERROR",
-      message: error.message || "خطای نامشخص در آپلود",
+      message,
       code: 500,
     };
   },
@@ -178,7 +212,11 @@ export const uploadService = {
    * محاسبه درصد پیشرفت آپلود
    * @param progressEvent رویداد پیشرفت
    */
-  calculateProgress: (progressEvent: any): number => {
+  calculateProgress: (progressEvent: {
+    loaded?: number;
+    total?: number;
+    lengthComputable?: boolean;
+  }): number => {
     if (
       progressEvent.lengthComputable ||
       (progressEvent.loaded && progressEvent.total)
