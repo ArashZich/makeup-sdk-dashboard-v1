@@ -6,6 +6,11 @@ import { useTheme } from "next-themes";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  safeObjectData,
+  safePercentages,
+  createEmptyState,
+} from "@/lib/safe-data-utils";
 import dynamic from "next/dynamic";
 
 // Dynamically import the chart to avoid server-side rendering issues
@@ -35,14 +40,10 @@ export function BrowserStatsCard({
     setMounted(true);
   }, []);
 
-  const labels = Object.keys(data);
-  const values = Object.values(data);
-
-  // Calculate percentages
-  const total = values.reduce((sum, value) => sum + value, 0);
-  const percentages = values.map((value) =>
-    total > 0 ? (value / total) * 100 : 0
-  );
+  // ✅ Safe handling of data using utility
+  const { labels, values, hasData } = safeObjectData(data);
+  const percentages = safePercentages(values);
+  const emptyState = createEmptyState();
 
   if (!mounted) {
     return (
@@ -59,18 +60,18 @@ export function BrowserStatsCard({
 
   const isDarkTheme = theme === "dark";
 
-  // بهبود رنگ‌های نمودار برای تمام تم‌ها
+  // Chart colors
   const colors = [
-    "#3B82F6", // blue - آبی روشن
-    "#10B981", // emerald - سبز زمردی
-    "#F59E0B", // amber - نارنجی طلایی
-    "#EF4444", // red - قرمز
-    "#8B5CF6", // violet - بنفش
-    "#EC4899", // pink - صورتی
-    "#06B6D4", // cyan - فیروزه‌ای
-    "#84CC16", // lime - سبز لیمویی
-    "#F97316", // orange - نارنجی
-    "#6366F1", // indigo - نیلی
+    "#3B82F6",
+    "#10B981",
+    "#F59E0B",
+    "#EF4444",
+    "#8B5CF6",
+    "#EC4899",
+    "#06B6D4",
+    "#84CC16",
+    "#F97316",
+    "#6366F1",
   ];
 
   // Chart options
@@ -87,9 +88,8 @@ export function BrowserStatsCard({
       position: "bottom",
       horizontalAlign: "center",
       labels: {
-        // استفاده از رنگ‌های بهتر برای contrast
-        colors: isDarkTheme ? "#E2E8F0" : "#334155", // slate-200 برای dark و slate-700 برای light
-        useSeriesColors: false, // از رنگ‌های سری استفاده نکن
+        colors: isDarkTheme ? "#E2E8F0" : "#334155",
+        useSeriesColors: false,
       },
       fontSize: "14px",
       fontWeight: 500,
@@ -97,11 +97,10 @@ export function BrowserStatsCard({
     dataLabels: {
       enabled: true,
       formatter: function (val: number) {
-        // اطمینان از اینکه val یک عدد است
         return typeof val === "number" ? val.toFixed(1) + "%" : "0%";
       },
       style: {
-        colors: ["#ffffff"], // همیشه سفید برای روی رنگ‌های تیره
+        colors: ["#ffffff"],
         fontSize: "12px",
         fontWeight: "bold",
       },
@@ -135,15 +134,14 @@ export function BrowserStatsCard({
               show: true,
               fontSize: "16px",
               fontWeight: 600,
-              color: isDarkTheme ? "#F1F5F9" : "#1E293B", // slate-100 برای dark و slate-800 برای light
+              color: isDarkTheme ? "#F1F5F9" : "#1E293B",
             },
             value: {
               show: true,
               fontSize: "20px",
               fontWeight: "bold",
-              color: isDarkTheme ? "#F1F5F9" : "#1E293B", // slate-100 برای dark و slate-800 برای light
+              color: isDarkTheme ? "#F1F5F9" : "#1E293B",
               formatter: function (val: any) {
-                // اطمینان از اینکه val یک عدد است
                 return typeof val === "number" ? val.toFixed(1) + "%" : "0%";
               },
             },
@@ -153,7 +151,7 @@ export function BrowserStatsCard({
               label: "Total",
               fontSize: "16px",
               fontWeight: 600,
-              color: isDarkTheme ? "#CBD5E1" : "#475569", // slate-300 برای dark و slate-600 برای light
+              color: isDarkTheme ? "#CBD5E1" : "#475569",
               formatter: function (w: any) {
                 return "100%";
               },
@@ -187,7 +185,7 @@ export function BrowserStatsCard({
     stroke: {
       show: true,
       width: 2,
-      colors: isDarkTheme ? ["#1E293B"] : ["#ffffff"], // border بین قسمت‌ها
+      colors: isDarkTheme ? ["#1E293B"] : ["#ffffff"],
     },
   };
 
@@ -199,11 +197,18 @@ export function BrowserStatsCard({
       <CardContent>
         {isLoading ? (
           <Skeleton className="h-[250px] w-full" />
+        ) : !hasData ? (
+          <div className="h-[250px] flex items-center justify-center text-center">
+            <div className="text-muted-foreground">
+              <div className="text-lg font-medium mb-2">{emptyState.title}</div>
+              <div className="text-sm">{emptyState.description}</div>
+            </div>
+          </div>
         ) : (
           <div className="w-full">
             <ReactApexChart
               options={options as any}
-              series={percentages} // استفاده از درصدها
+              series={percentages}
               type="donut"
               height={height}
             />

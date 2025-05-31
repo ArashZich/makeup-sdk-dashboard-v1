@@ -1,7 +1,7 @@
 // src/features/analytics/views/AnalyticsView.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useUserAnalytics } from "@/api/hooks/useAnalytics";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,6 +22,12 @@ import {
   Monitor,
   Smartphone,
 } from "lucide-react";
+import {
+  safeAnalyticsData,
+  safeChartData,
+  getTopItem,
+  createEmptyState,
+} from "@/lib/safe-data-utils";
 import { logger } from "@/lib/logger";
 
 // تعریف رابط ChartSeries برای رفع مشکل تایپ
@@ -37,25 +43,31 @@ export function AnalyticsView() {
   const { getUserAnalytics, downloadAnalytics, isDownloadingAnalytics } =
     useUserAnalytics();
 
-  // **مهم: تغییر اینجا - پارامتر رو به صورت object پاس می‌کنیم**
   const {
-    data: analytics,
+    data: rawAnalytics,
     isLoading,
     error,
     refetch,
     isRefetching,
-  } = getUserAnalytics({ timeRange }); // اینجا تغییر کردیم
+  } = getUserAnalytics({ timeRange });
+
+  // ✅ Safe handling of analytics data using utility
+  const analytics = safeAnalyticsData(rawAnalytics);
+  const emptyState = createEmptyState(
+    t("common.empty_data"),
+    t("common.emty_analytics")
+  );
 
   // Function to process time distribution data for chart
   const processTimeDistributionData = () => {
-    if (!analytics)
+    const { categories, values, hasData } = safeChartData(
+      rawAnalytics?.timeDistribution,
+      "byDate"
+    );
+
+    if (!hasData) {
       return { series: [] as ChartSeries[], categories: [] as string[] };
-
-    const byDate = analytics.timeDistribution.byDate;
-    const categories = Object.keys(byDate);
-
-    // تبدیل مستقیم به آرایه‌ای از اعداد
-    const values = Object.values(byDate).map((value) => Number(value));
+    }
 
     const series: ChartSeries[] = [
       {
@@ -81,23 +93,6 @@ export function AnalyticsView() {
   // Handle refresh analytics
   const handleRefresh = () => {
     refetch();
-  };
-
-  // کمک تابع برای یافتن بیشترین مقدار در یک رکورد
-  const getTopItem = (stats: Record<string, number>): string => {
-    if (!stats || Object.keys(stats).length === 0) return "-";
-
-    let maxItem = "";
-    let maxValue = 0;
-
-    for (const [key, value] of Object.entries(stats)) {
-      if (value > maxValue) {
-        maxValue = value;
-        maxItem = key;
-      }
-    }
-
-    return maxItem;
   };
 
   return (
@@ -152,7 +147,15 @@ export function AnalyticsView() {
         <div className="flex justify-center py-12">
           <Loader size="lg" text="common.loading" />
         </div>
-      ) : analytics ? (
+      ) : !analytics.hasAnyData ? (
+        <div className="flex flex-col items-center justify-center py-12 text-center">
+          <div className="text-muted-foreground max-w-md">
+            <Activity className="h-12 w-12 mx-auto mb-4 opacity-50" />
+            <div className="text-xl font-medium mb-2">{emptyState.title}</div>
+            <div className="text-sm">{emptyState.description}</div>
+          </div>
+        </div>
+      ) : (
         <>
           {/* Usage Stats Overview */}
           <div className="grid gap-4 md:grid-cols-3">
@@ -165,7 +168,13 @@ export function AnalyticsView() {
             />
             <SuccessRateCard
               title={t("analytics.requestsSuccessRate")}
-              successRate={analytics.successRate}
+              successRate={
+                rawAnalytics?.successRate || {
+                  success: 0,
+                  failed: 0,
+                  rate: "0%",
+                }
+              }
             />
             <Card className="h-full">
               <CardHeader className="pb-2">
@@ -179,7 +188,7 @@ export function AnalyticsView() {
                     <span className="text-sm">{t("analytics.topDevice")}</span>
                   </div>
                   <span className="font-medium text-sm">
-                    {getTopItem(analytics.deviceStats)}
+                    {getTopItem(rawAnalytics?.deviceStats)}
                   </span>
                 </div>
 
@@ -190,7 +199,7 @@ export function AnalyticsView() {
                     <span className="text-sm">{t("analytics.topBrowser")}</span>
                   </div>
                   <span className="font-medium text-sm">
-                    {getTopItem(analytics.browserStats)}
+                    {getTopItem(rawAnalytics?.browserStats)}
                   </span>
                 </div>
 
@@ -201,7 +210,7 @@ export function AnalyticsView() {
                     <span className="text-sm">{t("analytics.topOS")}</span>
                   </div>
                   <span className="font-medium text-sm">
-                    {getTopItem(analytics.osStats)}
+                    {getTopItem(rawAnalytics?.osStats)}
                   </span>
                 </div>
               </CardContent>
@@ -225,19 +234,19 @@ export function AnalyticsView() {
           <div className="grid gap-4 md:grid-cols-3 mt-6">
             <BrowserStatsCard
               title={t("analytics.browserDistribution")}
-              data={analytics.browserStats}
+              data={rawAnalytics?.browserStats || {}}
             />
             <BrowserStatsCard
               title={t("analytics.deviceDistribution")}
-              data={analytics.deviceStats}
+              data={rawAnalytics?.deviceStats || {}}
             />
             <BrowserStatsCard
               title={t("analytics.osDistribution")}
-              data={analytics.osStats}
+              data={rawAnalytics?.osStats || {}}
             />
           </div>
         </>
-      ) : null}
+      )}
     </div>
   );
 }

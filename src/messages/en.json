@@ -88,7 +88,9 @@
     "selected": "Selected",
     "used": "Used",
     "compatible": "Compatible",
-    "incompatible": "Incompatible"
+    "incompatible": "Incompatible",
+    "empty_data": "No data available",
+    "emty_analytics": "No analytics available"
   },
   "auth": {
     "login": "Login",

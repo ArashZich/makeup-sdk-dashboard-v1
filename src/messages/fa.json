@@ -88,7 +88,9 @@
     "selected": "انتخاب شده",
     "used": "استفاده شده",
     "compatible": "سازگار",
-    "incompatible": "ناسازگار"
+    "incompatible": "ناسازگار",
+    "empty_data": "داده‌ای موجود نیست",
+    "emty_analytics": "هنوز آماری از استفاده SDK شما ثبت نشده است"
   },
   "auth": {
     "login": "ورود",

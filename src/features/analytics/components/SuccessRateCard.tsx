@@ -6,6 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CheckCircle, XCircle } from "lucide-react";
 import { parseSuccessRate, formatSuccessRate } from "@/lib/analytics-utils";
+import {
+  safeSuccessRate,
+  safeNumberFormat,
+  createEmptyState,
+} from "@/lib/safe-data-utils";
 
 interface SuccessRateCardProps {
   title: string;
@@ -24,9 +29,16 @@ export function SuccessRateCard({
 }: SuccessRateCardProps) {
   const { t, isRtl } = useLanguage();
 
-  // استفاده از متد کمکی برای parse کردن نرخ موفقیت
-  const successPercent = parseSuccessRate(successRate.rate);
-  const totalRequests = successRate.success + successRate.failed;
+  // ✅ Safe handling of successRate data using utility
+  const { success, failed, rate, total, hasData } =
+    safeSuccessRate(successRate);
+
+  const successPercent = parseSuccessRate(rate);
+  const failedPercent = 100 - successPercent;
+  const emptyState = createEmptyState(
+    "داده‌ای موجود نیست",
+    "هنوز درخواستی ثبت نشده است"
+  );
 
   return (
     <Card className="h-full">
@@ -39,6 +51,13 @@ export function SuccessRateCard({
             <Skeleton className="h-8 w-full" />
             <Skeleton className="h-24 w-full" />
           </div>
+        ) : !hasData ? (
+          <div className="h-[120px] flex items-center justify-center text-center">
+            <div className="text-muted-foreground">
+              <div className="text-lg font-medium mb-2">{emptyState.title}</div>
+              <div className="text-sm">{emptyState.description}</div>
+            </div>
+          </div>
         ) : (
           <div className="space-y-4">
             <div className="flex items-center justify-between text-sm">
@@ -47,8 +66,8 @@ export function SuccessRateCard({
                 <span>{t("analytics.success")}</span>
               </div>
               <span className="font-medium">
-                {successRate.success.toLocaleString(isRtl ? "fa-IR" : "en-US")}{" "}
-                ({formatSuccessRate(successRate.rate)})
+                {safeNumberFormat(success, isRtl ? "fa-IR" : "en-US")} (
+                {formatSuccessRate(rate)})
               </span>
             </div>
 
@@ -58,8 +77,8 @@ export function SuccessRateCard({
                 <span>{t("analytics.failed")}</span>
               </div>
               <span className="font-medium">
-                {successRate.failed.toLocaleString(isRtl ? "fa-IR" : "en-US")} (
-                {(100 - successPercent).toFixed(1)}%)
+                {safeNumberFormat(failed, isRtl ? "fa-IR" : "en-US")} (
+                {failedPercent.toFixed(1)}%)
               </span>
             </div>
 
@@ -67,17 +86,16 @@ export function SuccessRateCard({
               <div className="flex h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
                 <div
                   className="flex flex-col justify-center overflow-hidden bg-green-500 text-xs text-white text-center"
-                  style={{ width: formatSuccessRate(successRate.rate) }}
+                  style={{ width: formatSuccessRate(rate) }}
                 ></div>
               </div>
               <div className="mt-2 flex justify-between text-xs text-gray-600 dark:text-gray-400">
                 <div>
                   {t("analytics.totalRequests")}:{" "}
-                  {totalRequests.toLocaleString(isRtl ? "fa-IR" : "en-US")}
+                  {safeNumberFormat(total, isRtl ? "fa-IR" : "en-US")}
                 </div>
                 <div>
-                  {t("analytics.successRate")}:{" "}
-                  {formatSuccessRate(successRate.rate)}
+                  {t("analytics.successRate")}: {formatSuccessRate(rate)}
                 </div>
               </div>
             </div>

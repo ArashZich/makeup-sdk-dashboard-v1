@@ -7,8 +7,9 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
+import { canDisplayChart, createEmptyState } from "@/lib/safe-data-utils";
+import { toJalali } from "@/lib/date";
 import dynamic from "next/dynamic";
-import { toJalali } from "@/lib/date"; // اضافه کردن import برای تبدیل تاریخ
 
 // Dynamically import the chart to avoid server-side rendering issues
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
@@ -53,6 +54,13 @@ export function UsageChartCard({
     setMounted(true);
   }, []);
 
+  // ✅ Safe handling of chart data using utility
+  const hasChartData = canDisplayChart(series.flatMap((s) => s.data));
+  const emptyState = createEmptyState(
+    "داده‌ای موجود نیست",
+    "هنوز آماری برای نمایش در نمودار وجود ندارد"
+  );
+
   if (!mounted) {
     return (
       <Card>
@@ -66,7 +74,7 @@ export function UsageChartCard({
     );
   }
 
-  // تبدیل تاریخ‌های موجود در categories به فرمت مناسب
+  // ✅ Safe processing of categories for date formatting
   const formattedCategories = categories.map((date) => {
     try {
       // بررسی آیا مقدار یک تاریخ معتبر است
@@ -146,7 +154,7 @@ export function UsageChartCard({
           { series, seriesIndex, dataPointIndex, w }: any
         ) {
           // نمایش تاریخ کامل در tooltip
-          return categories[dataPointIndex];
+          return categories[dataPointIndex] || "";
         },
       },
       style: {
@@ -158,8 +166,8 @@ export function UsageChartCard({
       // اضافه کردن استایل‌های سفارشی برای tooltip
       custom: function ({ series, seriesIndex, dataPointIndex, w }: any) {
         const value = series[seriesIndex][dataPointIndex];
-        const category = categories[dataPointIndex];
-        const seriesName = w.globals.seriesNames[seriesIndex];
+        const category = categories[dataPointIndex] || "";
+        const seriesName = w.globals.seriesNames[seriesIndex] || "";
 
         // استایل مناسب برای tooltip
         const bgColor = isDarkTheme ? "#1f2937" : "#ffffff";
@@ -186,7 +194,7 @@ export function UsageChartCard({
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <span>${seriesName}:</span>
-              <span style="font-weight: bold;">${value.toLocaleString(
+              <span style="font-weight: bold;">${(value || 0).toLocaleString(
                 isRtl ? "fa-IR" : "en-US"
               )}</span>
             </div>
@@ -236,6 +244,13 @@ export function UsageChartCard({
       <CardContent>
         {isLoading ? (
           <Skeleton className="h-[350px] w-full" />
+        ) : !hasChartData ? (
+          <div className="h-[350px] flex items-center justify-center text-center">
+            <div className="text-muted-foreground">
+              <div className="text-lg font-medium mb-2">{emptyState.title}</div>
+              <div className="text-sm">{emptyState.description}</div>
+            </div>
+          </div>
         ) : (
           <div className="w-full">
             <ReactApexChart
