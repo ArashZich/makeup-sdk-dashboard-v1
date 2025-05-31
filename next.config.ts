@@ -23,6 +23,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "armogroup.storage.iran.liara.space",
       },
+      {
+        protocol: "https",
+        hostname: "images.rojashop.com",
+      },
     ],
   },
   env: {
