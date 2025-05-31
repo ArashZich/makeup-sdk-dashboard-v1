@@ -42,9 +42,10 @@ import { Calendar } from "@/components/ui/calendar";
 import { Loader } from "@/components/common/Loader";
 import { Badge } from "@/components/ui/badge";
 import { DateTime } from "luxon";
-import { CalendarIcon, Plus, X, Users, Infinity } from "lucide-react";
+import { CalendarIcon, Users, Infinity } from "lucide-react";
 import { toJalali } from "@/lib/date";
 import logger from "@/lib/logger";
+import { UserSelector } from "./UserSelector"; // 🆕 import جدید
 
 // اسکیما برای اعتبارسنجی فرم
 const couponSchema = z
@@ -65,7 +66,7 @@ const couponSchema = z
       .min(1, { message: "Max usage must be at least 1" }),
     maxUsagePerUser: z.coerce
       .number()
-      .min(-1, { message: "Max usage per user cannot be less than -1" }), // 🆕 فیلد جدید
+      .min(-1, { message: "Max usage per user cannot be less than -1" }),
     startDate: z.date(),
     endDate: z.date(),
     forPlans: z.array(z.string()).optional(),
@@ -79,7 +80,6 @@ const couponSchema = z
 
 type CouponFormValues = z.infer<typeof couponSchema>;
 
-// ✅ اصلاح interface برای پشتیبانی از هر دو حالت
 interface CouponFormProps {
   coupon?: Coupon;
   isSubmitting: boolean;
@@ -92,7 +92,6 @@ export function CouponForm({
   onSubmit,
 }: CouponFormProps) {
   const { t, isRtl } = useLanguage();
-  const [userIdInput, setUserIdInput] = useState("");
 
   // دریافت لیست پلن‌ها
   const { getAllPlans } = usePlans();
@@ -105,7 +104,7 @@ export function CouponForm({
     percent: coupon?.percent || 10,
     maxAmount: coupon?.maxAmount || 0,
     maxUsage: coupon?.maxUsage || 1,
-    maxUsagePerUser: coupon?.maxUsagePerUser ?? -1, // 🆕 پیش‌فرض -1 (نامحدود)
+    maxUsagePerUser: coupon?.maxUsagePerUser ?? -1,
     startDate: coupon ? new Date(coupon.startDate) : new Date(),
     endDate: coupon
       ? new Date(coupon.endDate)
@@ -132,35 +131,6 @@ export function CouponForm({
     defaultValues,
   });
 
-  // منطق افزودن کاربر به فهرست محدودیت‌ها
-  const handleUserAdd = () => {
-    if (!userIdInput.trim()) return;
-
-    const currentUsers = form.getValues("forUsers") || [];
-
-    // بررسی تکراری بودن
-    if (currentUsers.includes(userIdInput)) {
-      form.setError("forUsers", {
-        type: "manual",
-        message: t("admin.coupons.userIdExists"),
-      });
-      return;
-    }
-
-    form.setValue("forUsers", [...currentUsers, userIdInput]);
-    setUserIdInput("");
-    form.clearErrors("forUsers");
-  };
-
-  // منطق حذف کاربر از فهرست محدودیت‌ها
-  const handleUserRemove = (userId: string) => {
-    const currentUsers = form.getValues("forUsers") || [];
-    form.setValue(
-      "forUsers",
-      currentUsers.filter((id) => id !== userId)
-    );
-  };
-
   // منطق انتخاب یا حذف پلن از فهرست محدودیت‌ها
   const handlePlanToggle = (planId: string) => {
     const currentPlans = form.getValues("forPlans") || [];
@@ -175,7 +145,6 @@ export function CouponForm({
     }
   };
 
-  // ✅ اصلاح handleSubmit برای پشتیبانی از هر دو حالت
   const handleSubmit = async (values: CouponFormValues) => {
     logger.api("Coupon form submitting with data:", values);
 
@@ -185,7 +154,7 @@ export function CouponForm({
         percent: values.percent,
         maxAmount: values.maxAmount,
         maxUsage: values.maxUsage,
-        maxUsagePerUser: values.maxUsagePerUser, // 🆕 اضافه کردن فیلد جدید
+        maxUsagePerUser: values.maxUsagePerUser,
         startDate: DateTime.fromJSDate(values.startDate).toISO()!,
         endDate: DateTime.fromJSDate(values.endDate).toISO()!,
         forPlans: values.forPlans,
@@ -194,12 +163,10 @@ export function CouponForm({
       };
 
       if (coupon) {
-        // ✅ حالت update - بدون code
         const updateData: UpdateCouponRequest = baseData;
         logger.data("Update coupon data:", updateData);
         await onSubmit(updateData);
       } else {
-        // ✅ حالت create - با code
         const createData: CreateCouponRequest = {
           ...baseData,
           code: values.code,
@@ -229,7 +196,7 @@ export function CouponForm({
                         placeholder={t("admin.coupons.codePlaceholder")}
                         {...field}
                         className="uppercase"
-                        disabled={!!coupon} // کد کوپن در حالت ویرایش غیرقابل تغییر است
+                        disabled={!!coupon}
                       />
                     </FormControl>
                     {coupon && (
@@ -341,7 +308,6 @@ export function CouponForm({
                 )}
               />
 
-              {/* 🆕 فیلد جدید maxUsagePerUser */}
               <FormField
                 control={form.control}
                 name="maxUsagePerUser"
@@ -391,7 +357,6 @@ export function CouponForm({
                           </SelectContent>
                         </Select>
 
-                        {/* نمایش فیلد manual برای مقادیر سفارشی */}
                         {![-1, 1, 2, 3, 5, 10].includes(field.value) && (
                           <Input
                             type="number"
@@ -445,7 +410,7 @@ export function CouponForm({
                             mode="single"
                             selected={field.value}
                             onSelect={field.onChange}
-                            disabled={(date) => date < new Date()} // گذشته غیرفعال است
+                            disabled={(date) => date < new Date()}
                           />
                         </PopoverContent>
                       </Popover>
@@ -483,7 +448,7 @@ export function CouponForm({
                             mode="single"
                             selected={field.value}
                             onSelect={field.onChange}
-                            disabled={(date) => date < new Date()} // گذشته غیرفعال است
+                            disabled={(date) => date < new Date()}
                           />
                         </PopoverContent>
                       </Popover>
@@ -545,7 +510,7 @@ export function CouponForm({
                                     isRtl ? "fa-IR" : "en-US",
                                     {
                                       style: "currency",
-                                      currency: "IRR", // پیش‌فرض ریال ایران - می‌توانید بر اساس نیاز تغییر دهید
+                                      currency: "IRR",
                                     }
                                   )}{" "}
                                   | {plan.duration} {t("admin.coupons.days")}
@@ -566,66 +531,25 @@ export function CouponForm({
               />
             </div>
 
-            {/* محدودیت‌های کاربر */}
+            {/* 🆕 محدودیت‌های کاربر - به‌روزرسانی شده */}
             <div className="mt-8">
               <FormField
                 control={form.control}
                 name="forUsers"
-                render={() => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t("admin.coupons.userRestrictions")}</FormLabel>
                     <FormDescription>
                       {t("admin.coupons.userRestrictionsDescription")}
                     </FormDescription>
-                    <div className="flex mt-2 mb-2">
-                      <Input
-                        value={userIdInput}
-                        onChange={(e) => setUserIdInput(e.target.value)}
+                    <FormControl>
+                      <UserSelector
+                        selectedUserIds={field.value || []}
+                        onUsersChange={field.onChange}
                         placeholder={t("admin.coupons.userIdPlaceholder")}
-                        className="mr-2"
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                            handleUserAdd();
-                          }
-                        }}
                       />
-                      <Button type="button" onClick={handleUserAdd}>
-                        <Plus className="h-4 w-4 mr-2" />
-                        {t("admin.coupons.addUser")}
-                      </Button>
-                    </div>
+                    </FormControl>
                     <FormMessage />
-                    <div className="mt-4">
-                      <h4 className="text-sm font-medium mb-2">
-                        {t("admin.coupons.currentUsers")}
-                      </h4>
-                      <div className="flex flex-wrap gap-2">
-                        {form.watch("forUsers")?.length ? (
-                          form.watch("forUsers")?.map((userId) => (
-                            <div
-                              key={userId}
-                              className="flex items-center bg-secondary text-secondary-foreground px-3 py-1 rounded-md text-sm"
-                            >
-                              {userId}
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                className="h-auto p-0 ml-1"
-                                onClick={() => handleUserRemove(userId)}
-                              >
-                                <X className="h-3 w-3 text-red-500" />
-                              </Button>
-                            </div>
-                          ))
-                        ) : (
-                          <p className="text-sm text-muted-foreground">
-                            {t("admin.coupons.noUsersAdded")}
-                          </p>
-                        )}
-                      </div>
-                    </div>
                   </FormItem>
                 )}
               />

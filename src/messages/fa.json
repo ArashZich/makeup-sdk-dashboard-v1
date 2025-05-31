@@ -989,7 +989,7 @@
       "planRestrictionsDescription": "این کد تخفیف فقط برای پلن‌های انتخاب شده قابل استفاده است",
       "userRestrictions": "محدودیت‌های کاربر",
       "userRestrictionsDescription": "این کد تخفیف فقط برای کاربران انتخاب شده قابل استفاده است",
-      "userIdPlaceholder": "شناسه کاربر را وارد کنید",
+      "userIdPlaceholder": "انتخاب کاربر برای اضافه کردن",
       "addUser": "افزودن کاربر",
       "currentUsers": "کاربران فعلی",
       "noUsersAdded": "هیچ کاربری اضافه نشده است",
@@ -1010,7 +1010,13 @@
       "unlimitedUsage": "استفاده نامحدود",
       "usagePerUser": "استفاده هر کاربر",
       "limitedUsage": "استفاده محدود",
-      "userUsageLimit": "محدودیت کاربری"
+      "userUsageLimit": "محدودیت کاربری",
+      "selectUser": "انتخاب کاربر",
+      "searchUsers": "جستجوی کاربران...",
+      "clearAllUsers": "پاک کردن همه",
+      "noUsersFound": "کاربری یافت نشد",
+      "userSelected": "کاربر انتخاب شده",
+      "removeUser": "حذف کاربر"
     },
     "packages": {
       "title": "مدیریت بسته‌ها",
@@ -1201,6 +1207,8 @@
         "usersDescription": "شناسه کاربران را با کاما جدا کنید",
         "sendSmsLabel": "ارسال پیامک",
         "sendSmsDescription": "علاوه بر اطلاعیه داخلی، پیامک نیز ارسال شود",
+        "sendEmailLabel": "ارسال ایمیل",
+        "sendEmailDescription": "علاوه بر اطلاعیه داخلی، ایمیل نیز ارسال شود",
         "sending": "در حال ارسال...",
         "sendButton": "ارسال اطلاعیه",
         "maxUsersWarning": "⚠️ حداکثر {{maxUsers}} کاربر قابل انتخاب است",

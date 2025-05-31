@@ -30,7 +30,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { UserPlanSelector } from "./UserPlanSelector";
 
-// Schema validation
+// Schema validation - به‌روزرسانی شده
 const formSchema = z.object({
   title: z.string().min(1, "titleRequired"),
   message: z.string().min(1, "messageRequired"),
@@ -43,6 +43,7 @@ const formSchema = z.object({
   planId: z.string().optional(),
   userIds: z.array(z.string()).optional(),
   sendSms: z.boolean(),
+  sendEmail: z.boolean(), // 🆕 فیلد جدید اضافه شده
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -61,6 +62,7 @@ export function SendNotificationForm() {
       planId: "",
       userIds: [],
       sendSms: false,
+      sendEmail: false, // 🆕 پیش‌فرض جدید
     },
   });
 
@@ -73,6 +75,7 @@ export function SendNotificationForm() {
         message: data.message,
         type: data.type,
         sendSms: data.sendSms,
+        sendEmail: data.sendEmail, // 🆕 ارسال فیلد جدید
         ...(data.target === "plan" && { planId: data.planId }),
         ...(data.target === "users" && {
           userId: data.userIds?.join(","), // تبدیل آرایه به string با کاما
@@ -291,6 +294,30 @@ export function SendNotificationForm() {
                     </FormLabel>
                     <FormDescription>
                       {t("admin.notifications.form.sendSmsDescription")}
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            {/* 🆕 Email Option - قسمت جدید اضافه شده */}
+            <FormField
+              control={form.control}
+              name="sendEmail"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-base">
+                      {t("admin.notifications.form.sendEmailLabel")}
+                    </FormLabel>
+                    <FormDescription>
+                      {t("admin.notifications.form.sendEmailDescription")}
                     </FormDescription>
                   </div>
                   <FormControl>

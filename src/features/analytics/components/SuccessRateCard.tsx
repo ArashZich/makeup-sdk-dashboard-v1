@@ -5,6 +5,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CheckCircle, XCircle } from "lucide-react";
+import { parseSuccessRate, formatSuccessRate } from "@/lib/analytics-utils";
 
 interface SuccessRateCardProps {
   title: string;
@@ -23,8 +24,8 @@ export function SuccessRateCard({
 }: SuccessRateCardProps) {
   const { t, isRtl } = useLanguage();
 
-  // Calculate the success percentage
-  const successPercent = parseFloat(successRate.rate.replace("%", ""));
+  // استفاده از متد کمکی برای parse کردن نرخ موفقیت
+  const successPercent = parseSuccessRate(successRate.rate);
   const totalRequests = successRate.success + successRate.failed;
 
   return (
@@ -47,7 +48,7 @@ export function SuccessRateCard({
               </div>
               <span className="font-medium">
                 {successRate.success.toLocaleString(isRtl ? "fa-IR" : "en-US")}{" "}
-                ({successRate.rate})
+                ({formatSuccessRate(successRate.rate)})
               </span>
             </div>
 
@@ -66,7 +67,7 @@ export function SuccessRateCard({
               <div className="flex h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
                 <div
                   className="flex flex-col justify-center overflow-hidden bg-green-500 text-xs text-white text-center"
-                  style={{ width: successRate.rate }}
+                  style={{ width: formatSuccessRate(successRate.rate) }}
                 ></div>
               </div>
               <div className="mt-2 flex justify-between text-xs text-gray-600 dark:text-gray-400">
@@ -75,7 +76,8 @@ export function SuccessRateCard({
                   {totalRequests.toLocaleString(isRtl ? "fa-IR" : "en-US")}
                 </div>
                 <div>
-                  {t("analytics.successRate")}: {successRate.rate}
+                  {t("analytics.successRate")}:{" "}
+                  {formatSuccessRate(successRate.rate)}
                 </div>
               </div>
             </div>
