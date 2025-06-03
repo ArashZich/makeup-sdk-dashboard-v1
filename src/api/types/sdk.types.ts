@@ -53,7 +53,7 @@ export interface SdkStatus {
   isPremium: boolean;
   projectType: string;
   requestLimit: {
-    monthly: number;
+    total: number;
     remaining: number;
   };
   usageStats: {

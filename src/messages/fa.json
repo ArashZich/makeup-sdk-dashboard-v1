@@ -90,7 +90,8 @@
     "compatible": "سازگار",
     "incompatible": "ناسازگار",
     "empty_data": "داده‌ای موجود نیست",
-    "emty_analytics": "هنوز آماری از استفاده SDK شما ثبت نشده است"
+    "emty_analytics": "هنوز آماری از استفاده SDK شما ثبت نشده است",
+    "apply": "اعمال"
   },
   "auth": {
     "login": "ورود",
@@ -493,7 +494,8 @@
       "applyRequests": "درخواست‌های اعمال",
       "otherRequests": "سایر درخواست‌ها",
       "projectType": "نوع پروژه",
-      "premium": "پرمیوم"
+      "premium": "پرمیوم",
+      "unlimitedUsage": "استفاده نامحدود"
     },
     "status": {
       "active": "فعال",
@@ -511,7 +513,7 @@
       "jsDescription": "کد JavaScript برای راه‌اندازی SDK",
       "reactDescription": "نحوه استفاده از SDK در کامپوننت React",
       "viewDocs": "مشاهده مستندات کامل",
-      "examples": "نمونه کدها"
+      "examples": "دموی پروژه"
     }
   },
   "profile": {
@@ -685,7 +687,24 @@
       "uploadThumbnail": "آپلود تصویر محصول",
       "addNewColor": "افزودن رنگ جدید",
       "colorImage": "تصویر رنگ",
-      "uploadColorImage": "آپلود تصویر رنگ"
+      "uploadColorImage": "آپلود تصویر رنگ",
+      "selectColor": "انتخاب رنگ",
+      "chooseColorDescription": "رنگ مورد نظر خود را انتخاب کنید",
+      "selectedColor": "رنگ انتخاب شده",
+      "hexColorCode": "کد رنگ هگزادسیمال",
+      "presetColors": "رنگ‌های آماده",
+      "extractFromImage": "استخراج رنگ از عکس",
+      "extractFromImageDescription": "عکسی آپلود کنید و با ابزار قطره‌چکان رنگ را انتخاب کنید",
+      "uploadImageForColor": "برای انتخاب رنگ، عکسی آپلود کنید",
+      "uploadImage": "آپلود عکس",
+      "uploadedImage": "عکس آپلود شده",
+      "eyedropperActive": "قطره‌چکان فعال",
+      "activateEyedropper": "فعال‌سازی قطره‌چکان",
+      "clickToSelectColor": "روی عکس کلیک کنید تا رنگ انتخاب شود",
+      "colorExtracted": "رنگ {color} استخراج شد",
+      "manualSelection": "انتخاب دستی",
+      "imageLoadError": "خطا در بارگذاری عکس",
+      "colorExtractionError": "خطا در استخراج رنگ"
     },
     "types": {
       "lips": "رژ لب",
@@ -705,7 +724,18 @@
       "productNotFound": "محصول مورد نظر یافت نشد"
     },
     "color": "{{count}} رنگ",
-    "pattern": "{{count}} الگو"
+    "pattern": "{{count}} الگو",
+    "typeDescriptions": {
+      "lips": "رژ لب و محصولات لب",
+      "eyeshadow": "سایه چشم و پالت",
+      "eyepencil": "مداد چشم",
+      "eyeliner": "خط چشم",
+      "eyelashes": "مژه و ریمل",
+      "blush": "رژگونه",
+      "concealer": "کانسیلر و پوشاننده",
+      "foundation": "کرم پودر و فاندیشن",
+      "brows": "ابرو و محصولات ابرو"
+    }
   },
   "payments": {
     "title": "پرداخت‌ها",

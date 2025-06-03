@@ -1,4 +1,4 @@
-// src/components/dashboard/Sidebar.tsx - آپدیت شده برای رفع مشکلات
+// src/components/dashboard/Sidebar.tsx - آپدیت شده با Separator بعد از title
 "use client";
 
 import { useState, useEffect } from "react";
@@ -238,10 +238,12 @@ export function Sidebar() {
                   <div key={group.id}>
                     {/* نمایش عنوان گروه فقط اگر title وجود داشته باشد */}
                     {group.title && (
-                      <div className="px-3 mb-2">
-                        <h2 className="text-xs font-medium text-sidebar-foreground/60 uppercase tracking-wider">
+                      <div className="px-3 mb-3">
+                        <h2 className="text-xs font-medium text-sidebar-foreground/60 uppercase tracking-wider mb-2">
                           {t(group.title)}
                         </h2>
+                        {/* ✅ اضافه کردن Separator بعد از title */}
+                        <Separator className="opacity-50" />
                       </div>
                     )}
 

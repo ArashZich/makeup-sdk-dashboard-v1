@@ -29,17 +29,18 @@ interface SdkStatsCardProps {
 export function SdkStatsCard({ status, className }: SdkStatsCardProps) {
   const { t, isRtl } = useLanguage();
 
-  // محاسبه درصد استفاده
-  const usagePercentage =
-    status.requestLimit.monthly === -1
-      ? 0 // برای نامحدود، progress bar نمایش نمی‌دهیم
-      : Math.round(
-          ((status.requestLimit.monthly - status.requestLimit.remaining) /
-            status.requestLimit.monthly) *
-            100
-        );
+  // ✅ بررسی نامحدود بودن بر اساس total === -1 یا remaining === -1
+  const isUnlimited =
+    status.requestLimit.total === -1 || status.requestLimit.remaining === -1;
 
-  const isUnlimited = status.requestLimit.monthly === -1;
+  // محاسبه درصد استفاده
+  const usagePercentage = isUnlimited
+    ? 0 // برای نامحدود، progress bar نمایش نمی‌دهیم
+    : Math.round(
+        ((status.requestLimit.total - (status.requestLimit.remaining || 0)) /
+          status.requestLimit.total) *
+          100
+      );
 
   return (
     <Card className={className}>
@@ -80,12 +81,14 @@ export function SdkStatsCard({ status, className }: SdkStatsCardProps) {
             <div className="text-left">
               <div className="text-sm font-medium">
                 {isUnlimited ? (
-                  <span className="flex items-center gap-1">
+                  <span className="flex items-center gap-1 text-green-600">
                     <Infinity className="h-4 w-4" />
                     {t("common.unlimited")}
                   </span>
                 ) : (
-                  `${status.requestLimit.remaining} / ${status.requestLimit.monthly}`
+                  `${status.requestLimit.remaining || 0} / ${
+                    status.requestLimit.total
+                  }`
                 )}
               </div>
               {!isUnlimited && (
@@ -98,6 +101,13 @@ export function SdkStatsCard({ status, className }: SdkStatsCardProps) {
 
           {/* Progress bar فقط برای محدود */}
           {!isUnlimited && <Progress value={usagePercentage} className="h-2" />}
+
+          {/* ✅ نمایش اطلاعات اضافی برای نامحدود */}
+          {isUnlimited && (
+            <div className="text-xs text-muted-foreground text-left">
+              {t("sdk.stats.unlimitedUsage")}
+            </div>
+          )}
         </div>
 
         {/* آمار استفاده */}
@@ -130,7 +140,9 @@ export function SdkStatsCard({ status, className }: SdkStatsCardProps) {
               <div className="text-xs text-muted-foreground">
                 {t("sdk.stats.otherRequests")}
               </div>
-              <div className="font-medium">{status.usageStats.other}</div>
+              <div className="text-xs text-muted-foreground">
+                {status.usageStats.other}
+              </div>
             </div>
           </div>
         </div>

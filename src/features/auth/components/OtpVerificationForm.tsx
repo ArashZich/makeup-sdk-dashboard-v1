@@ -126,7 +126,6 @@ export function OtpVerificationForm({
     <div className="space-y-8 w-full" dir={isRtl ? "rtl" : "ltr"}>
       {/* اطلاعات شماره تلفن */}
       <div className="text-center space-y-2">
-        <p className="text-muted-foreground text-sm">{t("auth.enterOtp")}</p>
         <p className="text-foreground font-semibold text-lg">{phone}</p>
       </div>
 

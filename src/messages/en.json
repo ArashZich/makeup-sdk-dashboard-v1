@@ -90,7 +90,8 @@
     "compatible": "Compatible",
     "incompatible": "Incompatible",
     "empty_data": "No data available",
-    "emty_analytics": "No analytics available"
+    "emty_analytics": "No analytics available",
+    "apply": "Apply"
   },
   "auth": {
     "login": "Login",
@@ -492,7 +493,8 @@
       "applyRequests": "Apply Requests",
       "otherRequests": "Other Requests",
       "projectType": "Project Type",
-      "premium": "Premium"
+      "premium": "Premium",
+      "unlimitedUsage": "Unlimited Usage"
     },
     "status": {
       "active": "Active",
@@ -510,7 +512,7 @@
       "jsDescription": "JavaScript code to initialize the SDK",
       "reactDescription": "How to use SDK in React component",
       "viewDocs": "View Full Documentation",
-      "examples": "Code Examples"
+      "examples": "Project Demo"
     }
   },
   "profile": {
@@ -695,7 +697,24 @@
       "uploadThumbnail": "Upload Product Image",
       "addNewColor": "Add New Color",
       "colorImage": "Color Image",
-      "uploadColorImage": "Upload Color Image"
+      "uploadColorImage": "Upload Color Image",
+      "selectColor": "Select Color",
+      "chooseColorDescription": "Choose your desired color",
+      "selectedColor": "Selected Color",
+      "hexColorCode": "Hexadecimal Color Code",
+      "presetColors": "Preset Colors",
+      "extractFromImage": "Extract Color from Image",
+      "extractFromImageDescription": "Upload an image and use the eyedropper tool to select colors",
+      "uploadImageForColor": "Upload an image to select colors",
+      "uploadImage": "Upload Image",
+      "uploadedImage": "Uploaded Image",
+      "eyedropperActive": "Eyedropper Active",
+      "activateEyedropper": "Activate Eyedropper",
+      "clickToSelectColor": "Click on the image to select a color",
+      "colorExtracted": "Color {color} extracted",
+      "manualSelection": "Manual Selection",
+      "imageLoadError": "Error loading image",
+      "colorExtractionError": "Error extracting color"
     },
     "error": {
       "title": "Error Fetching Products",
@@ -703,7 +722,18 @@
       "productNotFound": "Product not found"
     },
     "color": "{{count}} Colors",
-    "pattern": "{{count}} Patterns"
+    "pattern": "{{count}} Patterns",
+    "typeDescriptions": {
+      "lips": "Lipstick and lip products",
+      "eyeshadow": "Eyeshadow and palettes",
+      "eyepencil": "Eye pencil",
+      "eyeliner": "Eyeliner",
+      "eyelashes": "Eyelashes and mascara",
+      "blush": "Blush",
+      "concealer": "Concealer and coverage",
+      "foundation": "Foundation and base makeup",
+      "brows": "Eyebrows and brow products"
+    }
   },
   "payments": {
     "title": "Payments",
