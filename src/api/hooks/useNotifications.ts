@@ -46,8 +46,10 @@ export const useNotifications = () => {
     onSuccess: (data) => {
       // به‌روزرسانی کش
       queryClient.setQueryData(["notification", data._id], data);
-      // باطل کردن کش اطلاعیه‌ها
+
+      // ✅ باطل کردن همه کش‌های مرتبط با notifications
       queryClient.invalidateQueries({ queryKey: ["userNotifications"] });
+      queryClient.invalidateQueries({ queryKey: ["unreadNotificationsCount"] });
 
       // دریافت داده‌های کش فعلی اطلاعیه‌های خوانده نشده
       const unreadData = queryClient.getQueryData<PaginatedNotifications>([
@@ -67,8 +69,10 @@ export const useNotifications = () => {
   const markAllAsReadMutation = useMutation({
     mutationFn: notificationsService.markAllAsRead,
     onSuccess: () => {
-      // باطل کردن کش اطلاعیه‌ها
+      // ✅ باطل کردن همه کش‌های مرتبط با notifications
       queryClient.invalidateQueries({ queryKey: ["userNotifications"] });
+      queryClient.invalidateQueries({ queryKey: ["unreadNotificationsCount"] });
+
       // تنظیم تعداد اطلاعیه‌های خوانده نشده به صفر
       setUnreadNotifications(0);
       showToast.success(
@@ -153,6 +157,10 @@ export const useAdminNotifications = () => {
 
         queryClient.invalidateQueries({
           queryKey: ["userNotifications", { userId }],
+        });
+        // ✅ اضافه کردن invalidate برای unread count
+        queryClient.invalidateQueries({
+          queryKey: ["unreadNotificationsCount"],
         });
       }
 

@@ -1078,7 +1078,7 @@
       }
     },
     "packages": {
-      "title": "Plans Management",
+      "title": "User Plans Management",
       "description": "Manage and view user plans",
       "createPackage": "Create New Plan",
       "extendPackage": "Extend Plan",
