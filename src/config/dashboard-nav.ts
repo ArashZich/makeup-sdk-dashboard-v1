@@ -23,7 +23,7 @@ export const dashboardNavItems: SidebarGroup[] = [
     items: [
       {
         id: "dashboard",
-        label: "dashboard.title",
+        label: "dashboard.overview",
         path: "/dashboard",
         icon: Home,
         permission: "all",
