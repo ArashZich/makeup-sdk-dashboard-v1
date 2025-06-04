@@ -573,7 +573,16 @@
     "nationalIdPlaceholder": "10-digit National ID",
     "companyId": "Company National ID",
     "companyIdInvalid": "Company National ID must be at least 8 digits",
-    "companyIdPlaceholder": "Company National ID"
+    "companyIdPlaceholder": "Company National ID",
+    "domainPlaceholder": "example.com, *.armogroup.tech, subdomain.example.com, localhost:3000",
+    "domainFormatWildcard": "You can add main domains, wildcard domains (*.example.com), subdomains, localhost, or IP addresses",
+    "domainAdded": "Domain added successfully",
+    "domainTypes": {
+      "wildcard": "Wildcard",
+      "development": "Development",
+      "ip": "IP Address",
+      "subdomain": "Subdomain"
+    }
   },
   "notifications": {
     "title": "Notifications",

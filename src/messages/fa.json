@@ -574,7 +574,16 @@
     "nationalIdPlaceholder": "کد ملی 10 رقمی",
     "companyId": "شناسه ملی شرکت",
     "companyIdInvalid": "شناسه ملی شرکت حداقل 8 رقم باشد",
-    "companyIdPlaceholder": "شناسه ملی شرکت"
+    "companyIdPlaceholder": "شناسه ملی شرکت",
+    "domainPlaceholder": "example.com, *.armogroup.tech, subdomain.example.com, localhost:3000",
+    "domainFormatWildcard": "می‌توانید دامنه‌های اصلی، دامنه‌های wildcard (*.example.com)، زیردامنه‌ها، localhost یا آدرس IP اضافه کنید",
+    "domainAdded": "دامنه با موفقیت اضافه شد",
+    "domainTypes": {
+      "wildcard": "Wildcard",
+      "development": "توسعه",
+      "ip": "آدرس IP",
+      "subdomain": "زیردامنه"
+    }
   },
   "notifications": {
     "title": "اطلاعیه‌ها",
