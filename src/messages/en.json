@@ -129,7 +129,7 @@
     "menu": {
       "dashboard": "Dashboard",
       "analytics": "Analytics",
-      "packages": "Packages",
+      "packages": "Plans",
       "products": "Products",
       "plans": "Plans",
       "payments": "Payments",
@@ -142,7 +142,7 @@
   },
   "plans": {
     "title": "Plans",
-    "description": "Choose your preferred plan and activate the Makeup SDK",
+    "description": "Choose your preferred plan",
     "availablePlans": "Available Plans",
     "buyPlan": "Buy Plan",
     "duration": "Duration: {{duration}} days",
@@ -353,14 +353,14 @@
     "availablePlatforms": "Available Platforms"
   },
   "packages": {
-    "title": "Packages",
-    "description": "Manage your SDK packages",
-    "activePackage": "Active Package",
-    "package": "Package",
+    "title": "Active Plans",
+    "description": "Manage your SDK plans",
+    "activePackage": "Active Plan",
+    "package": "Plan",
     "expiresOn": "Expires On",
     "remainingDays": "{{count}} days remaining",
-    "packageId": "Package ID",
-    "packageDetails": "Package Details",
+    "packageId": "Plan ID",
+    "packageDetails": "Plan Details",
     "startDate": "Start Date",
     "endDate": "End Date",
     "timeRemaining": "Time Remaining",
@@ -368,9 +368,9 @@
     "unknownPlan": "Unknown Plan",
     "requestLimits": "Request Limits",
     "usageProgress": "Usage Progress",
-    "packageExpired": "Package Expired",
+    "packageExpired": "Plan Expired",
     "packageExpiredDescription": "This package is no longer active and you cannot use it.",
-    "renewPackage": "Renew Package",
+    "renewPackage": "Renew Plan",
     "renewPackageDescription": "To continue using the SDK, purchase a new plan.",
     "status": {
       "active": "Active",
@@ -383,27 +383,27 @@
       "expired": "Expired",
       "suspended": "Suspended"
     },
-    "noActivePackages": "No Active Packages",
+    "noActivePackages": "No Active Plans",
     "noActivePackagesDescription": "To use the Makeup SDK, purchase a plan.",
-    "noExpiredPackages": "No Expired Packages",
-    "noSuspendedPackages": "No Suspended Packages",
+    "noExpiredPackages": "No Expired Plans",
+    "noSuspendedPackages": "No Suspended Plans",
     "requestLimit": {
       "monthly": "Monthly Limit",
       "remaining": "Remaining",
       "total": "Total"
     },
     "error": {
-      "title": "Error Fetching Packages",
-      "fetchFailed": "Failed to fetch packages. Please try again.",
-      "packageNotFound": "Package not found"
+      "title": "Error Fetching Plans",
+      "fetchFailed": "Failed to fetch plans. Please try again.",
+      "packageNotFound": "Plan not found"
     },
     "active": "Active",
     "expired": "Expired",
     "suspended": "Suspended",
-    "currentPackage": "Current Package",
+    "currentPackage": "Current Plan",
     "willRenewSamePlan": "Your current plan will be renewed",
     "expirationWarning": "Your package is expiring soon. Please renew it.",
-    "totalPackages": "Total Packages",
+    "totalPackages": "Total Plans",
     "activePlatforms": "Active Platforms",
     "filterBy": "Filter By",
     "filterByStatus": "Filter by Status",
@@ -421,8 +421,8 @@
       "torob": "Torob platform",
       "basalam": "Basalam platform"
     },
-    "noPlatformPackages": "No packages for {{platform}}",
-    "noPlatformPackagesDescription": "You haven't purchased any packages for {{platform}} platform yet",
+    "noPlatformPackages": "No plans for {{platform}}",
+    "noPlatformPackagesDescription": "You haven't purchased any plans for {{platform}} platform yet",
     "platformStats": "Platform Statistics",
     "unlimitedRequests": "Unlimited Requests",
     "yourPlatform": "Your Platform"
@@ -437,7 +437,7 @@
     "tokenDescription": "Use this token to integrate the SDK in your application",
     "tokenCopied": "Token copied to clipboard",
     "tokenSecurityWarning": "This token is confidential. Do not share it with unauthorized individuals.",
-    "packageId": "Package ID",
+    "packageId": "Plan ID",
     "features": "Features",
     "premiumStatus": "Subscription Status",
     "premium": "Premium",
@@ -464,7 +464,7 @@
     "integrationGuideDescription": "For more information about integration, refer to the SDK documentation.",
     "codeCopied": "Code copied to clipboard",
     "viewDocumentation": "View Documentation",
-    "noActivePackage": "No Active Package",
+    "noActivePackage": "No Active Plan",
     "noActivePackageDescription": "To use the Makeup SDK, please purchase a plan first.",
     "error": {
       "title": "Error Fetching SDK Info",
@@ -589,7 +589,7 @@
     "filterByReadStatus": "Filter by Status",
     "loadMore": "Load More",
     "types": {
-      "expiry": "Package Expiry",
+      "expiry": "Plan Expiry",
       "payment": "Payment",
       "system": "System",
       "other": "Other"
@@ -1038,7 +1038,7 @@
         "users": "Specific Users"
       },
       "types": {
-        "expiry": "Package Expiry",
+        "expiry": "Plan Expiry",
         "payment": "Payment",
         "system": "System",
         "other": "Other"
@@ -1078,15 +1078,15 @@
       }
     },
     "packages": {
-      "title": "Packages Management",
-      "description": "Manage and view user packages",
-      "createPackage": "Create New Package",
-      "extendPackage": "Extend Package",
-      "suspendPackage": "Suspend Package",
-      "reactivatePackage": "Reactivate Package",
+      "title": "Plans Management",
+      "description": "Manage and view user plans",
+      "createPackage": "Create New Plan",
+      "extendPackage": "Extend Plan",
+      "suspendPackage": "Suspend Plan",
+      "reactivatePackage": "Reactivate Plan",
       "viewDetails": "View Details",
-      "noPackages": "No packages found",
-      "searchPlaceholder": "Search packages...",
+      "noPackages": "No plans found",
+      "searchPlaceholder": "Search plans...",
       "purchasePlatform": "Purchase Platform",
       "requestLimit": "Request Limit",
       "monthlyLimit": "Monthly",
@@ -1098,7 +1098,7 @@
         "basalam": "Basalam"
       },
       "form": {
-        "title": "Create New Package",
+        "title": "Create New Plan",
         "selectUser": "Select a user",
         "selectPlan": "Select a plan",
         "selectPlatform": "Select purchase platform",
@@ -1110,7 +1110,7 @@
         "durationDescription": "If left empty, the plan's default duration will be used",
         "platformDescription": "Platform through which the package was purchased",
         "creating": "Creating...",
-        "createButton": "Create Package",
+        "createButton": "Create Plan",
         "validation": {
           "userRequired": "User selection is required",
           "planRequired": "Plan selection is required",
@@ -1118,34 +1118,34 @@
         }
       },
       "extend": {
-        "title": "Extend Package",
+        "title": "Extend Plan",
         "description": "Enter the number of days you want to add to the package.",
         "daysLabel": "Number of Days",
         "daysPlaceholder": "30",
         "extending": "Extending...",
-        "extendButton": "Extend Package",
+        "extendButton": "Extend Plan",
         "validation": {
           "daysMin": "Days must be at least 1",
           "daysMax": "Days cannot be more than 365"
         }
       },
       "suspend": {
-        "title": "Suspend Package",
+        "title": "Suspend Plan",
         "description": "Are you sure you want to suspend this package? The suspended package will be unusable.",
         "suspending": "Suspending...",
-        "suspendButton": "Suspend Package"
+        "suspendButton": "Suspend Plan"
       },
       "reactivate": {
-        "title": "Reactivate Package",
+        "title": "Reactivate Plan",
         "description": "Are you sure you want to reactivate this package? The package will be usable again.",
         "reactivating": "Reactivating...",
-        "reactivateButton": "Reactivate Package"
+        "reactivateButton": "Reactivate Plan"
       },
       "success": {
-        "created": "Package created successfully",
-        "extended": "Package extended successfully",
-        "suspended": "Package suspended successfully",
-        "reactivated": "Package reactivated successfully"
+        "created": "Plan created successfully",
+        "extended": "Plan extended successfully",
+        "suspended": "Plan suspended successfully",
+        "reactivated": "Plan reactivated successfully"
       },
       "error": {
         "createFailed": "Error creating package",
@@ -1155,10 +1155,10 @@
       },
       "total": "Total",
       "remaining": "Remaining",
-      "totalPackages": "Total Packages",
-      "activePackages": "Active Packages",
-      "expiredPackages": "Expired Packages",
-      "suspendedPackages": "Suspended Packages",
+      "totalPackages": "Total Plans",
+      "activePackages": "Active Plans",
+      "expiredPackages": "Expired Plans",
+      "suspendedPackages": "Suspended Plans",
       "filterByPlatform": "Filter by Platform",
       "selectPlatform": "Select Platform",
       "allPlatforms": "All Platforms",
@@ -1167,12 +1167,12 @@
       "allStatuses": "All Statuses",
       "showingResults": "Showing {{count}} of {{total}} results",
       "platformStatistics": "Platform Statistics",
-      "packages": "Packages",
+      "packages": "Plans",
       "requestStatistics": "Request Statistics",
-      "unlimitedPackages": "Unlimited Packages",
-      "almostFinishedPackages": "Almost Finished Packages",
-      "noPackagesFound": "No Packages Found",
-      "noPackagesDescription": "No packages available for display",
+      "unlimitedPackages": "Unlimited Plans",
+      "almostFinishedPackages": "Almost Finished Plans",
+      "noPackagesFound": "No Plans Found",
+      "noPackagesDescription": "No plans available for display",
       "createPackageDescription": "Create a new package for users",
       "createPackageInfo": "To create a new package, select user, plan and purchase platform.",
       "creationSteps": "Creation Steps",
@@ -1180,24 +1180,24 @@
       "step1Description": "User for whom the package will be created",
       "step2Title": "Select Plan",
       "step2Description": "Plan on which the package will be based",
-      "step3Title": "Package Settings",
+      "step3Title": "Plan Settings",
       "step3Description": "Purchase platform and additional settings",
       "step4Title": "Confirm and Create",
       "step4Description": "Final review and package creation",
       "platformsInfo": "Platform Information",
       "platformsInfoDescription": "Different platforms available for purchase",
       "importantNotes": "Important Notes",
-      "note1": "Package becomes active immediately after creation",
-      "note2": "Package duration is calculated from creation date",
-      "note3": "Packages can be extended and suspended",
-      "warningNote": "Deleted packages cannot be recovered",
+      "note1": "Plan becomes active immediately after creation",
+      "note2": "Plan duration is calculated from creation date",
+      "note3": "Plans can be extended and suspended",
+      "warningNote": "Deleted plans cannot be recovered",
       "quickStats": "Quick Stats",
       "availablePlatforms": "Available Platforms",
       "totalLimit": "Total Limit",
       "extendPackageDescription": "Add days or requests to the package",
       "extendDays": "Extend Days",
       "updateLimits": {
-        "title": "Update Package Limits",
+        "title": "Update Plan Limits",
         "description": "Add requests or days to the package",
         "requestsLabel": "Additional Requests",
         "requestsPlaceholder": "1000",
@@ -1213,7 +1213,7 @@
         }
       },
       "limits": {
-        "title": "Update Package Limits",
+        "title": "Update Plan Limits",
         "description": "You can increase the number of requests or remaining days of the package",
         "alertMessage": "At least one field must be greater than zero for changes to be applied.",
         "addRequestsLabel": "Add Requests",
