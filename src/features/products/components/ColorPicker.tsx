@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useClipboard } from "@/hooks/useClipboard";
 import { ImageColorPicker } from "react-image-color-picker";
+import { cn } from "@/lib/utils";
 
 interface ColorPickerProps {
   value: string;
@@ -34,7 +35,7 @@ export function ColorPicker({
   onChange,
   imageUrl = "",
   onImageChange,
-  placeholder = "#000000",
+  placeholder = "#ff0000",
   className,
   disabled = false,
   showImageUpload = true,
@@ -52,7 +53,7 @@ export function ColorPicker({
     if (color && !color.startsWith("#")) {
       return `#${color}`;
     }
-    return color || "#000000";
+    return color || "#ff0000";
   };
 
   // اعتبارسنجی کد رنگ hex
@@ -137,7 +138,7 @@ export function ColorPicker({
   const displayImage = uploadedImage || imageUrl;
 
   return (
-    <div className="space-y-3">
+    <div className={cn("space-y-3", className)}>
       {/* انتخاب رنگ */}
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
