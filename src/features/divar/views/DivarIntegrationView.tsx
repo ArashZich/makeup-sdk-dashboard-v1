@@ -39,6 +39,7 @@ export function DivarIntegrationView() {
 
   const { getDivarPosts, addAddonToPost, removeAddonFromPost } = useDivar();
 
+  // ✅ تغییر شده: استفاده از getUserProducts که Infinite Query برمی‌گردونه
   const { getUserProducts } = useProducts();
 
   const {
@@ -51,11 +52,12 @@ export function DivarIntegrationView() {
     hasMakeupVirtualTryOn: addonFilter,
   });
 
+  // ✅ تغییر شده: دریافت محصولات با infinite query
   const {
     data: productsData,
     isLoading: isLoadingProducts,
     error: productsError,
-  } = getUserProducts();
+  } = getUserProducts(); // بدون فیلتر - همه محصولات
 
   const filteredPosts =
     searchTerm && postsData?.results
@@ -121,13 +123,14 @@ export function DivarIntegrationView() {
         <p className="text-muted-foreground">{t("divar.description")}</p>
       </div>
 
-      {/* کارت اتصال دیوار و انتخاب محصول در یک ردیف */}
+      {/* کارت اتصال دیوار */}
       <DivarConnectCard />
 
+      {/* انتخاب محصول - فقط اگر دیوار متصل باشه */}
       {isDivarConnected && (
         <div className="w-full">
           <ProductSelectorCard
-            products={productsData?.results || []}
+            productsData={productsData} // ✅ تغییر شده: حالا کل data structure پاس می‌دیم
             selectedProductId={selectedProductId}
             onProductSelect={handleProductSelect}
             isLoading={isLoadingProducts}
@@ -135,6 +138,7 @@ export function DivarIntegrationView() {
         </div>
       )}
 
+      {/* فیلترها و لیست آگهی‌ها - فقط اگر دیوار متصل باشه */}
       {isDivarConnected && (
         <>
           {/* فیلترهای آگهی‌ها */}

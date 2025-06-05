@@ -33,14 +33,22 @@ import {
 import Image from "next/image";
 
 interface ProductSelectorCardProps {
-  products: Product[];
+  // ✅ تغییر شده: حالا data structure متفاوته
+  productsData:
+    | {
+        pages: Array<{
+          results: Product[];
+          totalResults: number;
+        }>;
+      }
+    | undefined;
   selectedProductId: string | null;
   onProductSelect: (productId: string) => void;
   isLoading?: boolean;
 }
 
 export function ProductSelectorCard({
-  products,
+  productsData,
   selectedProductId,
   onProductSelect,
   isLoading = false,
@@ -49,10 +57,21 @@ export function ProductSelectorCard({
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const selectedProduct = products.find((p) => p._id === selectedProductId);
+  // ✅ استخراج همه محصولات از pages
+  const allProducts = productsData?.pages.flatMap((page) => page.results) || [];
+
+  // ✅ حذف تکراری‌ها
+  const uniqueProducts = allProducts.filter(
+    (product, index, arr) =>
+      arr.findIndex((p) => p._id === product._id) === index
+  );
+
+  const selectedProduct = uniqueProducts.find(
+    (p) => p._id === selectedProductId
+  );
 
   // فیلتر محصولات بر اساس جستجو
-  const filteredProducts = products.filter(
+  const filteredProducts = uniqueProducts.filter(
     (product) =>
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -208,7 +227,12 @@ export function ProductSelectorCard({
 
               {/* آمار */}
               <div className="text-xs text-muted-foreground text-center border-t pt-2">
-                {filteredProducts.length} از {products.length} محصول
+                {filteredProducts.length} از {uniqueProducts.length} محصول
+                {productsData?.pages[0]?.totalResults && (
+                  <span className="ml-2">
+                    (کل: {productsData.pages[0].totalResults})
+                  </span>
+                )}
               </div>
             </div>
           </DialogContent>
