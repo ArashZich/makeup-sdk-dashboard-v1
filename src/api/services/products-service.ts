@@ -81,7 +81,7 @@ export const productsService = {
   },
 
   /**
-   * ✅ به‌روزرسانی محصول - فیکس شده برای حذف فیلدهای غیرمجاز
+   * ✅ به‌روزرسانی محصول - حذف فیلدهای غیرمجاز
    * @param productId شناسه محصول
    * @param data اطلاعات جدید محصول
    */
@@ -89,18 +89,24 @@ export const productsService = {
     productId: string,
     data: UpdateProductRequest
   ): Promise<Product> => {
-    // ✅ حذف فیلدهای غیرمجاز قبل از ارسال
-    const {
-      _id,
-      __v,
-      createdAt,
-      updatedAt,
-      userId,
-      uid,
-      type, // ✅ type هم نباید در update باشه
-      code, // ✅ code هم نباید در update باشه
-      ...cleanData
-    } = data as any;
+    // ✅ فقط فیلدهای مجاز
+    const allowedFields = [
+      "name",
+      "description",
+      "thumbnail",
+      "patterns",
+      "colors",
+      "active",
+    ];
+
+    const cleanData: any = {};
+
+    // فقط فیلدهای مجاز کپی کن
+    allowedFields.forEach((field) => {
+      if (field in data && (data as any)[field] !== undefined) {
+        cleanData[field] = (data as any)[field];
+      }
+    });
 
     const response = await axios.put(`/products/${productId}`, cleanData);
     return response.data;
@@ -153,7 +159,7 @@ export const productsService = {
   },
 
   /**
-   * ✅ به‌روزرسانی محصول کاربر (ادمین) - فیکس کامل شده
+   * ✅ به‌روزرسانی محصول کاربر (ادمین)
    * @param userId شناسه کاربر
    * @param productId شناسه محصول
    * @param data اطلاعات جدید محصول
@@ -163,7 +169,7 @@ export const productsService = {
     productId: string,
     data: UpdateProductRequest
   ): Promise<Product> => {
-    // ✅ فیلتر کامل فیلدهای غیرمجاز
+    // ✅ فقط فیلدهای مجاز
     const allowedFields = [
       "name",
       "description",
@@ -175,12 +181,12 @@ export const productsService = {
 
     const cleanData: any = {};
 
-    // ✅ فقط فیلدهای مجاز کپی کن
-    for (const key of allowedFields) {
-      if (key in data && (data as any)[key] !== undefined) {
-        cleanData[key] = (data as any)[key];
+    // فقط فیلدهای مجاز کپی کن
+    allowedFields.forEach((field) => {
+      if (field in data && (data as any)[field] !== undefined) {
+        cleanData[field] = (data as any)[field];
       }
-    }
+    });
 
     const response = await axios.put(
       `/products/user/${userId}/${productId}`,

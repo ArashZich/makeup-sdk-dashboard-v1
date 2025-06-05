@@ -64,6 +64,15 @@ export function ProductsListView() {
     refetch,
   } = getUserProducts();
 
+  // ✅ ساده - فقط حذف تکراری‌ها
+  const allProducts = data?.pages.flatMap((page) => page.results) || [];
+
+  // حذف محصولات تکراری بر اساس _id
+  const uniqueProducts = allProducts.filter(
+    (product, index, arr) =>
+      arr.findIndex((p) => p._id === product._id) === index
+  );
+
   // ✅ Intersection Observer برای تشخیص انتهای صفحه
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
@@ -85,14 +94,11 @@ export function ProductsListView() {
     return () => observer.disconnect();
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-  // ✅ تبدیل data به لیست محصولات
-  const allProducts = data?.pages.flatMap((page) => page.results) || [];
-
   // ✅ Check if error is related to no active package
   const isNoActivePackageError = (error as any)?.response?.status === 402;
 
   // Filter products by search term (client-side)
-  const filteredProducts = allProducts.filter(
+  const filteredProducts = uniqueProducts.filter(
     (product) =>
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -403,7 +409,7 @@ export function ProductsListView() {
           )}
 
           {/* ✅ End of results */}
-          {!hasNextPage && allProducts.length > 4 && (
+          {!hasNextPage && uniqueProducts.length > 4 && (
             <div className="text-center py-6">
               <p className="text-sm text-muted-foreground">
                 🎉 {t("products.allProductsShown")}

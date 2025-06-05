@@ -28,13 +28,12 @@ export const useProducts = () => {
     return useInfiniteQuery({
       queryKey: ["userProducts", filters],
       queryFn: ({ pageParam = 1 }) =>
-        productsService.getCurrentUserProducts(filters, pageParam, 4), // 4 محصول در هر صفحه
+        productsService.getCurrentUserProducts(filters, pageParam, 4),
       getNextPageParam: (lastPage) => {
-        // اگر صفحه بعدی وجود داشته باشه، شماره اون رو برگردون
         if (lastPage.page < lastPage.totalPages) {
           return lastPage.page + 1;
         }
-        return undefined; // دیگه صفحه‌ای نیست
+        return undefined;
       },
       staleTime: 5 * 60 * 1000, // 5 دقیقه
       initialPageParam: 1,
@@ -64,7 +63,7 @@ export const useProducts = () => {
     mutationFn: (data: CreateProductRequest) =>
       productsService.createProduct(data),
     onSuccess: () => {
-      // باطل کردن کش محصولات
+      // ✅ ساده - فقط invalidate کن
       queryClient.invalidateQueries({ queryKey: ["userProducts"] });
       showToast.success(t("common.success.create"));
     },
@@ -83,10 +82,9 @@ export const useProducts = () => {
       data: UpdateProductRequest;
     }) => productsService.updateProduct(productId, data),
     onSuccess: (data) => {
-      // به‌روزرسانی کش
+      // ✅ ساده - update کش و invalidate
       queryClient.setQueryData(["product", data._id], data);
       queryClient.setQueryData(["product", "uid", data.uid], data);
-      // باطل کردن کش محصولات
       queryClient.invalidateQueries({ queryKey: ["userProducts"] });
       showToast.success(t("common.success.update"));
     },
@@ -99,9 +97,8 @@ export const useProducts = () => {
   const deleteProductMutation = useMutation({
     mutationFn: (productId: string) => productsService.deleteProduct(productId),
     onSuccess: (_, productId) => {
-      // حذف از کش
+      // ✅ ساده - remove کش و invalidate
       queryClient.removeQueries({ queryKey: ["product", productId] });
-      // باطل کردن کش محصولات
       queryClient.invalidateQueries({ queryKey: ["userProducts"] });
       showToast.success(t("common.success.delete"));
     },
@@ -138,9 +135,9 @@ export const useAdminProducts = () => {
   ) => {
     return useQuery({
       queryKey: ["adminUserProducts", userId, filters],
-      queryFn: () => productsService.getUserProducts(userId, filters, 1, 10), // ادمین با pagination عادی
+      queryFn: () => productsService.getUserProducts(userId, filters, 1, 10),
       staleTime: 5 * 60 * 1000, // 5 دقیقه
-      enabled: options?.enabled ?? Boolean(userId), // ✅ فقط اگر userId موجود باشه
+      enabled: options?.enabled ?? Boolean(userId),
     });
   };
 
@@ -148,7 +145,7 @@ export const useAdminProducts = () => {
   const getAllProducts = (filters?: ProductFilters) => {
     return useQuery({
       queryKey: ["adminAllProducts", filters],
-      queryFn: () => productsService.getAllProducts(filters, 1, 50), // ادمین با pagination عادی
+      queryFn: () => productsService.getAllProducts(filters, 1, 50),
       staleTime: 5 * 60 * 1000,
     });
   };
@@ -162,26 +159,23 @@ export const useAdminProducts = () => {
       userId: string;
       data: CreateProductRequest;
     }) => {
-      logger.api("🎯 Hook - createProductForUser called with:", {
-        userId,
-        data,
-      });
+      logger.api("🎯 Admin creating product for user:", { userId, data });
       return productsService.createProductForUser(userId, data);
     },
     onSuccess: (data, { userId }) => {
-      // باطل کردن کش محصولات کاربر
+      // ✅ ساده - فقط invalidate
       queryClient.invalidateQueries({
         queryKey: ["adminUserProducts", userId],
       });
       showToast.success(t("common.success.create"));
     },
     onError: (error: ApiError) => {
-      logger.fail("🔴 Hook - createProductForUser error:", error);
+      logger.fail("🔴 Admin createProductForUser error:", error);
       showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
-  // ✅ به‌روزرسانی محصول کاربر - اصلاح شده
+  // ✅ به‌روزرسانی محصول کاربر
   const updateUserProductMutation = useMutation({
     mutationFn: ({
       userId,
@@ -192,13 +186,13 @@ export const useAdminProducts = () => {
       productId: string;
       data: UpdateProductRequest;
     }) => {
-      logger.api("🎯 Hook - updateUserProduct called with:", {
+      logger.api("🎯 Admin updating user product:", {
         userId,
         productId,
         data,
       });
 
-      // ✅ اطمینان از اینکه فقط فیلدهای مجاز ارسال شن
+      // ✅ فقط فیلدهای مجاز
       const cleanData = {
         name: data.name,
         description: data.description,
@@ -208,26 +202,19 @@ export const useAdminProducts = () => {
         active: data.active,
       };
 
-      logger.api("🟢 Hook - Clean data being sent:", cleanData);
-
       return productsService.updateUserProduct(userId, productId, cleanData);
     },
     onSuccess: (data, { userId }) => {
-      // به‌روزرسانی کش
+      // ✅ ساده - update کش و invalidate
       queryClient.setQueryData(["product", data._id], data);
       queryClient.setQueryData(["product", "uid", data.uid], data);
-      // باطل کردن کش محصولات کاربر
       queryClient.invalidateQueries({
         queryKey: ["adminUserProducts", userId],
       });
       showToast.success(t("common.success.update"));
     },
     onError: (error: ApiError) => {
-      logger.fail("🔴 Hook - updateUserProduct error:", error);
-      logger.fail(
-        "🔴 Hook - Error response:",
-        (error as { response?: { data?: unknown } }).response?.data
-      );
+      logger.fail("🔴 Admin updateUserProduct error:", error);
       showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
@@ -241,30 +228,26 @@ export const useAdminProducts = () => {
       userId: string;
       productId: string;
     }) => {
-      logger.api("🎯 Hook - deleteUserProduct called with:", {
-        userId,
-        productId,
-      });
+      logger.api("🎯 Admin deleting user product:", { userId, productId });
       return productsService.deleteUserProduct(userId, productId);
     },
     onSuccess: (_, { userId, productId }) => {
-      // حذف از کش
+      // ✅ ساده - remove کش و invalidate
       queryClient.removeQueries({ queryKey: ["product", productId] });
-      // باطل کردن کش محصولات کاربر
       queryClient.invalidateQueries({
         queryKey: ["adminUserProducts", userId],
       });
       showToast.success(t("common.success.delete"));
     },
     onError: (error: ApiError) => {
-      logger.fail("🔴 Hook - deleteUserProduct error:", error);
+      logger.fail("🔴 Admin deleteUserProduct error:", error);
       showToast.error(getErrorMessage(error, t("common.error.general")));
     },
   });
 
   return {
-    getUserProducts, // برای یک کاربر خاص
-    getAllProducts, // برای تمام محصولات
+    getUserProducts,
+    getAllProducts,
     createProductForUser: createProductForUserMutation.mutateAsync,
     updateUserProduct: updateUserProductMutation.mutateAsync,
     deleteUserProduct: deleteUserProductMutation.mutateAsync,
