@@ -1,5 +1,10 @@
 // src/api/hooks/useProducts.ts
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  useInfiniteQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { productsService } from "@/api/services/products-service";
 import { showToast } from "@/lib/toast";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -18,12 +23,21 @@ export const useProducts = () => {
   const queryClient = useQueryClient();
   const { t } = useLanguage();
 
-  // ✅ دریافت محصولات کاربر جاری (بدون userId)
+  // ✅ دریافت محصولات کاربر جاری با Infinite Query
   const getUserProducts = (filters?: ProductFilters) => {
-    return useQuery({
+    return useInfiniteQuery({
       queryKey: ["userProducts", filters],
-      queryFn: () => productsService.getCurrentUserProducts(filters),
+      queryFn: ({ pageParam = 1 }) =>
+        productsService.getCurrentUserProducts(filters, pageParam, 4), // 4 محصول در هر صفحه
+      getNextPageParam: (lastPage) => {
+        // اگر صفحه بعدی وجود داشته باشه، شماره اون رو برگردون
+        if (lastPage.page < lastPage.totalPages) {
+          return lastPage.page + 1;
+        }
+        return undefined; // دیگه صفحه‌ای نیست
+      },
       staleTime: 5 * 60 * 1000, // 5 دقیقه
+      initialPageParam: 1,
     });
   };
 
@@ -116,7 +130,7 @@ export const useAdminProducts = () => {
   const queryClient = useQueryClient();
   const { t } = useLanguage();
 
-  // ✅ دریافت محصولات یک کاربر خاص (با userId برای ادمین)
+  // ✅ دریافت محصولات یک کاربر خاص (با userId برای ادمین) - معمولی
   const getUserProducts = (
     userId: string,
     filters?: ProductFilters,
@@ -124,17 +138,17 @@ export const useAdminProducts = () => {
   ) => {
     return useQuery({
       queryKey: ["adminUserProducts", userId, filters],
-      queryFn: () => productsService.getUserProducts(userId, filters),
+      queryFn: () => productsService.getUserProducts(userId, filters, 1, 10), // ادمین با pagination عادی
       staleTime: 5 * 60 * 1000, // 5 دقیقه
       enabled: options?.enabled ?? Boolean(userId), // ✅ فقط اگر userId موجود باشه
     });
   };
 
-  // ✅ دریافت تمام محصولات (برای ادمین)
+  // ✅ دریافت تمام محصولات (برای ادمین) - معمولی
   const getAllProducts = (filters?: ProductFilters) => {
     return useQuery({
       queryKey: ["adminAllProducts", filters],
-      queryFn: () => productsService.getAllProducts(filters),
+      queryFn: () => productsService.getAllProducts(filters, 1, 50), // ادمین با pagination عادی
       staleTime: 5 * 60 * 1000,
     });
   };

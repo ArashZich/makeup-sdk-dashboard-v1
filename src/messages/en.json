@@ -742,7 +742,14 @@
       "concealer": "Concealer and coverage",
       "foundation": "Foundation and base makeup",
       "brows": "Eyebrows and brow products"
-    }
+    },
+    "gridView": "Grid View",
+    "listView": "List View",
+    "loadingMoreProducts": "Loading more products...",
+    "loadMoreProducts": "Load More Products",
+    "allProductsShown": "All your products have been displayed",
+    "showingProducts": "Showing {{showing}} products of {{total}} products",
+    "pageInfo": "Page {{current}} of {{total}}"
   },
   "payments": {
     "title": "Payments",

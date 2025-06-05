@@ -744,7 +744,14 @@
       "concealer": "کانسیلر و پوشاننده",
       "foundation": "کرم پودر و فاندیشن",
       "brows": "ابرو و محصولات ابرو"
-    }
+    },
+    "gridView": "نمای شبکه‌ای",
+    "listView": "نمای لیستی",
+    "loadingMoreProducts": "در حال بارگذاری محصولات بیشتر...",
+    "loadMoreProducts": "بارگذاری محصولات بیشتر",
+    "allProductsShown": "همه محصولات شما نمایش داده شد",
+    "showingProducts": "نمایش {{showing}} محصول از {{total}} محصول",
+    "pageInfo": "صفحه {{current}} از {{total}}"
   },
   "payments": {
     "title": "پرداخت‌ها",

@@ -10,24 +10,46 @@ import {
 
 export const productsService = {
   /**
-   * دریافت محصولات کاربر جاری
+   * ✅ دریافت محصولات کاربر جاری با pagination
    * @param filters فیلترهای جستجو
+   * @param page شماره صفحه (پیش‌فرض: 1)
+   * @param limit تعداد آیتم در هر صفحه (پیش‌فرض: 4)
    */
   getCurrentUserProducts: async (
-    filters?: ProductFilters
+    filters?: ProductFilters,
+    page: number = 1,
+    limit: number = 4
   ): Promise<PaginatedProducts> => {
-    const response = await axios.get("/products/me", { params: filters });
+    const params = {
+      ...filters,
+      page,
+      limit,
+      sortBy: "createdAt:desc", // جدیدترین محصولات اول
+    };
+
+    const response = await axios.get("/products/me", { params });
     return response.data;
   },
 
   /**
-   * ✅ دریافت همه محصولات (ادمین)
+   * ✅ دریافت همه محصولات (ادمین) با pagination
    * @param filters فیلترهای جستجو
+   * @param page شماره صفحه
+   * @param limit تعداد آیتم در هر صفحه
    */
   getAllProducts: async (
-    filters?: ProductFilters
+    filters?: ProductFilters,
+    page: number = 1,
+    limit: number = 10
   ): Promise<PaginatedProducts> => {
-    const response = await axios.get("/products", { params: filters });
+    const params = {
+      ...filters,
+      page,
+      limit,
+      sortBy: "createdAt:desc",
+    };
+
+    const response = await axios.get("/products", { params });
     return response.data;
   },
 
@@ -94,17 +116,26 @@ export const productsService = {
   },
 
   /**
-   * دریافت محصولات کاربر (ادمین)
+   * ✅ دریافت محصولات کاربر (ادمین) با pagination
    * @param userId شناسه کاربر
    * @param filters فیلترهای جستجو
+   * @param page شماره صفحه
+   * @param limit تعداد آیتم در هر صفحه
    */
   getUserProducts: async (
     userId: string,
-    filters?: ProductFilters
+    filters?: ProductFilters,
+    page: number = 1,
+    limit: number = 10
   ): Promise<PaginatedProducts> => {
-    const response = await axios.get(`/products/user/${userId}`, {
-      params: filters,
-    });
+    const params = {
+      ...filters,
+      page,
+      limit,
+      sortBy: "createdAt:desc",
+    };
+
+    const response = await axios.get(`/products/user/${userId}`, { params });
     return response.data;
   },
 

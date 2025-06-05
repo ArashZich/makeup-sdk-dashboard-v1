@@ -1,7 +1,7 @@
 // src/features/products/views/ProductsListView.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useProducts } from "@/api/hooks/useProducts";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useBoolean } from "@/hooks/useBoolean";
@@ -23,6 +23,7 @@ import {
   TableIcon,
   PackageIcon,
   ShoppingCartIcon,
+  ArrowDown,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -52,23 +53,51 @@ export function ProductsListView() {
     isDeletingProduct,
   } = useProducts();
 
-  // Get products data
-  const { data: products, isLoading, error, refetch } = getUserProducts();
+  // ✅ Infinite Query Hook
+  const {
+    data,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = getUserProducts();
+
+  // ✅ Intersection Observer برای تشخیص انتهای صفحه
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!loadMoreRef.current || !hasNextPage || isFetchingNextPage) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          logger.api("🔄 Loading more products...");
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(loadMoreRef.current);
+
+    return () => observer.disconnect();
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
+  // ✅ تبدیل data به لیست محصولات
+  const allProducts = data?.pages.flatMap((page) => page.results) || [];
 
   // ✅ Check if error is related to no active package
   const isNoActivePackageError = (error as any)?.response?.status === 402;
 
-  // Filter products by search term
-  const filteredProducts = products
-    ? products.results.filter(
-        (product) =>
-          product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          product.description
-            ?.toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          product.code.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : [];
+  // Filter products by search term (client-side)
+  const filteredProducts = allProducts.filter(
+    (product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.code.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   // Create form handlers
   const handleOpenCreateForm = () => {
@@ -263,6 +292,24 @@ export function ProductsListView() {
             {t("products.title")}
           </h1>
           <p className="text-muted-foreground">{t("products.description")}</p>
+          {/* ✅ نمایش آمار محصولات */}
+          {data && (
+            <p className="text-sm text-muted-foreground mt-1">
+              {t("products.showingProducts", {
+                showing: filteredProducts.length,
+                total: data.pages[0]?.totalResults || 0,
+              })}
+              {hasNextPage && (
+                <span className="ml-2">
+                  •{" "}
+                  {t("products.pageInfo", {
+                    current: data.pages.length,
+                    total: data.pages[0]?.totalPages || 1,
+                  })}
+                </span>
+              )}
+            </p>
+          )}
         </div>
 
         <Button onClick={handleOpenCreateForm}>
@@ -307,22 +354,62 @@ export function ProductsListView() {
 
       {/* Products list */}
       {filteredProducts.length > 0 ? (
-        <div
-          className={`
-         grid gap-6 
-         ${
-           viewMode === "grid" ? "md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"
-         }
-       `}
-        >
-          {filteredProducts.map((product) => (
-            <ProductCard
-              key={product._id}
-              product={product}
-              onEdit={handleOpenEditForm}
-              onDelete={() => handleOpenDeleteDialog(product)}
-            />
-          ))}
+        <div className="space-y-6">
+          {/* Products Grid */}
+          <div
+            className={`
+             grid gap-6 
+             ${
+               viewMode === "grid"
+                 ? "md:grid-cols-2 lg:grid-cols-3"
+                 : "grid-cols-1"
+             }
+           `}
+          >
+            {filteredProducts.map((product) => (
+              <ProductCard
+                key={product._id}
+                product={product}
+                onEdit={handleOpenEditForm}
+                onDelete={() => handleOpenDeleteDialog(product)}
+              />
+            ))}
+          </div>
+
+          {/* ✅ Infinite Scroll Loading */}
+          {hasNextPage && (
+            <div
+              ref={loadMoreRef}
+              className="flex flex-col items-center py-8 space-y-4"
+            >
+              {isFetchingNextPage ? (
+                <>
+                  <Loader size="md" />
+                  <p className="text-sm text-muted-foreground">
+                    {t("products.loadingMoreProducts")}
+                  </p>
+                </>
+              ) : (
+                <Button
+                  variant="outline"
+                  onClick={() => fetchNextPage()}
+                  className="gap-2"
+                >
+                  <ArrowDown className="h-4 w-4" />
+                  {t("products.loadMoreProducts")}
+                </Button>
+              )}
+            </div>
+          )}
+
+          {/* ✅ End of results */}
+          {!hasNextPage && allProducts.length > 4 && (
+            <div className="text-center py-6">
+              <p className="text-sm text-muted-foreground">
+                🎉 {t("products.allProductsShown")}
+              </p>
+            </div>
+          )}
         </div>
       ) : (
         // Empty state
