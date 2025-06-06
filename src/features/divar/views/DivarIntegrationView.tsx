@@ -1,12 +1,13 @@
 // src/features/divar/views/DivarIntegrationView.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useDivar } from "@/api/hooks/useDivar";
 import { useProducts } from "@/api/hooks/useProducts";
 import { useUserProfile } from "@/api/hooks/useUsers";
-import { DivarPostFilters } from "../components/DivarPostFilters";
+import { useDebouncedSearch } from "@/hooks/useDebounce";
+import { DivarSimpleSearch } from "../components/DivarSimpleSearch";
 import { DivarPostsList } from "../components/DivarPostsList";
 import { DivarConnectCard } from "../components/DivarConnectCard";
 import { ProductSelectorCard } from "../components/ProductSelectorCard";
@@ -16,15 +17,14 @@ import { logger } from "@/lib/logger";
 export function DivarIntegrationView() {
   const { t } = useLanguage();
   const { profile } = useUserProfile();
-  const [statusFilter, setStatusFilter] = useState<
-    "active" | "inactive" | "expired" | undefined
-  >(undefined);
-  const [addonFilter, setAddonFilter] = useState<boolean | undefined>(
-    undefined
-  );
-  const [searchTerm, setSearchTerm] = useState("");
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     null
+  );
+
+  // استفاده از هوک debounced search
+  const { searchTerm, debouncedSearchTerm, setSearchTerm } = useDebouncedSearch(
+    "",
+    300
   );
 
   // State برای مدیریت توکن آگهی در حال پردازش
@@ -39,46 +39,37 @@ export function DivarIntegrationView() {
 
   const { getDivarPosts, addAddonToPost, removeAddonFromPost } = useDivar();
 
-  // ✅ تغییر شده: استفاده از getUserProducts که Infinite Query برمی‌گردونه
+  // دریافت محصولات کاربر
   const { getUserProducts } = useProducts();
 
+  // دریافت آگهی‌های دیوار بدون فیلتر
   const {
     data: postsData,
     isLoading: isLoadingPosts,
     error: postsError,
     refetch: refetchPosts,
-  } = getDivarPosts({
-    status: statusFilter,
-    hasMakeupVirtualTryOn: addonFilter,
-  });
+  } = getDivarPosts({});
 
-  // ✅ تغییر شده: دریافت محصولات با infinite query
   const {
     data: productsData,
     isLoading: isLoadingProducts,
     error: productsError,
-  } = getUserProducts(); // بدون فیلتر - همه محصولات
+  } = getUserProducts();
 
-  const filteredPosts =
-    searchTerm && postsData?.results
-      ? postsData.results.filter((post) =>
-          post.title.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      : postsData?.results || [];
+  // فیلتر کردن آگهی‌ها بر اساس جستجوی debounced
+  const filteredPosts = useMemo(() => {
+    if (!postsData?.results) return [];
 
-  const handleStatusFilterChange = (
-    status: "active" | "inactive" | "expired" | null
-  ) => {
-    setStatusFilter(status === null ? undefined : status);
-  };
+    if (!debouncedSearchTerm.trim()) {
+      return postsData.results;
+    }
 
-  const handleAddonFilterChange = (hasAddon: boolean | null) => {
-    setAddonFilter(hasAddon === null ? undefined : hasAddon);
-  };
-
-  const handleSearch = (term: string) => {
-    setSearchTerm(term);
-  };
+    return postsData.results.filter((post) =>
+      post.title
+        .toLowerCase()
+        .includes(debouncedSearchTerm.toLowerCase().trim())
+    );
+  }, [postsData?.results, debouncedSearchTerm]);
 
   const handleProductSelect = (productId: string) => {
     setSelectedProductId(productId);
@@ -130,7 +121,7 @@ export function DivarIntegrationView() {
       {isDivarConnected && (
         <div className="w-full">
           <ProductSelectorCard
-            productsData={productsData} // ✅ تغییر شده: حالا کل data structure پاس می‌دیم
+            productsData={productsData}
             selectedProductId={selectedProductId}
             onProductSelect={handleProductSelect}
             isLoading={isLoadingProducts}
@@ -138,29 +129,41 @@ export function DivarIntegrationView() {
         </div>
       )}
 
-      {/* فیلترها و لیست آگهی‌ها - فقط اگر دیوار متصل باشه */}
+      {/* جستجو و لیست آگهی‌ها - فقط اگر دیوار متصل باشه */}
       {isDivarConnected && (
         <>
-          {/* فیلترهای آگهی‌ها */}
-          <div>
-            <DivarPostFilters
-              onStatusChange={handleStatusFilterChange}
-              onAddonFilterChange={handleAddonFilterChange}
-              onSearch={handleSearch}
-            />
+          {/* هدر و جستجو */}
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <h2 className="text-lg font-medium">{t("divar.yourPosts")}</h2>
+                {postsData && (
+                  <p className="text-sm text-muted-foreground">
+                    {t("divar.postsCount", { count: postsData.totalResults })}
+                    {debouncedSearchTerm && (
+                      <span className="ml-2">
+                        •{" "}
+                        {t("divar.searchResults", {
+                          found: filteredPosts.length,
+                          total: postsData.totalResults,
+                        })}
+                      </span>
+                    )}
+                  </p>
+                )}
+              </div>
+
+              {/* کامپوننت جستجو */}
+              <DivarSimpleSearch
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+                placeholder={t("divar.searchPlaceholder")}
+              />
+            </div>
           </div>
 
           {/* لیست آگهی‌ها */}
           <div>
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-medium">{t("divar.yourPosts")}</h2>
-              {postsData && (
-                <span className="text-sm text-muted-foreground">
-                  {t("divar.postsCount", { count: postsData.totalResults })}
-                </span>
-              )}
-            </div>
-
             <DivarPostsList
               posts={filteredPosts}
               isLoading={isLoadingPosts}
@@ -170,6 +173,9 @@ export function DivarIntegrationView() {
               onRemoveAddon={handleRemoveAddon}
               isAddingAddonForToken={processingAddonToken}
               isRemovingAddonForToken={processingRemoveToken}
+              isSearchActive={!!debouncedSearchTerm.trim()}
+              searchTerm={debouncedSearchTerm}
+              totalPosts={postsData?.totalResults || 0}
             />
           </div>
         </>

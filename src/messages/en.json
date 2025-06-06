@@ -1487,7 +1487,6 @@
       "selectUserFirst": "Please select a user first"
     }
   },
-
   "divar": {
     "title": "Divar Integration",
     "description": "Add your products to your Divar listings",
@@ -1515,6 +1514,11 @@
     "viewOnDivar": "View on Divar",
     "connectedAs": "Connected as",
     "connectWithDivarDescription": "To add the Virtual Try-On widget to your listings, connect to your Divar account first.",
+    "searchPlaceholder": "Search in listings...",
+    "searchResults": "{{found}} of {{total}} listings found",
+    "clearSearch": "Clear search",
+    "noSearchResults": "No listings found",
+    "noSearchResultsDescription": "No listings found for \"{{term}}\". Try a different search term.",
     "status": {
       "active": "Active",
       "inactive": "Inactive",
@@ -1529,15 +1533,6 @@
       "authFailed": "Authentication with Divar failed",
       "userFetchFailed": "Failed to fetch user information",
       "general": "An unexpected error occurred"
-    },
-    "filters": {
-      "all": "All Listings",
-      "active": "Active",
-      "withAddon": "With Widget",
-      "withoutAddon": "Without Widget",
-      "inactive": "Inactive",
-      "expired": "Expired",
-      "search": "Search listings"
     },
     "connecting": "Connecting to Divar...",
     "connected": "Successfully Connected",

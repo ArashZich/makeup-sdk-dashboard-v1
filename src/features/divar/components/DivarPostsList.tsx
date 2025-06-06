@@ -6,7 +6,7 @@ import { DivarPost } from "@/api/types/divar.types";
 import { DivarPostCard } from "./DivarPostCard";
 import { Loader } from "@/components/common/Loader";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Receipt, AlertCircle } from "lucide-react";
+import { Receipt, AlertCircle, Search } from "lucide-react";
 
 interface DivarPostsListProps {
   posts: DivarPost[];
@@ -15,8 +15,12 @@ interface DivarPostsListProps {
   selectedProductId: string | null;
   onAddAddon: (postToken: string) => void;
   onRemoveAddon: (postToken: string) => void;
-  isAddingAddonForToken: string | null; // اضافه شد
-  isRemovingAddonForToken: string | null; // اضافه شد
+  isAddingAddonForToken: string | null;
+  isRemovingAddonForToken: string | null;
+  // اضافه کردن props جدید برای نمایش حالت جستجو
+  isSearchActive?: boolean;
+  searchTerm?: string;
+  totalPosts?: number;
 }
 
 export function DivarPostsList({
@@ -26,8 +30,11 @@ export function DivarPostsList({
   selectedProductId,
   onAddAddon,
   onRemoveAddon,
-  isAddingAddonForToken, // اضافه شد
-  isRemovingAddonForToken, // اضافه شد
+  isAddingAddonForToken,
+  isRemovingAddonForToken,
+  isSearchActive = false,
+  searchTerm = "",
+  totalPosts = 0,
 }: DivarPostsListProps) {
   const { t } = useLanguage();
 
@@ -51,6 +58,20 @@ export function DivarPostsList({
     );
   }
 
+  // حالت جستجو که نتیجه‌ای ندارد
+  if (isSearchActive && posts.length === 0 && searchTerm.trim()) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <Search className="h-12 w-12 text-muted-foreground opacity-20 mb-4" />
+        <h3 className="text-lg font-medium">{t("divar.noSearchResults")}</h3>
+        <p className="text-sm text-muted-foreground mt-1 max-w-md">
+          {t("divar.noSearchResultsDescription", { term: searchTerm })}
+        </p>
+      </div>
+    );
+  }
+
+  // حالت کلی که آگهی وجود ندارد
   if (posts.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -64,18 +85,31 @@ export function DivarPostsList({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {posts.map((post) => (
-        <DivarPostCard
-          key={post.token} // اطمینان از key منحصر به فرد
-          post={post}
-          selectedProductId={selectedProductId}
-          onAddAddon={onAddAddon}
-          onRemoveAddon={onRemoveAddon}
-          isAddingAddonForToken={isAddingAddonForToken} // پاس داده شد
-          isRemovingAddonForToken={isRemovingAddonForToken} // پاس داده شد
-        />
-      ))}
+    <div className="space-y-4">
+      {/* نمایش تعداد نتایج در صورت جستجو */}
+      {isSearchActive && searchTerm.trim() && (
+        <div className="text-sm text-muted-foreground">
+          {t("divar.searchResults", {
+            found: posts.length,
+            total: totalPosts,
+          })}
+        </div>
+      )}
+
+      {/* گرید آگهی‌ها */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {posts.map((post) => (
+          <DivarPostCard
+            key={post.token}
+            post={post}
+            selectedProductId={selectedProductId}
+            onAddAddon={onAddAddon}
+            onRemoveAddon={onRemoveAddon}
+            isAddingAddonForToken={isAddingAddonForToken}
+            isRemovingAddonForToken={isRemovingAddonForToken}
+          />
+        ))}
+      </div>
     </div>
   );
 }

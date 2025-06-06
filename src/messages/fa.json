@@ -1519,6 +1519,11 @@
     "viewOnDivar": "مشاهده در دیوار",
     "connectedAs": "در حال اتصال به حساب دیوار",
     "connectWithDivarDescription": "برای اضافه کردن ویجت تست مجازی به آگهی‌های خود، ابتدا به حساب کاربری دیوار متصل شوید.",
+    "searchPlaceholder": "جستجو در آگهی‌ها...",
+    "searchResults": "{{found}} از {{total}} آگهی یافت شد",
+    "clearSearch": "پاک کردن جستجو",
+    "noSearchResults": "آگهی‌ای یافت نشد",
+    "noSearchResultsDescription": "برای عبارت «{{term}}» آگهی‌ای یافت نشد. عبارت دیگری را امتحان کنید.",
     "status": {
       "active": "فعال",
       "inactive": "غیرفعال",
@@ -1533,15 +1538,6 @@
       "authFailed": "خطا در احراز هویت با دیوار",
       "userFetchFailed": "خطا در دریافت اطلاعات کاربر",
       "general": "خطای غیرمنتظره رخ داده است"
-    },
-    "filters": {
-      "all": "همه آگهی‌ها",
-      "active": "فعال",
-      "withAddon": "دارای ویجت",
-      "withoutAddon": "بدون ویجت",
-      "inactive": "غیرفعال",
-      "expired": "منقضی شده",
-      "search": "جستجو در آگهی‌ها"
     },
     "connecting": "در حال اتصال به دیوار...",
     "connected": "با موفقیت متصل شدید",
