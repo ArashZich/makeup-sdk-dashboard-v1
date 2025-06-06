@@ -1,7 +1,5 @@
 // src/api/types/users.types.ts - اضافه کردن تایپ‌های جدید
 
-// تایپ‌های موجود قبلی + تایپ‌های جدید SDK Features
-
 import { PaginatedResponse } from "@/types/common.types";
 
 export interface DivarTokens {
@@ -10,7 +8,10 @@ export interface DivarTokens {
   expiresAt: string;
 }
 
-// مدل کاربر اصلی (بدون تغییر)
+// انواع پلتفرم‌ها
+export type PlatformType = "divar" | "salam" | "otp" | "web" | "api" | "admin";
+
+// مدل کاربر اصلی - Updated
 export interface User {
   _id: string;
   name: string;
@@ -21,6 +22,9 @@ export interface User {
   verified: boolean;
   userType?: "real" | "legal";
   nationalId?: string;
+  platform: PlatformType; // ✅ تایپ شده
+  oauthProvider?: string; // ✅ اضافه شده
+  oauthId?: string; // ✅ اضافه شده
   allowedDomains?: string[];
   notificationSettings?: {
     email: boolean;
@@ -31,7 +35,7 @@ export interface User {
   divarTokens?: DivarTokens;
 }
 
-// تایپ‌های جدید برای SDK Features
+// ✅ تایپ‌های جدید برای SDK Features
 export interface MakeupFeature {
   type:
     | "lips"
@@ -91,13 +95,16 @@ export type UserSdkFeaturesResponse =
   | UserSdkFeaturesWithPackage
   | UserSdkFeaturesWithoutPackage;
 
-// تایپ‌های موجود قبلی (بدون تغییر)
+// تایپ‌های موجود قبلی - Updated
 export interface UserFilters {
   name?: string;
   phone?: string;
   role?: "user" | "admin";
+  platform?: PlatformType; // ✅ اضافه شده
+  verified?: boolean; // ✅ اضافه شده
   page?: number;
   limit?: number;
+  sortBy?: string; // ✅ اضافه شده
 }
 
 export interface UpdateProfileRequest {
@@ -124,6 +131,7 @@ export interface CreateUserRequest {
   role?: "user" | "admin";
   userType?: "real" | "legal";
   nationalId?: string;
+  platform?: PlatformType; // ✅ اضافه شده
   allowedDomains?: string[];
   notificationSettings?: {
     email: boolean;
@@ -131,6 +139,7 @@ export interface CreateUserRequest {
   };
 }
 
+// ✅ تایپ جدید برای به‌روزرسانی اطلاعات ضروری
 export interface UpdateRequiredInfoRequest {
   userType: "real" | "legal";
   nationalId: string;
@@ -143,6 +152,8 @@ export interface UpdateRequiredInfoResponse {
 
 export interface UpdateUserRequest extends UpdateProfileRequest {
   role?: "user" | "admin";
+  phone?: string; // ✅ ادمین می‌تواند شماره تلفن تغییر دهد
+  platform?: PlatformType; // ✅ ادمین می‌تواند پلتفرم تغییر دهد
 }
 
 export type PaginatedUsers = PaginatedResponse<User>;

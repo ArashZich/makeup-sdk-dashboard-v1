@@ -14,6 +14,7 @@ import {
   UpdateUserRequest,
   UpdateRequiredInfoRequest, // 🆕 جدید
   UserSdkFeaturesResponse, // تایپ جدید
+  User, // ✅ اضافه شده
 } from "@/api/types/users.types";
 
 /**
@@ -44,7 +45,7 @@ export const useUserProfile = () => {
       // به‌روزرسانی cache پروفایل
       queryClient.setQueryData(
         ["userProfile"],
-        (oldData: { userType?: string; nationalId?: string }) => ({
+        (oldData: User | undefined) => ({
           ...oldData,
           userType: data.user.userType,
           nationalId: data.user.nationalId,

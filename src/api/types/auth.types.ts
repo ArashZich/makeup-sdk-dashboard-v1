@@ -1,5 +1,8 @@
 // src/api/types/auth.types.ts
 
+// انواع پلتفرم‌ها
+export type PlatformType = "divar" | "salam" | "otp" | "web" | "api" | "admin";
+
 // مدل توکن‌های دیوار
 export interface DivarTokens {
   accessToken: string;
@@ -7,7 +10,7 @@ export interface DivarTokens {
   expiresAt: string; // به صورت ISO string
 }
 
-// مدل کاربر
+// مدل کاربر - Updated
 export interface User {
   _id: string;
   name: string;
@@ -18,6 +21,9 @@ export interface User {
   verified: boolean;
   userType?: "real" | "legal";
   nationalId?: string;
+  platform: PlatformType; // ✅ تایپ شده
+  oauthProvider?: string; // ✅ اضافه شده
+  oauthId?: string; // ✅ اضافه شده
   allowedDomains?: string[];
   notificationSettings?: {
     email: boolean;
@@ -51,10 +57,13 @@ export interface SendOtpRequest {
   phone: string;
 }
 
-// مدل پاسخ ارسال OTP
+// مدل پاسخ ارسال OTP - Updated
 export interface SendOtpResponse {
   message: string;
   userId: string;
+  requireOtp: boolean;
+  platform: string; // ✅ اضافه شده
+  otpCode?: string; // فقط در محیط development
 }
 
 // مدل درخواست تایید OTP
