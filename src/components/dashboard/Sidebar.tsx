@@ -1,4 +1,4 @@
-// src/components/dashboard/Sidebar.tsx - آپدیت شده با Separator بعد از title
+// src/components/dashboard/Sidebar.tsx - آپدیت شده با استفاده از platform
 "use client";
 
 import { useState, useEffect } from "react";
@@ -21,7 +21,7 @@ import { Logo } from "../common/Logo";
 
 export function Sidebar() {
   const { t, isRtl } = useLanguage();
-  const { user } = useAuth();
+  const { user, isDivarUser } = useAuth(); // ✅ استفاده از isDivarUser
   const pathname = usePathname();
   const { isSidebarOpen, toggleSidebar, setSidebarOpen } = useUIStore();
   const isMobile = useMediaQuery("(max-width: 1024px)");
@@ -47,10 +47,10 @@ export function Sidebar() {
     return false;
   };
 
-  // بررسی آیا آیتم نیاز به اتصال دیوار دارد و کاربر متصل است یا خیر
+  // ✅ تغییر اینجا - استفاده از isDivarUser
   const hasDivarAccess = (requiresDivarAuth?: boolean) => {
     if (!requiresDivarAuth) return true;
-    return !!user?.divarTokens?.accessToken;
+    return isDivarUser;
   };
 
   // باز کردن گروه منو برای آیتمی که در مسیر فعلی است

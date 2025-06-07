@@ -22,10 +22,12 @@ interface AuthContextType {
   isLoading: boolean;
   isAuthenticated: boolean;
   isAdmin: boolean;
+  isDivarUser: boolean; // ✅ اضافه شده
+  userPlatform: string | null; // ✅ اضافه شده
   login: (token: string, refreshToken: string, userData: User) => void;
   logout: () => void;
   updateUser: (userData: Partial<User>) => void;
-  refreshUserData: () => Promise<void>; // جدید
+  refreshUserData: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -33,6 +35,8 @@ const AuthContext = createContext<AuthContextType>({
   isLoading: true,
   isAuthenticated: false,
   isAdmin: false,
+  isDivarUser: false, // ✅ اضافه شده
+  userPlatform: null, // ✅ اضافه شده
   login: () => {},
   logout: () => {},
   updateUser: () => {},
@@ -158,6 +162,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const isAuthenticated = !!user;
   const isAdmin = user?.role === "admin";
+  const isDivarUser = user?.platform === "divar"; // ✅ اضافه شده
+  const userPlatform = user?.platform || null; // ✅ اضافه شده
 
   return (
     <AuthContext.Provider
@@ -166,6 +172,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         isLoading,
         isAuthenticated,
         isAdmin,
+        isDivarUser, // ✅ اضافه شده
+        userPlatform, // ✅ اضافه شده
         login,
         logout,
         updateUser,
