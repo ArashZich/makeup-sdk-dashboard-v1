@@ -91,7 +91,8 @@
     "incompatible": "Incompatible",
     "empty_data": "No data available",
     "emty_analytics": "No analytics available",
-    "apply": "Apply"
+    "apply": "Apply",
+    "retry": "Retry"
   },
   "auth": {
     "login": "Login",

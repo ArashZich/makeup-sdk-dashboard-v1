@@ -28,6 +28,8 @@ export function SdkDashboardView() {
   // بسته فعال اول را استفاده می‌کنیم
   const activePackage = activePackages.length > 0 ? activePackages[0] : null;
 
+  console.log(activePackage, "activePackage");
+
   // استفاده از توکن SDK برای دریافت اطلاعات SDK
   const { status, isLoadingStatus, statusError, refetchStatus } = useSdk(
     activePackage?.token

@@ -29,6 +29,7 @@ export const sdkService = {
     const response = await axios.get("/sdk/products", {
       headers: {
         "x-sdk-token": token,
+        "x-dashboard-request": "true",
       },
     });
     return response.data;
@@ -46,6 +47,7 @@ export const sdkService = {
     const response = await axios.get(`/sdk/products/${productUid}`, {
       headers: {
         "x-sdk-token": token,
+        "x-dashboard-request": "true",
       },
     });
     return response.data;
@@ -63,6 +65,7 @@ export const sdkService = {
     const response = await axios.post("/sdk/apply", data, {
       headers: {
         "x-sdk-token": token,
+        "x-dashboard-request": "true",
       },
     });
     return response.data;
@@ -76,6 +79,7 @@ export const sdkService = {
     const response = await axios.get("/sdk/status", {
       headers: {
         "x-sdk-token": token,
+        "x-dashboard-request": "true",
       },
     });
     return response.data;
